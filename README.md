@@ -1,16 +1,46 @@
-@graphile-contrib/pg-simplify-inflector
-=======================================
+# @graphile-contrib/pg-simplify-inflector
 
 Simplifies relation names; e.g. `postsByAuthorId` becomes simply `posts`.
 
-## Usage:
+## Installation:
 
 ```bash
 yarn add @graphile-contrib/pg-simplify-inflector
+```
+
+or
+
+```bash
+npm install --save @graphile-contrib/pg-simplify-inflector
+```
+
+## Usage:
+
+CLI:
+
+```bash
 postgraphile --append-plugins @graphile-contrib/pg-simplify-inflector
 ```
 
-## Conflicts:
+Library:
+
+```js
+const PgSimplifyInflectorPlugin =
+  require('@graphile-contrib/pg-simplify-inflector');
+
+// ...
+
+app.use(
+  postgraphile(process.env.AUTH_DATABASE_URL, "app_public", {
+    appendPlugins: [
+      PgSimplifyInflectorPlugin,
+    ],
+    // ... other settings ...
+  })
+);
+```
+
+## Handling field conflicts:
 
 If you have two relations that will result in a conflict (e.g.
 `postsByAuthorId` and `postsByEditorId` would both become `posts` with this
