@@ -1,0 +1,29 @@
+{
+  "name": "@graphile-contrib/pg-simplify-inflector",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/graphile-contrib/pg-simplify-inflector.git"
+  },
+  "keywords": [
+    "graphile",
+    "postgraphile",
+    "plugin",
+    "simple",
+    "simplify",
+    "inflection",
+    "inflector",
+    "pg"
+  ],
+  "author": "Benjie Gillam <code@benjiegillam.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/graphile-contrib/pg-simplify-inflector/issues"
+  },
+  "homepage": "https://github.com/graphile-contrib/pg-simplify-inflector#readme"
+}
