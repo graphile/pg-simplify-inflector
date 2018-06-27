@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/graphile-contrib/pg-simplify-inflector/issues"
   },
-  "homepage": "https://github.com/graphile-contrib/pg-simplify-inflector#readme"
+  "homepage": "https://github.com/graphile-contrib/pg-simplify-inflector#readme",
+  "files": [
+    "index.js"
+  ]
 }
