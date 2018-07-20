@@ -17,6 +17,14 @@ module.exports = function PgSimplifyInflectorPlugin(builder) {
         if (constraint.tags.fieldName) {
           return constraint.tags.fieldName;
         }
+        if (detailedKeys.length === 1) {
+          const key = detailedKeys[0];
+          const columnName = this._columnName(key);
+          const matches = columnName.match(/^(.*)(_id|_uuid|Id|Uuid)$/);
+          if (matches) {
+            return this.camelCase(matches[1]);
+          }
+        }
         return this.camelCase(`${this._singularizedTableName(table)}`);
       },
       manyRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
