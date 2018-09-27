@@ -35,7 +35,7 @@ module.exports = function PgSimplifyInflectorPlugin(
     return {
       ...inflection,
 
-      singleRelationByKeys(detailedKeys, table, foreignTable, constraint) {
+      singleRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.fieldName) {
           return constraint.tags.fieldName;
         }
@@ -49,7 +49,7 @@ module.exports = function PgSimplifyInflectorPlugin(
         }
         return this.camelCase(`${this._singularizedTableName(table)}`);
       },
-      manyRelationByKeys(detailedKeys, table, foreignTable, constraint) {
+      manyRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.foreignFieldName) {
           return constraint.tags.foreignFieldName;
         }
@@ -70,7 +70,12 @@ module.exports = function PgSimplifyInflectorPlugin(
           `${this.pluralize(this._singularizedTableName(table))}`
         );
       },
-      manyRelationByKeysSimple(detailedKeys, table, foreignTable, constraint) {
+      manyRelationByKeysSimple(
+        _detailedKeys,
+        table,
+        _foreignTable,
+        constraint
+      ) {
         if (constraint.tags.foreignFieldName) {
           return constraint.tags.foreignFieldName;
         }
