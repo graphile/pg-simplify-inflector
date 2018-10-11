@@ -12,12 +12,12 @@ module.exports = function PgSimplifyInflectorPlugin(
   builder,
   { pgSimpleCollections, pgOmitListSuffix }
 ) {
-  const hasConnections = pgSimpleCollections !== 'only';
+  const hasConnections = pgSimpleCollections !== "only";
   const hasSimpleCollections =
-    pgSimpleCollections === 'only' || pgSimpleCollections === 'both';
+    pgSimpleCollections === "only" || pgSimpleCollections === "both";
   if (hasConnections && hasSimpleCollections && pgOmitListSuffix) {
     throw new Error(
-      'Cannot omit -list suffix (`pgOmitListSuffix`) if both relay connections and simple collections are enabled.'
+      "Cannot omit -list suffix (`pgOmitListSuffix`) if both relay connections and simple collections are enabled."
     );
   }
   if (
@@ -27,11 +27,11 @@ module.exports = function PgSimplifyInflectorPlugin(
     pgOmitListSuffix !== false
   ) {
     console.warn(
-      'You can simplify the inflector further by adding `{graphileOptions: {pgOmitListSuffix: true}}` to the options passed to PostGraphile, however be aware that doing so will mean that later enabling relay connections will be a breaking change. To dismiss this message, set `pgOmitListSuffix` to false instead.'
+      "You can simplify the inflector further by adding `{graphileOptions: {pgOmitListSuffix: true}}` to the options passed to PostGraphile, however be aware that doing so will mean that later enabling relay connections will be a breaking change. To dismiss this message, set `pgOmitListSuffix` to false instead."
     );
   }
 
-  builder.hook('inflection', inflection => {
+  builder.hook("inflection", inflection => {
     return {
       ...inflection,
 
@@ -82,9 +82,9 @@ module.exports = function PgSimplifyInflectorPlugin(
 
         return this.camelCase(
           `${this.pluralize(this._singularizedTableName(table))}` +
-            (pgOmitListSuffix ? '' : '-list')
+            (pgOmitListSuffix ? "" : "-list")
         );
-      }
+      },
     };
   });
 };
