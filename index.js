@@ -45,6 +45,14 @@ module.exports = function PgSimplifyInflectorPlugin(
         return null;
       },
 
+      /* This is a good method to override. */
+      getOppositeBaseName(baseName) {
+        if (baseName === "parent") {
+          return "child";
+        }
+        return null;
+      },
+
       getBaseNameFromKeys(detailedKeys) {
         if (detailedKeys.length === 1) {
           const key = detailedKeys[0];
@@ -77,8 +85,11 @@ module.exports = function PgSimplifyInflectorPlugin(
           return constraint.tags.foreignFieldName;
         }
         const baseName = this.getBaseNameFromKeys(detailedKeys);
-        if (baseName === "parent") {
-          return this.camelCase(`child-${this._singularizedTableName(table)}`);
+        const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
+        if (oppositeBaseName) {
+          return this.camelCase(
+            `${oppositeBaseName}-${this._singularizedTableName(table)}`
+          );
         }
         return this.camelCase(
           `${this._singularizedTableName(table)}-by-${detailedKeys
@@ -91,9 +102,12 @@ module.exports = function PgSimplifyInflectorPlugin(
           return constraint.tags.foreignFieldName;
         }
         const baseName = this.getBaseNameFromKeys(detailedKeys);
-        if (baseName === "parent") {
+        const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
+        if (oppositeBaseName) {
           return this.camelCase(
-            `child-${this.pluralize(this._singularizedTableName(table))}`
+            `${oppositeBaseName}-${this.pluralize(
+              this._singularizedTableName(table)
+            )}`
           );
         }
         return this.camelCase(
