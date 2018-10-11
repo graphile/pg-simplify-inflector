@@ -29,7 +29,7 @@ module.exports = function PgSimplifyInflectorPlugin(builder, { pgSimpleCollectio
         if (detailedKeys.length === 1) {
           const key = detailedKeys[0];
           const columnName = this._columnName(key);
-          const matches = columnName.match(/^(.*)(_id|_uuid|Id|Uuid)$/);
+          const matches = columnName.match(/^(.+?)(_row_id|_id|_uuid|RowId|Id|Uuid)$/);
           if (matches) {
             return this.camelCase(matches[1]);
           }
