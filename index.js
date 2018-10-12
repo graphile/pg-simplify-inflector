@@ -27,7 +27,7 @@ module.exports = function PgSimplifyInflectorPlugin(
     pgOmitListSuffix !== false
   ) {
     console.warn(
-      "You can simplify the inflector further by adding `{graphileOptions: {pgOmitListSuffix: true}}` to the options passed to PostGraphile, however be aware that doing so will mean that later enabling relay connections will be a breaking change. To dismiss this message, set `pgOmitListSuffix` to false instead."
+      "You can simplify the inflector further by adding `{graphileBuildOptions: {pgOmitListSuffix: true}}` to the options passed to PostGraphile, however be aware that doing so will mean that later enabling relay connections will be a breaking change. To dismiss this message, set `pgOmitListSuffix` to false instead."
     );
   }
 
@@ -35,54 +35,96 @@ module.exports = function PgSimplifyInflectorPlugin(
     return {
       ...inflection,
 
+      getBaseName(columnName) {
+        const matches = columnName.match(
+          /^(.+?)(_row_id|_id|_uuid|_fk|RowId|Id|Uuid|UUID|Fk)$/
+        );
+        if (matches) {
+          return matches[1];
+        }
+        return null;
+      },
+
+      /* This is a good method to override. */
+      getOppositeBaseName(baseName) {
+        if (baseName === "parent") {
+          return "child";
+        }
+        return null;
+      },
+
+      getBaseNameFromKeys(detailedKeys) {
+        if (detailedKeys.length === 1) {
+          const key = detailedKeys[0];
+          const columnName = this._columnName(key);
+          return this.getBaseName(columnName);
+        }
+        return null;
+      },
+
       singleRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.fieldName) {
           return constraint.tags.fieldName;
         }
-        if (detailedKeys.length === 1) {
-          const key = detailedKeys[0];
-          const columnName = this._columnName(key);
-          const matches = columnName.match(/^(.*)(_id|_uuid|Id|Uuid)$/);
-          if (matches) {
-            return this.camelCase(matches[1]);
-          }
+        const baseName = this.getBaseNameFromKeys(detailedKeys);
+        if (baseName) {
+          return this.camelCase(baseName);
         }
         return this.camelCase(`${this._singularizedTableName(table)}`);
+      },
+      singleRelationByKeysBackwards(
+        detailedKeys,
+        table,
+        _foreignTable,
+        constraint
+      ) {
+        if (constraint.tags.foreignSingleFieldName) {
+          return constraint.tags.foreignSingleFieldName;
+        }
+        if (constraint.tags.foreignFieldName) {
+          return constraint.tags.foreignFieldName;
+        }
+        const baseName = this.getBaseNameFromKeys(detailedKeys);
+        const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
+        if (oppositeBaseName) {
+          return this.camelCase(
+            `${oppositeBaseName}-${this._singularizedTableName(table)}`
+          );
+        }
+        return this.camelCase(
+          `${this._singularizedTableName(table)}-by-${detailedKeys
+            .map(key => this.column(key))
+            .join("-and-")}`
+        );
       },
       manyRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.foreignFieldName) {
           return constraint.tags.foreignFieldName;
         }
-        if (detailedKeys.length === 1) {
-          const key = detailedKeys[0];
-          const columnName = this._columnName(key);
-          const matches = columnName.match(/^(.*)(_id|_uuid|Id|Uuid)$/);
-          if (matches) {
-            return this.camelCase(
-              `${matches[1]}_${this.pluralize(
-                this._singularizedTableName(table)
-              )}`
-            );
-          }
+        const baseName = this.getBaseNameFromKeys(detailedKeys);
+        const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
+        if (oppositeBaseName) {
+          return this.camelCase(
+            `${oppositeBaseName}-${this.pluralize(
+              this._singularizedTableName(table)
+            )}`
+          );
         }
-
         return this.camelCase(
           `${this.pluralize(this._singularizedTableName(table))}`
         );
       },
-      manyRelationByKeysSimple(
-        _detailedKeys,
-        table,
-        _foreignTable,
-        constraint
-      ) {
-        if (constraint.tags.foreignFieldName) {
-          return constraint.tags.foreignFieldName;
+      manyRelationByKeysSimple(detailedKeys, table, _foreignTable, constraint) {
+        if (constraint.tags.foreignSimpleFieldName) {
+          return constraint.tags.foreignSimpleFieldName;
         }
-
-        return this.camelCase(
-          `${this.pluralize(this._singularizedTableName(table))}` +
-            (pgOmitListSuffix ? "" : "-list")
+        return (
+          this.manyRelationByKeys(
+            detailedKeys,
+            table,
+            _foreignTable,
+            constraint
+          ) + (pgOmitListSuffix ? "" : "-list")
         );
       },
     };
