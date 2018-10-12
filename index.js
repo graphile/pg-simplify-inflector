@@ -8,6 +8,13 @@
  *
  */
 
+function fixCapitalisedPlural(fn) {
+  return function(str) {
+    const original = fn.call(this, str);
+    return original.replace(/[0-9]S(?=[A-Z]|$)/g, match => match.toLowerCase());
+  };
+}
+
 module.exports = function PgSimplifyInflectorPlugin(
   builder,
   {
@@ -41,6 +48,13 @@ module.exports = function PgSimplifyInflectorPlugin(
   builder.hook("inflection", inflection => {
     return {
       ...inflection,
+
+      /*
+       * This solves the issue with `blah-table1s` becoming `blahTable1S`
+       * (i.e. the capital S at the end) or `table1-connection becoming `Table1SConnection`
+       */
+      camelCase: fixCapitalisedPlural(inflection.camelCase),
+      upperCamelCase: fixCapitalisedPlural(inflection.upperCamelCase),
 
       getBaseName(columnName) {
         const matches = columnName.match(
