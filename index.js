@@ -15,11 +15,13 @@ module.exports = function PgSimplifyInflectorPlugin(
   const hasConnections = pgSimpleCollections !== "only";
   const hasSimpleCollections =
     pgSimpleCollections === "only" || pgSimpleCollections === "both";
+
   if (hasConnections && hasSimpleCollections && pgOmitListSuffix) {
     throw new Error(
       "Cannot omit -list suffix (`pgOmitListSuffix`) if both relay connections and simple collections are enabled."
     );
   }
+
   if (
     hasSimpleCollections &&
     !hasConnections &&
@@ -49,6 +51,14 @@ module.exports = function PgSimplifyInflectorPlugin(
       getOppositeBaseName(baseName) {
         return (
           {
+            /*
+             * Changes to this list are breaking changes and will require a
+             * major version update, so we need to group as many together as
+             * possible! Rather than sending a PR, please look for an open
+             * issue called something like "Add more opposites" (if there isn't
+             * one then please open it) and add your suggestions to the GitHub
+             * comments.
+             */
             parent: "child",
             child: "parent",
             author: "authored",
@@ -77,6 +87,7 @@ module.exports = function PgSimplifyInflectorPlugin(
         }
         return this.camelCase(`${this._singularizedTableName(table)}`);
       },
+
       singleRelationByKeysBackwards(
         detailedKeys,
         table,
@@ -98,6 +109,7 @@ module.exports = function PgSimplifyInflectorPlugin(
         }
         return this.camelCase(`${this._singularizedTableName(table)}`);
       },
+
       manyRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.foreignFieldName) {
           return constraint.tags.foreignFieldName;
@@ -115,6 +127,7 @@ module.exports = function PgSimplifyInflectorPlugin(
           `${this.pluralize(this._singularizedTableName(table))}`
         );
       },
+
       manyRelationByKeysSimple(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.foreignSimpleFieldName) {
           return constraint.tags.foreignSimpleFieldName;
