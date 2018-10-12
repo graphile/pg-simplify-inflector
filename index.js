@@ -10,7 +10,12 @@
 
 module.exports = function PgSimplifyInflectorPlugin(
   builder,
-  { pgSimpleCollections, pgOmitListSuffix }
+  {
+    pgSimpleCollections,
+    pgOmitListSuffix,
+    pgSimplifyPatch = true,
+    pgSimplifyAllRows = true,
+  }
 ) {
   const hasConnections = pgSimpleCollections !== "only";
   const hasSimpleCollections =
@@ -76,6 +81,29 @@ module.exports = function PgSimplifyInflectorPlugin(
         }
         return null;
       },
+
+      ...(pgSimplifyPatch
+        ? {
+            patchField() {
+              return "patch";
+            },
+          }
+        : null),
+
+      ...(pgSimplifyAllRows
+        ? {
+            allRows(table) {
+              return this.camelCase(
+                this.pluralize(this._singularizedTableName(table))
+              );
+            },
+            allRowsSimple(table) {
+              return this.camelCase(
+                `${this.pluralize(this._singularizedTableName(table))}-list`
+              );
+            },
+          }
+        : null),
 
       singleRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.fieldName) {
