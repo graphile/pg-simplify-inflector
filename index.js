@@ -47,10 +47,15 @@ module.exports = function PgSimplifyInflectorPlugin(
 
       /* This is a good method to override. */
       getOppositeBaseName(baseName) {
-        if (baseName === "parent") {
-          return "child";
-        }
-        return null;
+        return (
+          {
+            parent: "child",
+            child: "parent",
+            author: "authored",
+            editor: "edited",
+            reviewer: "reviewed",
+          }[baseName] || null
+        );
       },
 
       getBaseNameFromKeys(detailedKeys) {
