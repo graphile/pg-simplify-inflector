@@ -13,6 +13,15 @@ familiarity with smart comments to override certain potential naming conflicts
 `Company.beveragesByDistributorId` both want to become simply
 `Company.beverages` which would cause a conflict).
 
+## Customising
+
+This plugin is implemented as a single JS file that does not need to be
+compiled at all - you can simply copy it into your project and customise it as
+you see fit.
+
+Alternatively, you can [write your own inflection
+plugin](https://www.graphile.org/postgraphile/inflection/).
+
 ## Changes:
 
 Given these tables:
