@@ -13,6 +13,38 @@ familiarity with smart comments to override certain potential naming conflicts
 `Company.beveragesByDistributorId` both want to become simply
 `Company.beverages` which would cause a conflict).
 
+## Changes:
+
+Given these tables:
+
+```sql
+create table companies (
+  id serial primary key,
+  name text not null
+);
+create table beverages (
+  id serial primary key,
+  name text not null,
+  manufacturer_id int references companies,
+  distributor_id int references companies
+);
+comment on constraint "beverages_distributor_id_fkey" on "beverages" is
+  E'@foreignFieldName distributedBeverages';
+```
+
+- `Beverage.companyByManufacturerId` and `Beverage.companyByDistributorId`
+  become `Beverage.manufacturer` and `Beverage.distributor` respectively
+- `Company.beveragesByManufacturerId` and `Company.beveragesByDistributorId`
+  would both become `Company.beverages` and cause an error (but we have a smart
+  comment above to rename the latter to `Company.distributedBeverages` to avoid
+  the issue)
+- `Query.allCompanies` and `Query.allBeverages` become `Query.companies` and
+  `Query.beverages` respectively (disable via `pgSimplifyAllRows = false`)
+- All update mutations now accept `patch` instead of `companyPatch` /
+  `beveragePatch` (disable via `pgSimplifyPatch = false`)
+- If you are using `pgSimpleCollections = "only"` then you can set
+  `pgOmitListSuffix = true` to omit the `List` suffix
+
 ## Installation:
 
 ```bash
