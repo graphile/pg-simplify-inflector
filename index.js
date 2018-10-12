@@ -91,11 +91,7 @@ module.exports = function PgSimplifyInflectorPlugin(
             `${oppositeBaseName}-${this._singularizedTableName(table)}`
           );
         }
-        return this.camelCase(
-          `${this._singularizedTableName(table)}-by-${detailedKeys
-            .map(key => this.column(key))
-            .join("-and-")}`
-        );
+        return this.camelCase(`${this._singularizedTableName(table)}`);
       },
       manyRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.foreignFieldName) {
