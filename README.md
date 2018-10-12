@@ -1,7 +1,17 @@
 # @graphile-contrib/pg-simplify-inflector
 
-Simplifies relation names; e.g. `postsByAuthorId` becomes simply `posts`, and
-`userByAuthorId` becomes simply `author`.
+This plugin simplifies relation names in the PostGraphile schema; e.g.
+`User.postsByAuthorId` becomes simply `User.posts`, and `Post.userByAuthorId`
+becomes simply `Post.author`.
+
+_Adding this plugin to your schema is almost certainly a breaking change, so do
+it before you ship anything!_
+
+This is recommended for most PostGraphile users, but it does require
+familiarity with smart comments to override certain potential naming conflicts
+(e.g. `Company.beveragesByManufacturerId` and
+`Company.beveragesByDistributorId` both want to become simply
+`Company.beverages` which would cause a conflict).
 
 ## Installation:
 
@@ -68,6 +78,25 @@ the relation 'posts' and it will be up to you to add smart comments to handle
 the field conflicts.
 
 ## Handling field conflicts:
+
+In most cases, the conflict errors will guide you on how to fix these issues:
+
+```
+⚠️⚠️⚠️ An error occured when building the schema on watch:
+Error: A naming conflict has occurred - two entities have tried to define the same key 'beverages'.
+
+  The first entity was:
+
+    Backward relation (connection) for constraint "beverages_manufacturer_id_fkey" on table "a"."beverages". To rename this relation with smart comments:
+
+      COMMENT ON CONSTRAINT "beverages_manufacturer_id_fkey" ON "a"."beverages" IS E'@foreignFieldName newNameHere';
+
+  The second entity was:
+
+    Backward relation (connection) for constraint "beverages_distributor_id_fkey" on table "a"."beverages". To rename this relation with smart comments:
+
+      COMMENT ON CONSTRAINT "beverages_distributor_id_fkey" ON "a"."beverages" IS E'@foreignFieldName newNameHere';
+```
 
 If you have two relations that will result in a conflict (e.g.
 `postsByFooId` and `postsByBarId` would both become `posts` with this
