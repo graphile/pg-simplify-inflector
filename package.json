@@ -28,5 +28,8 @@
   "homepage": "https://github.com/graphile-contrib/pg-simplify-inflector#readme",
   "files": [
     "index.js"
-  ]
+  ],
+  "devDependencies": {
+    "prettier": "^1.14.3"
+  }
 }
