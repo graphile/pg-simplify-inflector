@@ -174,7 +174,7 @@ module.exports = function PgSimplifyInflectorPlugin(
         if (constraint.tags.foreignSimpleFieldName) {
           return constraint.tags.foreignSimpleFieldName;
         }
-        return (
+        return this.camelCase(
           this.manyRelationByKeys(
             detailedKeys,
             table,
