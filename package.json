@@ -30,6 +30,7 @@
     "index.js"
   ],
   "devDependencies": {
+    "postgraphile": "^4.2.0",
     "prettier": "^1.14.3"
   }
 }
