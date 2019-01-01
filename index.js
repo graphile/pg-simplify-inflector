@@ -56,6 +56,27 @@ module.exports = function PgSimplifyInflectorPlugin(
       camelCase: fixCapitalisedPlural(inflection.camelCase),
       upperCamelCase: fixCapitalisedPlural(inflection.upperCamelCase),
 
+      distinctPluralize(str) {
+        const singular = this.singularize(str);
+        const plural = this.pluralize(singular);
+        if (singular !== plural) {
+          return plural;
+        }
+        if (
+          plural.endsWith("ch") ||
+          plural.endsWith("s") ||
+          plural.endsWith("sh") ||
+          plural.endsWith("x") ||
+          plural.endsWith("z")
+        ) {
+          return plural + "es";
+        } else if (plural.endsWith("y")) {
+          return plural.slice(0, -1) + "ies";
+        } else {
+          return plural + "s";
+        }
+      },
+
       getBaseName(columnName) {
         const matches = columnName.match(
           /^(.+?)(_row_id|_id|_uuid|_fk|RowId|Id|Uuid|UUID|Fk)$/
@@ -108,12 +129,13 @@ module.exports = function PgSimplifyInflectorPlugin(
         ? {
             allRows(table) {
               return this.camelCase(
-                this.pluralize(this._singularizedTableName(table))
+                this.distinctPluralize(this._singularizedTableName(table))
               );
             },
             allRowsSimple(table) {
               return this.camelCase(
-                this.pluralize(this._singularizedTableName(table)) + (pgOmitListSuffix ? "" : "-list")
+                this.distinctPluralize(this._singularizedTableName(table)) +
+                  (pgOmitListSuffix ? "" : "-list")
               );
             },
           }
@@ -160,13 +182,13 @@ module.exports = function PgSimplifyInflectorPlugin(
         const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
         if (oppositeBaseName) {
           return this.camelCase(
-            `${oppositeBaseName}-${this.pluralize(
+            `${oppositeBaseName}-${this.distinctPluralize(
               this._singularizedTableName(table)
             )}`
           );
         }
         return this.camelCase(
-          `${this.pluralize(this._singularizedTableName(table))}`
+          `${this.distinctPluralize(this._singularizedTableName(table))}`
         );
       },
 
