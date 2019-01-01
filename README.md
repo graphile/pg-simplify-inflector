@@ -1,8 +1,8 @@
 # @graphile-contrib/pg-simplify-inflector
 
 This plugin simplifies relation names in the PostGraphile schema; e.g.
-`User.postsByAuthorId` becomes simply `User.posts`, and `Post.userByAuthorId`
-becomes simply `Post.author`.
+`allUsers` becomes simply `users`, `User.postsByAuthorId` becomes simply
+`User.posts`, and `Post.userByAuthorId` becomes simply `Post.author`.
 
 _Adding this plugin to your schema is almost certainly a breaking change, so do
 it before you ship anything!_
