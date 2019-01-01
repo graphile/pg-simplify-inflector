@@ -15,14 +15,15 @@ create table fish(
 insert into ponds (name) values ('Amy');
 insert into fish (pond_id, name) values (1, 'Blub'), (2, 'Bubble'), (3, 'Guber');
 
-create table companies(
+create table companies (
   id serial primary key,
   name text not null
 );
-
-create table beverages(
+create table beverages (
   id serial primary key,
   manufacturer_id int not null references companies,
-  distributor_id int not null references companies,
+  distributor_id int references companies,
   name text not null
 );
+comment on constraint "beverages_distributor_id_fkey" on "beverages" is
+  E'@foreignFieldName distributedBeverages';

@@ -5,7 +5,7 @@ type Beverage implements Node {
   nodeId: ID!
   id: Int!
   manufacturerId: Int!
-  distributorId: Int!
+  distributorId: Int
   name: String!
 
   """Reads a single `Company` that is related to this `Beverage`."""
@@ -37,7 +37,7 @@ input BeverageCondition {
 input BeverageInput {
   id: Int
   manufacturerId: Int!
-  distributorId: Int!
+  distributorId: Int
   name: String!
 }
 
@@ -184,7 +184,7 @@ type Company implements Node {
   ): [Beverage!]!
 
   """Reads and enables pagination through a set of `Beverage`."""
-  beveragesByDistributorId(
+  distributedBeverages(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -213,7 +213,7 @@ type Company implements Node {
   ): BeveragesConnection!
 
   """Reads and enables pagination through a set of `Beverage`."""
-  beveragesByDistributorIdList(
+  distributedBeveragesList(
     """Only read the first `n` values of the set."""
     first: Int
 
