@@ -113,7 +113,7 @@ module.exports = function PgSimplifyInflectorPlugin(
             },
             allRowsSimple(table) {
               return this.camelCase(
-                `${this.pluralize(this._singularizedTableName(table))}-list`
+                this.pluralize(this._singularizedTableName(table)) + (pgOmitListSuffix ? "" : "-list")
               );
             },
           }
