@@ -887,7 +887,7 @@ type Pond implements Node {
   name: String!
 
   """Reads and enables pagination through a set of `Fish`."""
-  fishByPondId(
+  fishes(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -916,7 +916,7 @@ type Pond implements Node {
   ): FishConnection!
 
   """Reads and enables pagination through a set of `Fish`."""
-  fishByPondIdList(
+  fishesList(
     """Only read the first `n` values of the set."""
     first: Int
 
