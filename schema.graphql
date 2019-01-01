@@ -4,12 +4,12 @@ type Beverage implements Node {
   """
   nodeId: ID!
   id: Int!
-  manufacturerId: Int!
+  companyId: Int!
   distributorId: Int
   name: String!
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  manufacturer: Company
+  company: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
   distributor: Company
@@ -23,8 +23,8 @@ input BeverageCondition {
   """Checks for equality with the object’s `id` field."""
   id: Int
 
-  """Checks for equality with the object’s `manufacturerId` field."""
-  manufacturerId: Int
+  """Checks for equality with the object’s `companyId` field."""
+  companyId: Int
 
   """Checks for equality with the object’s `distributorId` field."""
   distributorId: Int
@@ -36,7 +36,7 @@ input BeverageCondition {
 """An input for mutations affecting `Beverage`"""
 input BeverageInput {
   id: Int
-  manufacturerId: Int!
+  companyId: Int!
   distributorId: Int
   name: String!
 }
@@ -46,7 +46,7 @@ Represents an update to a `Beverage`. Fields that are set will be updated.
 """
 input BeveragePatch {
   id: Int
-  manufacturerId: Int
+  companyId: Int
   distributorId: Int
   name: String
 }
@@ -82,8 +82,8 @@ enum BeveragesOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
-  MANUFACTURER_ID_ASC
-  MANUFACTURER_ID_DESC
+  COMPANY_ID_ASC
+  COMPANY_ID_DESC
   DISTRIBUTOR_ID_ASC
   DISTRIBUTOR_ID_DESC
   NAME_ASC
@@ -138,7 +138,7 @@ type Company implements Node {
   name: String!
 
   """Reads and enables pagination through a set of `Beverage`."""
-  beveragesByManufacturerId(
+  beverages(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -167,7 +167,7 @@ type Company implements Node {
   ): BeveragesConnection!
 
   """Reads and enables pagination through a set of `Beverage`."""
-  beveragesByManufacturerIdList(
+  beveragesList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -284,7 +284,7 @@ type CreateBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  manufacturer: Company
+  company: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
   distributor: Company
@@ -449,7 +449,7 @@ type DeleteBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  manufacturer: Company
+  company: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
   distributor: Company
@@ -1278,7 +1278,7 @@ type UpdateBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  manufacturer: Company
+  company: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
   distributor: Company

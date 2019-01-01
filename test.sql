@@ -21,7 +21,7 @@ create table companies (
 );
 create table beverages (
   id serial primary key,
-  manufacturer_id int not null references companies,
+  company_id int not null references companies,
   distributor_id int references companies,
   name text not null
 );
