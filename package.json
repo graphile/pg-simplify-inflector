@@ -4,6 +4,7 @@
   "description": "Simplifies the graphile-build-pg inflector to trim the `ByFooIdAndBarId` from relations",
   "main": "index.js",
   "scripts": {
+    "postgraphile": "postgraphile --append-plugins \"$(pwd)/index.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

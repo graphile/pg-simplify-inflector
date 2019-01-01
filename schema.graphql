@@ -9,10 +9,10 @@ type Beverage implements Node {
   name: String!
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  companyByManufacturerId: Company
+  manufacturer: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  companyByDistributorId: Company
+  distributor: Company
 }
 
 """
@@ -284,10 +284,10 @@ type CreateBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  companyByManufacturerId: Company
+  manufacturer: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  companyByDistributorId: Company
+  distributor: Company
 
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
@@ -360,7 +360,7 @@ type CreateFishPayload {
   query: Query
 
   """Reads a single `Pond` that is related to this `Fish`."""
-  pondByPondId: Pond
+  pond: Pond
 
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
@@ -449,10 +449,10 @@ type DeleteBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  companyByManufacturerId: Company
+  manufacturer: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  companyByDistributorId: Company
+  distributor: Company
 
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
@@ -551,7 +551,7 @@ type DeleteFishPayload {
   query: Query
 
   """Reads a single `Pond` that is related to this `Fish`."""
-  pondByPondId: Pond
+  pond: Pond
 
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
@@ -618,7 +618,7 @@ type Fish implements Node {
   name: String!
 
   """Reads a single `Pond` that is related to this `Fish`."""
-  pondByPondId: Pond
+  pond: Pond
 }
 
 """
@@ -887,7 +887,7 @@ type Pond implements Node {
   name: String!
 
   """Reads and enables pagination through a set of `Fish`."""
-  fishByPondId(
+  fishes(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -916,7 +916,7 @@ type Pond implements Node {
   ): FishConnection!
 
   """Reads and enables pagination through a set of `Fish`."""
-  fishByPondIdList(
+  fishesList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1015,7 +1015,7 @@ type Query implements Node {
   ): Node
 
   """Reads and enables pagination through a set of `Beverage`."""
-  allBeverages(
+  beverages(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1044,7 +1044,7 @@ type Query implements Node {
   ): BeveragesConnection
 
   """Reads a set of `Beverage`."""
-  allBeveragesList(
+  beveragesList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1061,7 +1061,7 @@ type Query implements Node {
   ): [Beverage!]
 
   """Reads and enables pagination through a set of `Company`."""
-  allCompanies(
+  companies(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1090,7 +1090,7 @@ type Query implements Node {
   ): CompaniesConnection
 
   """Reads a set of `Company`."""
-  allCompaniesList(
+  companiesList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1107,7 +1107,7 @@ type Query implements Node {
   ): [Company!]
 
   """Reads and enables pagination through a set of `Fish`."""
-  allFish(
+  fishes(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1136,7 +1136,7 @@ type Query implements Node {
   ): FishConnection
 
   """Reads a set of `Fish`."""
-  allFishList(
+  fishesList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1153,7 +1153,7 @@ type Query implements Node {
   ): [Fish!]
 
   """Reads and enables pagination through a set of `Pond`."""
-  allPonds(
+  ponds(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1182,7 +1182,7 @@ type Query implements Node {
   ): PondsConnection
 
   """Reads a set of `Pond`."""
-  allPondsList(
+  pondsList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1238,7 +1238,7 @@ input UpdateBeverageByIdInput {
   """
   An object where the defined keys will be set on the `Beverage` being updated.
   """
-  beveragePatch: BeveragePatch!
+  patch: BeveragePatch!
   id: Int!
 }
 
@@ -1258,7 +1258,7 @@ input UpdateBeverageInput {
   """
   An object where the defined keys will be set on the `Beverage` being updated.
   """
-  beveragePatch: BeveragePatch!
+  patch: BeveragePatch!
 }
 
 """The output of our update `Beverage` mutation."""
@@ -1278,10 +1278,10 @@ type UpdateBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  companyByManufacturerId: Company
+  manufacturer: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  companyByDistributorId: Company
+  distributor: Company
 
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
@@ -1301,7 +1301,7 @@ input UpdateCompanyByIdInput {
   """
   An object where the defined keys will be set on the `Company` being updated.
   """
-  companyPatch: CompanyPatch!
+  patch: CompanyPatch!
   id: Int!
 }
 
@@ -1321,7 +1321,7 @@ input UpdateCompanyInput {
   """
   An object where the defined keys will be set on the `Company` being updated.
   """
-  companyPatch: CompanyPatch!
+  patch: CompanyPatch!
 }
 
 """The output of our update `Company` mutation."""
@@ -1358,7 +1358,7 @@ input UpdateFishByIdInput {
   """
   An object where the defined keys will be set on the `Fish` being updated.
   """
-  fishPatch: FishPatch!
+  patch: FishPatch!
   id: Int!
 }
 
@@ -1378,7 +1378,7 @@ input UpdateFishInput {
   """
   An object where the defined keys will be set on the `Fish` being updated.
   """
-  fishPatch: FishPatch!
+  patch: FishPatch!
 }
 
 """The output of our update `Fish` mutation."""
@@ -1398,7 +1398,7 @@ type UpdateFishPayload {
   query: Query
 
   """Reads a single `Pond` that is related to this `Fish`."""
-  pondByPondId: Pond
+  pond: Pond
 
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
@@ -1418,7 +1418,7 @@ input UpdatePondByIdInput {
   """
   An object where the defined keys will be set on the `Pond` being updated.
   """
-  pondPatch: PondPatch!
+  patch: PondPatch!
   id: Int!
 }
 
@@ -1438,7 +1438,7 @@ input UpdatePondInput {
   """
   An object where the defined keys will be set on the `Pond` being updated.
   """
-  pondPatch: PondPatch!
+  patch: PondPatch!
 }
 
 """The output of our update `Pond` mutation."""
