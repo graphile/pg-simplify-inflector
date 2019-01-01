@@ -167,6 +167,23 @@ type Company implements Node {
   ): BeveragesConnection!
 
   """Reads and enables pagination through a set of `Beverage`."""
+  beveragesByManufacturerIdList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Beverage`."""
+    orderBy: [BeveragesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BeverageCondition
+  ): [Beverage!]!
+
+  """Reads and enables pagination through a set of `Beverage`."""
   beveragesByDistributorId(
     """Only read the first `n` values of the set."""
     first: Int
@@ -194,6 +211,23 @@ type Company implements Node {
     """
     condition: BeverageCondition
   ): BeveragesConnection!
+
+  """Reads and enables pagination through a set of `Beverage`."""
+  beveragesByDistributorIdList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Beverage`."""
+    orderBy: [BeveragesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BeverageCondition
+  ): [Beverage!]!
 }
 
 """
@@ -880,6 +914,23 @@ type Pond implements Node {
     """
     condition: FishCondition
   ): FishConnection!
+
+  """Reads and enables pagination through a set of `Fish`."""
+  fishByPondIdList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Fish`."""
+    orderBy: [FishOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FishCondition
+  ): [Fish!]!
 }
 
 """
@@ -992,6 +1043,23 @@ type Query implements Node {
     condition: BeverageCondition
   ): BeveragesConnection
 
+  """Reads a set of `Beverage`."""
+  allBeveragesList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Beverage`."""
+    orderBy: [BeveragesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BeverageCondition
+  ): [Beverage!]
+
   """Reads and enables pagination through a set of `Company`."""
   allCompanies(
     """Only read the first `n` values of the set."""
@@ -1020,6 +1088,23 @@ type Query implements Node {
     """
     condition: CompanyCondition
   ): CompaniesConnection
+
+  """Reads a set of `Company`."""
+  allCompaniesList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Company`."""
+    orderBy: [CompaniesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CompanyCondition
+  ): [Company!]
 
   """Reads and enables pagination through a set of `Fish`."""
   allFish(
@@ -1050,6 +1135,23 @@ type Query implements Node {
     condition: FishCondition
   ): FishConnection
 
+  """Reads a set of `Fish`."""
+  allFishList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Fish`."""
+    orderBy: [FishOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FishCondition
+  ): [Fish!]
+
   """Reads and enables pagination through a set of `Pond`."""
   allPonds(
     """Only read the first `n` values of the set."""
@@ -1078,6 +1180,23 @@ type Query implements Node {
     """
     condition: PondCondition
   ): PondsConnection
+
+  """Reads a set of `Pond`."""
+  allPondsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Pond`."""
+    orderBy: [PondsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PondCondition
+  ): [Pond!]
   beverageById(id: Int!): Beverage
   companyById(id: Int!): Company
   fishById(id: Int!): Fish
