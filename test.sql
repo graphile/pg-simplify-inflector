@@ -13,11 +13,9 @@ create table companies(
   name text not null
 );
 
-/*
 create table beverages(
   id serial primary key,
   manufacturer_id int not null references companies,
   distributor_id int not null references companies,
   name text not null
 );
-*/

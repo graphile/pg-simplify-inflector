@@ -45,16 +45,16 @@ module.exports = function PgSimplifyInflectorPlugin(
     );
   }
 
-  builder.hook("inflection", inflection => {
+  builder.hook("inflection", oldInflection => {
     return {
-      ...inflection,
+      ...oldInflection,
 
       /*
        * This solves the issue with `blah-table1s` becoming `blahTable1S`
        * (i.e. the capital S at the end) or `table1-connection becoming `Table1SConnection`
        */
-      camelCase: fixCapitalisedPlural(inflection.camelCase),
-      upperCamelCase: fixCapitalisedPlural(inflection.upperCamelCase),
+      camelCase: fixCapitalisedPlural(oldInflection.camelCase),
+      upperCamelCase: fixCapitalisedPlural(oldInflection.upperCamelCase),
 
       distinctPluralize(str) {
         const singular = this.singularize(str);
@@ -149,7 +149,13 @@ module.exports = function PgSimplifyInflectorPlugin(
         if (baseName) {
           return this.camelCase(baseName);
         }
-        return this.camelCase(`${this._singularizedTableName(table)}`);
+        //return this.camelCase(`${this._singularizedTableName(table)}`);
+        return oldInflection.singleRelationByKeys(
+          detailedKeys,
+          table,
+          _foreignTable,
+          constraint
+        );
       },
 
       singleRelationByKeysBackwards(
@@ -171,7 +177,13 @@ module.exports = function PgSimplifyInflectorPlugin(
             `${oppositeBaseName}-${this._singularizedTableName(table)}`
           );
         }
-        return this.camelCase(`${this._singularizedTableName(table)}`);
+        //return this.camelCase(`${this._singularizedTableName(table)}`);
+        return oldInflection.singleRelationByKeysBackwards(
+          detailedKeys,
+          table,
+          _foreignTable,
+          constraint
+        );
       },
 
       manyRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
@@ -187,8 +199,16 @@ module.exports = function PgSimplifyInflectorPlugin(
             )}`
           );
         }
+        /*
         return this.camelCase(
           `${this.distinctPluralize(this._singularizedTableName(table))}`
+        );
+        */
+        return oldInflection.manyRelationByKeys(
+          detailedKeys,
+          table,
+          _foreignTable,
+          constraint
         );
       },
 
@@ -196,6 +216,7 @@ module.exports = function PgSimplifyInflectorPlugin(
         if (constraint.tags.foreignSimpleFieldName) {
           return constraint.tags.foreignSimpleFieldName;
         }
+        /*
         return this.camelCase(
           this.manyRelationByKeys(
             detailedKeys,
@@ -203,6 +224,13 @@ module.exports = function PgSimplifyInflectorPlugin(
             _foreignTable,
             constraint
           ) + (pgOmitListSuffix ? "" : "-list")
+        );
+        */
+        return oldInflection.manyRelationByKeysSimple(
+          detailedKeys,
+          table,
+          _foreignTable,
+          constraint
         );
       },
     };
