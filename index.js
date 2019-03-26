@@ -145,6 +145,16 @@ module.exports = function PgSimplifyInflectorPlugin(
             },
           }
         : null),
+      
+      computedColumnList(
+        pseudoColumnName,
+        proc,
+        _table,
+      ) {
+        return proc.tags.fieldName
+          ? proc.tags.fieldName +  (pgOmitListSuffix ? "" : "List")
+          : this.camelCase(pseudoColumnName + (pgOmitListSuffix ? "" : "-list"));
+      },
 
       singleRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
         if (constraint.tags.fieldName) {
