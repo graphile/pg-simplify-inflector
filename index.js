@@ -69,6 +69,13 @@ module.exports = function PgSimplifyInflectorPlugin(
         }
       },
 
+      // Fix a naming bug
+      deletedNodeId(table) {
+        return this.camelCase(
+          `deleted-${this.singularize(table.name)}-${nodeIdFieldName}`
+        );
+      },
+
       getBaseName(columnName) {
         const matches = columnName.match(
           /^(.+?)(_row_id|_id|_uuid|_fk|_pk|RowId|Id|Uuid|UUID|Fk|Pk)$/
