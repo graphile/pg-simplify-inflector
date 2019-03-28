@@ -311,6 +311,114 @@ module.exports = function PgSimplifyInflectorPlugin(
                 );
               }
             },
+
+            updateByKeys(detailedKeys, table, constraint) {
+              if (constraint.tags.updateFieldName) {
+                return constraint.tags.updateFieldName;
+              }
+              if (constraint.type === "p") {
+                return this.camelCase(
+                  `update-${this._singularizedTableName(table)}`
+                );
+              } else {
+                return this.camelCase(
+                  `update-${this._singularizedTableName(
+                    table
+                  )}-by-${detailedKeys
+                    .map(key => this.column(key))
+                    .join("-and-")}`
+                );
+              }
+            },
+            deleteByKeys(detailedKeys, table, constraint) {
+              if (constraint.tags.deleteFieldName) {
+                return constraint.tags.deleteFieldName;
+              }
+              if (constraint.type === "p") {
+                // Primary key, shorten!
+                return this.camelCase(
+                  `delete-${this._singularizedTableName(table)}`
+                );
+              } else {
+                return this.camelCase(
+                  `delete-${this._singularizedTableName(
+                    table
+                  )}-by-${detailedKeys
+                    .map(key => this.column(key))
+                    .join("-and-")}`
+                );
+              }
+            },
+            updateByKeysInputType(detailedKeys, table, constraint) {
+              if (constraint.tags.updateFieldName) {
+                return this.upperCamelCase(
+                  `${constraint.tags.updateFieldName}-input`
+                );
+              }
+              if (constraint.type === "p") {
+                // Primary key, shorten!
+                return this.upperCamelCase(
+                  `update-${this._singularizedTableName(table)}-input`
+                );
+              } else {
+                return this.upperCamelCase(
+                  `update-${this._singularizedTableName(
+                    table
+                  )}-by-${detailedKeys
+                    .map(key => this.column(key))
+                    .join("-and-")}-input`
+                );
+              }
+            },
+            deleteByKeysInputType(detailedKeys, table, constraint) {
+              if (constraint.tags.deleteFieldName) {
+                return this.upperCamelCase(
+                  `${constraint.tags.deleteFieldName}-input`
+                );
+              }
+              if (constraint.type === "p") {
+                // Primary key, shorten!
+                return this.upperCamelCase(
+                  `delete-${this._singularizedTableName(table)}-input`
+                );
+              } else {
+                return this.upperCamelCase(
+                  `delete-${this._singularizedTableName(
+                    table
+                  )}-by-${detailedKeys
+                    .map(key => this.column(key))
+                    .join("-and-")}-input`
+                );
+              }
+            },
+            updateNode(table) {
+              return this.camelCase(
+                `update-${this._singularizedTableName(
+                  table
+                )}-by-${nodeIdFieldName}`
+              );
+            },
+            deleteNode(table) {
+              return this.camelCase(
+                `delete-${this._singularizedTableName(
+                  table
+                )}-by-${nodeIdFieldName}`
+              );
+            },
+            updateNodeInputType(table) {
+              return this.upperCamelCase(
+                `update-${this._singularizedTableName(
+                  table
+                )}-by-${nodeIdFieldName}-input`
+              );
+            },
+            deleteNodeInputType(table) {
+              return this.upperCamelCase(
+                `delete-${this._singularizedTableName(
+                  table
+                )}-by-${nodeIdFieldName}-input`
+              );
+            },
           }
         : null),
     };
