@@ -27,9 +27,7 @@
     "url": "https://github.com/graphile-contrib/pg-simplify-inflector/issues"
   },
   "homepage": "https://github.com/graphile-contrib/pg-simplify-inflector#readme",
-  "files": [
-    "index.js"
-  ],
+  "files": ["index.js", "index.d.ts"],
   "devDependencies": {
     "postgraphile": "^4.2.0",
     "prettier": "^1.14.3"
