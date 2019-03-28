@@ -20,12 +20,6 @@ module.exports = function PgSimplifyInflectorPlugin(
   const hasSimpleCollections =
     pgSimpleCollections === "only" || pgSimpleCollections === "both";
 
-  if (hasConnections && hasSimpleCollections && pgOmitListSuffix) {
-    throw new Error(
-      "Cannot omit -list suffix (`pgOmitListSuffix`) if both relay connections and simple collections are enabled."
-    );
-  }
-
   if (
     hasSimpleCollections &&
     !hasConnections &&
@@ -37,6 +31,11 @@ module.exports = function PgSimplifyInflectorPlugin(
       "You can simplify the inflector further by adding `{graphileBuildOptions: {pgOmitListSuffix: true}}` to the options passed to PostGraphile, however be aware that doing so will mean that later enabling relay connections will be a breaking change. To dismiss this message, set `pgOmitListSuffix` to false instead."
     );
   }
+
+  const connectionSuffix = pgOmitListSuffix ? "-connection" : "";
+  const ConnectionSuffix = pgOmitListSuffix ? "Connection" : "";
+  const listSuffix = pgOmitListSuffix ? "" : "-list";
+  const ListSuffix = pgOmitListSuffix ? "" : "List";
 
   builder.hook("inflection", oldInflection => {
     return {
@@ -127,26 +126,31 @@ module.exports = function PgSimplifyInflectorPlugin(
         ? {
             allRows(table) {
               return this.camelCase(
-                this.distinctPluralize(this._singularizedTableName(table))
+                this.distinctPluralize(this._singularizedTableName(table)) +
+                  connectionSuffix
               );
             },
             allRowsSimple(table) {
               return this.camelCase(
                 this.distinctPluralize(this._singularizedTableName(table)) +
-                  (pgOmitListSuffix ? "" : "-list")
+                  listSuffix
               );
             },
           }
         : null),
-      
-      computedColumnList(
-        pseudoColumnName,
-        proc,
-        _table,
-      ) {
+
+      computedColumn(pseudoColumnName, proc, _table) {
         return proc.tags.fieldName
-          ? proc.tags.fieldName +  (pgOmitListSuffix ? "" : "List")
-          : this.camelCase(pseudoColumnName + (pgOmitListSuffix ? "" : "-list"));
+          ? proc.tags.fieldName + (proc.returnsSet ? ConnectionSuffix : "")
+          : this.camelCase(
+              pseudoColumnName + (proc.returnsSet ? connectionSuffix : "")
+            );
+      },
+
+      computedColumnList(pseudoColumnName, proc, _table) {
+        return proc.tags.fieldName
+          ? proc.tags.fieldName + ListSuffix
+          : this.camelCase(pseudoColumnName + listSuffix);
       },
 
       singleRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
@@ -198,10 +202,7 @@ module.exports = function PgSimplifyInflectorPlugin(
         );
       },
 
-      manyRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
-        if (constraint.tags.foreignFieldName) {
-          return constraint.tags.foreignFieldName;
-        }
+      _manyRelationByKeysBase(detailedKeys, table, _foreignTable, _constraint) {
         const baseName = this.getBaseNameFromKeys(detailedKeys);
         const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
         if (oppositeBaseName) {
@@ -216,26 +217,69 @@ module.exports = function PgSimplifyInflectorPlugin(
             `${this.distinctPluralize(this._singularizedTableName(table))}`
           );
         }
-        return oldInflection.manyRelationByKeys(
+        return null;
+      },
+
+      manyRelationByKeys(detailedKeys, table, foreignTable, constraint) {
+        if (constraint.tags.foreignFieldName) {
+          if (constraint.tags.foreignSimpleFieldName) {
+            return constraint.tags.foreignFieldName;
+          } else {
+            return constraint.tags.foreignFieldName + ConnectionSuffix;
+          }
+        }
+        const base = this._manyRelationByKeysBase(
           detailedKeys,
           table,
-          _foreignTable,
+          foreignTable,
           constraint
+        );
+        if (base) {
+          return base + ConnectionSuffix;
+        }
+        return (
+          oldInflection.manyRelationByKeys(
+            detailedKeys,
+            table,
+            foreignTable,
+            constraint
+          ) + ConnectionSuffix
         );
       },
 
-      manyRelationByKeysSimple(detailedKeys, table, _foreignTable, constraint) {
+      manyRelationByKeysSimple(detailedKeys, table, foreignTable, constraint) {
         if (constraint.tags.foreignSimpleFieldName) {
           return constraint.tags.foreignSimpleFieldName;
         }
-        return this.camelCase(
-          this.manyRelationByKeys(
+        if (constraint.tags.foreignFieldName) {
+          return constraint.tags.foreignFieldName + ListSuffix;
+        }
+        const base = this._manyRelationByKeysBase(
+          detailedKeys,
+          table,
+          foreignTable,
+          constraint
+        );
+        if (base) {
+          return base + ListSuffix;
+        }
+        return (
+          oldInflection.manyRelationByKeys(
             detailedKeys,
             table,
-            _foreignTable,
+            foreignTable,
             constraint
-          ) + (pgOmitListSuffix ? "" : "-list")
+          ) + ListSuffix
         );
+      },
+
+      functionQueryName(proc) {
+        return this.camelCase(
+          this._functionName(proc) + (proc.returnsSet ? connectionSuffix : "")
+        );
+      },
+      functionQueryNameList(proc) {
+        return this.camelCase(this._functionName(proc) + listSuffix);
       },
 
       ...(pgShortPk
