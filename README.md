@@ -112,8 +112,8 @@ app.use(
     // Optional customisation
     graphileBuildOptions: {
       /*
-       * Uncomment if you are using `simpleCollections: 'only'` and you never
-       * want relay connections
+       * Uncomment if you want simple collections to lose the 'List' suffix
+       * (and connections to gain a 'Connection' suffix).
        */
       //pgOmitListSuffix: true,
       /*
@@ -125,6 +125,12 @@ app.use(
        * Uncomment if you want 'allUsers' instead of 'users' at root level.
        */
       //pgSimplifyAllRows: false,
+      /*
+       * Uncomment if you want primary key queries and mutations to have
+       * `ById` (or similar) suffix; and the `nodeId` queries/mutations
+       * to lose their `ByNodeId` suffix.
+       */
+      // pgShortPk: true,
     },
     // ... other settings ...
   })
@@ -155,8 +161,8 @@ rather use shorter names, so we introduce a new inflector:
 the `_id`/`_fk` suffix, e.g. `author`, `editor`, `reviewer` above) and should
 return the opposite of that base name which will be prepended to the target
 type to produce, e.g. `authoredPosts`, `editedPosts`, `reviewedPosts`.
-Failing this, we just fall back to the default inflector; it will be up to
-you to add smart comments or a custom inflector to override these.
+Failing this, we just fall back to the default (verbose) inflector; it will be
+up to you to add smart comments or a custom inflector to override these.
 
 ## Handling field conflicts:
 

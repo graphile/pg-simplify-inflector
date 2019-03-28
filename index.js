@@ -5,7 +5,7 @@ function fixCapitalisedPlural(fn) {
   };
 }
 
-module.exports = function PgSimplifyInflectorPlugin(
+function PgSimplifyInflectorPlugin(
   builder,
   {
     pgSimpleCollections,
@@ -423,4 +423,9 @@ module.exports = function PgSimplifyInflectorPlugin(
         : null),
     };
   });
-};
+}
+
+module.exports = PgSimplifyInflectorPlugin;
+// Hacks for TypeScript/Babel import
+module.exports.default = PgSimplifyInflectorPlugin;
+Object.defineProperty(module.exports, "__esModule", { value: true });
