@@ -72,7 +72,7 @@ module.exports = function PgSimplifyInflectorPlugin(
 
       getBaseName(columnName) {
         const matches = columnName.match(
-          /^(.+?)(_row_id|_id|_uuid|_fk|RowId|Id|Uuid|UUID|Fk)$/
+          /^(.+?)(_row_id|_id|_uuid|_fk|_pk|RowId|Id|Uuid|UUID|Fk|Pk)$/
         );
         if (matches) {
           return matches[1];
