@@ -1,13 +1,3 @@
-/*
- * This plugin removes the 'ByFooIdAndBarId' from the end of relations.
- *
- * If this results in a field conflict in your GraphQL schema, use smart
- * comments to rename the conflicting foreign key constraint:
- *
- *   https://www.graphile.org/postgraphile/smart-comments/#renaming
- *
- */
-
 function fixCapitalisedPlural(fn) {
   return function(str) {
     const original = fn.call(this, str);
@@ -22,6 +12,8 @@ module.exports = function PgSimplifyInflectorPlugin(
     pgOmitListSuffix,
     pgSimplifyPatch = true,
     pgSimplifyAllRows = true,
+    pgShortPk = true,
+    nodeIdFieldName = "nodeId",
   }
 ) {
   const hasConnections = pgSimpleCollections !== "only";
@@ -244,6 +236,31 @@ module.exports = function PgSimplifyInflectorPlugin(
           ) + (pgOmitListSuffix ? "" : "-list")
         );
       },
+
+      ...(pgShortPk
+        ? {
+            tableNode(table) {
+              return this.camelCase(
+                `${this._singularizedTableName(table)}-by-${nodeIdFieldName}`
+              );
+            },
+            rowByUniqueKeys(detailedKeys, table, constraint) {
+              if (constraint.tags.fieldName) {
+                return constraint.tags.fieldName;
+              }
+              if (constraint.type === "p") {
+                // Primary key, shorten!
+                return this.camelCase(this._singularizedTableName(table));
+              } else {
+                return this.camelCase(
+                  `${this._singularizedTableName(table)}-by-${detailedKeys
+                    .map(key => this.column(key))
+                    .join("-and-")}`
+                );
+              }
+            },
+          }
+        : null),
     };
   });
 };
