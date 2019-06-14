@@ -5,6 +5,18 @@ function fixCapitalisedPlural(fn) {
   };
 }
 
+function fixChangePlural(fn) {
+  return function(str) {
+    const matches = str.match(/[A-Z_][a-z0-9]*$/);
+    const index = matches ? matches.index : 0;
+    const hasUnderscore = matches && matches[0].startsWith("_");
+    const splitIndex = hasUnderscore ? index + 1 : index;
+    const prefix = str.substr(0, splitIndex);
+    const word = str.substr(splitIndex);
+    return `${prefix}${fn(word)}`;
+  };
+}
+
 function PgSimplifyInflectorPlugin(
   builder,
   {
@@ -47,6 +59,13 @@ function PgSimplifyInflectorPlugin(
        */
       camelCase: fixCapitalisedPlural(oldInflection.camelCase),
       upperCamelCase: fixCapitalisedPlural(oldInflection.upperCamelCase),
+
+      /*
+       * Pluralize/singularize only supports single words, so only run
+       * on the final segment of a name.
+       */
+      pluralize: fixChangePlural(oldInflection.pluralize),
+      singularize: fixChangePlural(oldInflection.singularize),
 
       distinctPluralize(str) {
         const singular = this.singularize(str);
