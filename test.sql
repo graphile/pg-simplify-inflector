@@ -27,3 +27,8 @@ create table beverages (
 );
 comment on constraint "beverages_distributor_id_fkey" on "beverages" is
   E'@foreignFieldName distributedBeverages';
+
+create table foo_genera(
+  id serial primary key,
+  name text not null
+);
