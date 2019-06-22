@@ -7,13 +7,14 @@ function fixCapitalisedPlural(fn) {
 
 function fixChangePlural(fn) {
   return function(str) {
-    const matches = str.match(/[A-Z_][a-z0-9]*$/);
-    const index = matches ? matches.index : 0;
-    const hasUnderscore = matches && matches[0].startsWith("_");
-    const splitIndex = hasUnderscore ? index + 1 : index;
-    const prefix = str.substr(0, splitIndex);
-    const word = str.substr(splitIndex);
-    return `${prefix}${fn(word)}`;
+    const matches = str.match(/([A-Z]|_[a-z0-9])[a-z0-9]*_*$/);
+    const index = matches ? matches.index + matches[1].length - 1 : 0;
+    const suffixMatches = str.match(/_*$/);
+    const suffixIndex = suffixMatches.index;
+    const prefix = str.substr(0, index);
+    const word = str.substr(index, suffixIndex - index);
+    const suffix = str.substr(suffixIndex);
+    return `${prefix}${fn.call(this, word)}${suffix}`;
   };
 }
 
