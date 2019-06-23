@@ -26,6 +26,7 @@ function PgSimplifyInflectorPlugin(
     pgSimplifyPatch = true,
     pgSimplifyAllRows = true,
     pgShortPk = true,
+    pgSimplifyMultikeyRelations = true,
     nodeIdFieldName = "nodeId",
   }
 ) {
@@ -137,6 +138,16 @@ function PgSimplifyInflectorPlugin(
           const key = detailedKeys[0];
           const columnName = this._columnName(key);
           return this.getBaseName(columnName);
+        }
+        if (pgSimplifyMultikeyRelations) {
+          const columnNames = detailedKeys.map(key => this._columnName(key));
+          const baseNames = columnNames.map(columnName =>
+            this.getBaseName(columnName)
+          );
+          // Check none are null
+          if (baseNames.every(n => n)) {
+            return baseNames.join("-");
+          }
         }
         return null;
       },
