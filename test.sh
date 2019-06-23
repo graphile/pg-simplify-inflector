@@ -10,4 +10,4 @@ if command -v colordiff; then
 else
   COLORDIFF="cat"
 fi;
-diff -u ./schema.graphql ./schema.simplified.graphql | tee schema.diff | $COLORDIFF
+diff -u ./schema.graphql ./schema.simplified.graphql | tee schema.graphql.diff | $COLORDIFF
