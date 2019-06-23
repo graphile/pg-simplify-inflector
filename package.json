@@ -32,7 +32,7 @@
     "index.d.ts"
   ],
   "devDependencies": {
-    "postgraphile": "^4.2.0",
+    "postgraphile": "4.4.1",
     "prettier": "^1.14.3"
   }
 }

@@ -9,10 +9,10 @@ type Beverage implements Node {
   name: String!
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  company: Company
+  companyByCompanyId: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  distributor: Company
+  companyByDistributorId: Company
 }
 
 """
@@ -65,7 +65,7 @@ type BeveragesConnection {
   pageInfo: PageInfo!
 
   """The count of *all* `Beverage` you could get from the connection."""
-  totalCount: Int
+  totalCount: Int!
 }
 
 """A `Beverage` edge in the connection."""
@@ -106,7 +106,7 @@ type CompaniesConnection {
   pageInfo: PageInfo!
 
   """The count of *all* `Company` you could get from the connection."""
-  totalCount: Int
+  totalCount: Int!
 }
 
 """A `Company` edge in the connection."""
@@ -138,7 +138,7 @@ type Company implements Node {
   name: String!
 
   """Reads and enables pagination through a set of `Beverage`."""
-  beverages(
+  beveragesByCompanyId(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -167,7 +167,7 @@ type Company implements Node {
   ): BeveragesConnection!
 
   """Reads and enables pagination through a set of `Beverage`."""
-  beveragesList(
+  beveragesByCompanyIdList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -284,10 +284,10 @@ type CreateBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  company: Company
+  companyByCompanyId: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  distributor: Company
+  companyByDistributorId: Company
 
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
@@ -360,13 +360,48 @@ type CreateFishPayload {
   query: Query
 
   """Reads a single `Pond` that is related to this `Fish`."""
-  pond: Pond
+  pondByPondId: Pond
 
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
     """The method to use when ordering `Fish`."""
     orderBy: [FishOrderBy!] = PRIMARY_KEY_ASC
   ): FishEdge
+}
+
+"""All input for the create `FooGenera` mutation."""
+input CreateFooGeneraInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `FooGenera` to be created by this mutation."""
+  fooGenera: FooGeneraInput!
+}
+
+"""The output of our create `FooGenera` mutation."""
+type CreateFooGeneraPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `FooGenera` that was created by this mutation."""
+  fooGenera: FooGenera
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `FooGenera`. May be used by Relay 1."""
+  fooGeneraEdge(
+    """The method to use when ordering `FooGenera`."""
+    orderBy: [FooGenerasOrderBy!] = PRIMARY_KEY_ASC
+  ): FooGenerasEdge
 }
 
 """All input for the create `Pond` mutation."""
@@ -449,10 +484,10 @@ type DeleteBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  company: Company
+  companyByCompanyId: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  distributor: Company
+  companyByDistributorId: Company
 
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
@@ -551,13 +586,61 @@ type DeleteFishPayload {
   query: Query
 
   """Reads a single `Pond` that is related to this `Fish`."""
-  pond: Pond
+  pondByPondId: Pond
 
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
     """The method to use when ordering `Fish`."""
     orderBy: [FishOrderBy!] = PRIMARY_KEY_ASC
   ): FishEdge
+}
+
+"""All input for the `deleteFooGeneraById` mutation."""
+input DeleteFooGeneraByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""All input for the `deleteFooGenera` mutation."""
+input DeleteFooGeneraInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `FooGenera` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The output of our delete `FooGenera` mutation."""
+type DeleteFooGeneraPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `FooGenera` that was deleted by this mutation."""
+  fooGenera: FooGenera
+  deletedFooGeneraId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `FooGenera`. May be used by Relay 1."""
+  fooGeneraEdge(
+    """The method to use when ordering `FooGenera`."""
+    orderBy: [FooGenerasOrderBy!] = PRIMARY_KEY_ASC
+  ): FooGenerasEdge
 }
 
 """All input for the `deletePondById` mutation."""
@@ -618,7 +701,7 @@ type Fish implements Node {
   name: String!
 
   """Reads a single `Pond` that is related to this `Fish`."""
-  pond: Pond
+  pondByPondId: Pond
 }
 
 """
@@ -649,7 +732,7 @@ type FishConnection {
   pageInfo: PageInfo!
 
   """The count of *all* `Fish` you could get from the connection."""
-  totalCount: Int
+  totalCount: Int!
 }
 
 """A `Fish` edge in the connection."""
@@ -690,6 +773,78 @@ input FishPatch {
   name: String
 }
 
+type FooGenera implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  name: String!
+}
+
+"""
+A condition to be used against `FooGenera` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input FooGeneraCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""An input for mutations affecting `FooGenera`"""
+input FooGeneraInput {
+  id: Int
+  name: String!
+}
+
+"""
+Represents an update to a `FooGenera`. Fields that are set will be updated.
+"""
+input FooGeneraPatch {
+  id: Int
+  name: String
+}
+
+"""A connection to a list of `FooGenera` values."""
+type FooGenerasConnection {
+  """A list of `FooGenera` objects."""
+  nodes: [FooGenera]!
+
+  """
+  A list of edges which contains the `FooGenera` and cursor to aid in pagination.
+  """
+  edges: [FooGenerasEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `FooGenera` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `FooGenera` edge in the connection."""
+type FooGenerasEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `FooGenera` at the end of the edge."""
+  node: FooGenera
+}
+
+"""Methods to use when ordering `FooGenera`."""
+enum FooGenerasOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """
 The root mutation type which contains root level fields which mutate data.
 """
@@ -717,6 +872,14 @@ type Mutation {
     """
     input: CreateFishInput!
   ): CreateFishPayload
+
+  """Creates a single `FooGenera`."""
+  createFooGenera(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateFooGeneraInput!
+  ): CreateFooGeneraPayload
 
   """Creates a single `Pond`."""
   createPond(
@@ -773,6 +936,24 @@ type Mutation {
     """
     input: UpdateFishByIdInput!
   ): UpdateFishPayload
+
+  """
+  Updates a single `FooGenera` using its globally unique id and a patch.
+  """
+  updateFooGenera(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFooGeneraInput!
+  ): UpdateFooGeneraPayload
+
+  """Updates a single `FooGenera` using a unique key and a patch."""
+  updateFooGeneraById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFooGeneraByIdInput!
+  ): UpdateFooGeneraPayload
 
   """Updates a single `Pond` using its globally unique id and a patch."""
   updatePond(
@@ -838,6 +1019,22 @@ type Mutation {
     input: DeleteFishByIdInput!
   ): DeleteFishPayload
 
+  """Deletes a single `FooGenera` using its globally unique id."""
+  deleteFooGenera(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFooGeneraInput!
+  ): DeleteFooGeneraPayload
+
+  """Deletes a single `FooGenera` using a unique key."""
+  deleteFooGeneraById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFooGeneraByIdInput!
+  ): DeleteFooGeneraPayload
+
   """Deletes a single `Pond` using its globally unique id."""
   deletePond(
     """
@@ -887,7 +1084,7 @@ type Pond implements Node {
   name: String!
 
   """Reads and enables pagination through a set of `Fish`."""
-  fishes(
+  fishByPondId(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -916,7 +1113,7 @@ type Pond implements Node {
   ): FishConnection!
 
   """Reads and enables pagination through a set of `Fish`."""
-  fishesList(
+  fishByPondIdList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -972,7 +1169,7 @@ type PondsConnection {
   pageInfo: PageInfo!
 
   """The count of *all* `Pond` you could get from the connection."""
-  totalCount: Int
+  totalCount: Int!
 }
 
 """A `Pond` edge in the connection."""
@@ -1015,7 +1212,7 @@ type Query implements Node {
   ): Node
 
   """Reads and enables pagination through a set of `Beverage`."""
-  beverages(
+  allBeverages(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1044,7 +1241,7 @@ type Query implements Node {
   ): BeveragesConnection
 
   """Reads a set of `Beverage`."""
-  beveragesList(
+  allBeveragesList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1061,7 +1258,7 @@ type Query implements Node {
   ): [Beverage!]
 
   """Reads and enables pagination through a set of `Company`."""
-  companies(
+  allCompanies(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1090,7 +1287,7 @@ type Query implements Node {
   ): CompaniesConnection
 
   """Reads a set of `Company`."""
-  companiesList(
+  allCompaniesList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1107,7 +1304,7 @@ type Query implements Node {
   ): [Company!]
 
   """Reads and enables pagination through a set of `Fish`."""
-  fishes(
+  allFish(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1136,7 +1333,7 @@ type Query implements Node {
   ): FishConnection
 
   """Reads a set of `Fish`."""
-  fishesList(
+  allFishList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1152,8 +1349,54 @@ type Query implements Node {
     condition: FishCondition
   ): [Fish!]
 
+  """Reads and enables pagination through a set of `FooGenera`."""
+  allFooGeneras(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `FooGenera`."""
+    orderBy: [FooGenerasOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FooGeneraCondition
+  ): FooGenerasConnection
+
+  """Reads a set of `FooGenera`."""
+  allFooGenerasList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `FooGenera`."""
+    orderBy: [FooGenerasOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FooGeneraCondition
+  ): [FooGenera!]
+
   """Reads and enables pagination through a set of `Pond`."""
-  ponds(
+  allPonds(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1182,7 +1425,7 @@ type Query implements Node {
   ): PondsConnection
 
   """Reads a set of `Pond`."""
-  pondsList(
+  allPondsList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -1200,6 +1443,7 @@ type Query implements Node {
   beverageById(id: Int!): Beverage
   companyById(id: Int!): Company
   fishById(id: Int!): Fish
+  fooGeneraById(id: Int!): FooGenera
   pondById(id: Int!): Pond
 
   """Reads a single `Beverage` using its globally unique `ID`."""
@@ -1220,6 +1464,14 @@ type Query implements Node {
     nodeId: ID!
   ): Fish
 
+  """Reads a single `FooGenera` using its globally unique `ID`."""
+  fooGenera(
+    """
+    The globally unique `ID` to be used in selecting a single `FooGenera`.
+    """
+    nodeId: ID!
+  ): FooGenera
+
   """Reads a single `Pond` using its globally unique `ID`."""
   pond(
     """The globally unique `ID` to be used in selecting a single `Pond`."""
@@ -1238,7 +1490,7 @@ input UpdateBeverageByIdInput {
   """
   An object where the defined keys will be set on the `Beverage` being updated.
   """
-  patch: BeveragePatch!
+  beveragePatch: BeveragePatch!
   id: Int!
 }
 
@@ -1258,7 +1510,7 @@ input UpdateBeverageInput {
   """
   An object where the defined keys will be set on the `Beverage` being updated.
   """
-  patch: BeveragePatch!
+  beveragePatch: BeveragePatch!
 }
 
 """The output of our update `Beverage` mutation."""
@@ -1278,10 +1530,10 @@ type UpdateBeveragePayload {
   query: Query
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  company: Company
+  companyByCompanyId: Company
 
   """Reads a single `Company` that is related to this `Beverage`."""
-  distributor: Company
+  companyByDistributorId: Company
 
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
@@ -1301,7 +1553,7 @@ input UpdateCompanyByIdInput {
   """
   An object where the defined keys will be set on the `Company` being updated.
   """
-  patch: CompanyPatch!
+  companyPatch: CompanyPatch!
   id: Int!
 }
 
@@ -1321,7 +1573,7 @@ input UpdateCompanyInput {
   """
   An object where the defined keys will be set on the `Company` being updated.
   """
-  patch: CompanyPatch!
+  companyPatch: CompanyPatch!
 }
 
 """The output of our update `Company` mutation."""
@@ -1358,7 +1610,7 @@ input UpdateFishByIdInput {
   """
   An object where the defined keys will be set on the `Fish` being updated.
   """
-  patch: FishPatch!
+  fishPatch: FishPatch!
   id: Int!
 }
 
@@ -1378,7 +1630,7 @@ input UpdateFishInput {
   """
   An object where the defined keys will be set on the `Fish` being updated.
   """
-  patch: FishPatch!
+  fishPatch: FishPatch!
 }
 
 """The output of our update `Fish` mutation."""
@@ -1398,13 +1650,70 @@ type UpdateFishPayload {
   query: Query
 
   """Reads a single `Pond` that is related to this `Fish`."""
-  pond: Pond
+  pondByPondId: Pond
 
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
     """The method to use when ordering `Fish`."""
     orderBy: [FishOrderBy!] = PRIMARY_KEY_ASC
   ): FishEdge
+}
+
+"""All input for the `updateFooGeneraById` mutation."""
+input UpdateFooGeneraByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `FooGenera` being updated.
+  """
+  fooGeneraPatch: FooGeneraPatch!
+  id: Int!
+}
+
+"""All input for the `updateFooGenera` mutation."""
+input UpdateFooGeneraInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `FooGenera` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `FooGenera` being updated.
+  """
+  fooGeneraPatch: FooGeneraPatch!
+}
+
+"""The output of our update `FooGenera` mutation."""
+type UpdateFooGeneraPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `FooGenera` that was updated by this mutation."""
+  fooGenera: FooGenera
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `FooGenera`. May be used by Relay 1."""
+  fooGeneraEdge(
+    """The method to use when ordering `FooGenera`."""
+    orderBy: [FooGenerasOrderBy!] = PRIMARY_KEY_ASC
+  ): FooGenerasEdge
 }
 
 """All input for the `updatePondById` mutation."""
@@ -1418,7 +1727,7 @@ input UpdatePondByIdInput {
   """
   An object where the defined keys will be set on the `Pond` being updated.
   """
-  patch: PondPatch!
+  pondPatch: PondPatch!
   id: Int!
 }
 
@@ -1438,7 +1747,7 @@ input UpdatePondInput {
   """
   An object where the defined keys will be set on the `Pond` being updated.
   """
-  patch: PondPatch!
+  pondPatch: PondPatch!
 }
 
 """The output of our update `Pond` mutation."""
