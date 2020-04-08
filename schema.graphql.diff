@@ -31,7 +31,29 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -284,10 +284,10 @@
+@@ -230,10 +230,10 @@
+   ): [Beverage!]!
+ 
+   """Reads a single `Mascot` that is related to this `Company`."""
+-  mascotByCompanyId: Mascot
++  mascot: Mascot
+ 
+   """Reads and enables pagination through a set of `Mascot`."""
+-  mascotsByCompanyId(
++  mascots(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -259,7 +259,7 @@
+     A condition to be used in determining which values should be returned by the collection.
+     """
+     condition: MascotCondition
+-  ): MascotsConnection! @deprecated(reason: "Please use mascotByCompanyId instead")
++  ): MascotsConnection! @deprecated(reason: "Please use mascot instead")
+ }
+ 
+ """
+@@ -316,10 +316,10 @@
    query: Query
  
    """Reads a single `Company` that is related to this `Beverage`."""
@@ -105,8 +127,17 @@
 +  ): FooGeneraEdge
  }
  
- """All input for the create `Pond` mutation."""
-@@ -442,14 +442,18 @@
+ """All input for the create `Mascot` mutation."""
+@@ -465,7 +465,7 @@
+   query: Query
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """An edge for our `Mascot`. May be used by Relay 1."""
+   mascotEdge(
+@@ -512,14 +512,18 @@
  """A location in a connection that can be used for resuming pagination."""
  scalar Cursor
  
@@ -332,6 +363,64 @@
 +  ): FooGeneraEdge
  }
  
+ """All input for the `deleteMascotByCompanyId` mutation."""
+@@ -723,14 +723,18 @@
+   companyId: Int!
+ }
+ 
+-"""All input for the `deleteMascotById` mutation."""
+-input DeleteMascotByIdInput {
++"""All input for the `deleteMascotByNodeId` mutation."""
++input DeleteMascotByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Mascot` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteMascot` mutation."""
+@@ -740,11 +744,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Mascot` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Mascot` mutation."""
+@@ -757,7 +757,7 @@
+ 
+   """The `Mascot` that was deleted by this mutation."""
+   mascot: Mascot
+-  deletedMascotId: ID
++  deletedMascotNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -765,7 +765,7 @@
+   query: Query
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """An edge for our `Mascot`. May be used by Relay 1."""
+   mascotEdge(
+@@ -774,14 +774,18 @@
+   ): MascotsEdge
+ }
+ 
 -"""All input for the `deletePondById` mutation."""
 -input DeletePondByIdInput {
 +"""All input for the `deletePondByNodeId` mutation."""
@@ -499,10 +588,19 @@
 -  PRIMARY_KEY_DESC
 -}
 -
+ type Mascot implements Node {
+   """
+   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+@@ -986,7 +986,7 @@
+   name: String!
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ }
+ 
  """
- The root mutation type which contains root level fields which mutate data.
- """
-@@ -873,13 +873,13 @@
+@@ -1086,13 +1086,13 @@
      input: CreateFishInput!
    ): CreateFishPayload
  
@@ -518,9 +616,9 @@
 +    input: CreateFooGenusInput!
 +  ): CreateFooGenusPayload
  
-   """Creates a single `Pond`."""
-   createPond(
-@@ -890,165 +890,163 @@
+   """Creates a single `Mascot`."""
+   createMascot(
+@@ -1111,85 +1111,83 @@
    ): CreatePondPayload
  
    """Updates a single `Beverage` using its globally unique id and a patch."""
@@ -608,6 +706,30 @@
 -  ): UpdateFooGeneraPayload
 +    input: UpdateFooGenusInput!
 +  ): UpdateFooGenusPayload
+ 
+   """Updates a single `Mascot` using its globally unique id and a patch."""
+-  updateMascot(
++  updateMascotByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateMascotInput!
++    input: UpdateMascotByNodeIdInput!
+   ): UpdateMascotPayload
+ 
+   """Updates a single `Mascot` using a unique key and a patch."""
+-  updateMascotById(
++  updateMascot(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateMascotByIdInput!
++    input: UpdateMascotInput!
+   ): UpdateMascotPayload
+ 
+   """Updates a single `Mascot` using a unique key and a patch."""
+@@ -1201,99 +1199,99 @@
+   ): UpdateMascotPayload
  
    """Updates a single `Pond` using its globally unique id and a patch."""
 -  updatePond(
@@ -712,6 +834,30 @@
 -  ): DeleteFooGeneraPayload
 +    input: DeleteFooGenusInput!
 +  ): DeleteFooGenusPayload
+ 
+   """Deletes a single `Mascot` using its globally unique id."""
+-  deleteMascot(
++  deleteMascotByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteMascotInput!
++    input: DeleteMascotByNodeIdInput!
+   ): DeleteMascotPayload
+ 
+   """Deletes a single `Mascot` using a unique key."""
+-  deleteMascotById(
++  deleteMascot(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteMascotByIdInput!
++    input: DeleteMascotInput!
+   ): DeleteMascotPayload
+ 
+   """Deletes a single `Mascot` using a unique key."""
+@@ -1305,19 +1303,19 @@
+   ): DeleteMascotPayload
  
    """Deletes a single `Pond` using its globally unique id."""
 -  deletePond(
@@ -857,6 +1003,24 @@
 +    condition: FooGenusCondition
 +  ): [FooGenus!]
  
+   """Reads and enables pagination through a set of `Mascot`."""
+-  allMascots(
++  mascots(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1694,7 +1692,7 @@
+   ): MascotsConnection
+ 
+   """Reads a set of `Mascot`."""
+-  allMascotsList(
++  mascotsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1711,7 +1709,7 @@
+   ): [Mascot!]
+ 
    """Reads and enables pagination through a set of `Pond`."""
 -  allPonds(
 +  ponds(
@@ -880,11 +1044,14 @@
 -  companyById(id: Int!): Company
 -  fishById(id: Int!): Fish
 -  fooGeneraById(id: Int!): FooGenera
--  pondById(id: Int!): Pond
+-  mascotById(id: Int!): Mascot
 +  beverage(id: Int!): Beverage
 +  company(id: Int!): Company
 +  fish(id: Int!): Fish
 +  fooGenus(id: Int!): FooGenus
++  mascot(id: Int!): Mascot
+   mascotByCompanyId(companyId: Int!): Mascot
+-  pondById(id: Int!): Pond
 +  pond(id: Int!): Pond
  
    """Reads a single `Beverage` using its globally unique `ID`."""
@@ -919,6 +1086,13 @@
      nodeId: ID!
 -  ): FooGenera
 +  ): FooGenus
+ 
+   """Reads a single `Mascot` using its globally unique `ID`."""
+-  mascot(
++  mascotByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Mascot`."""
+     nodeId: ID!
+   ): Mascot
  
    """Reads a single `Pond` using its globally unique `ID`."""
 -  pond(
@@ -1163,6 +1337,70 @@
 +    """The method to use when ordering `FooGenus`."""
 +    orderBy: [FooGeneraOrderBy!] = PRIMARY_KEY_ASC
 +  ): FooGeneraEdge
+ }
+ 
+ """All input for the `updateMascotByCompanyId` mutation."""
+@@ -2050,12 +2046,12 @@
+   """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
++  patch: MascotPatch!
+   companyId: Int!
+ }
+ 
+-"""All input for the `updateMascotById` mutation."""
+-input UpdateMascotByIdInput {
++"""All input for the `updateMascotByNodeId` mutation."""
++input UpdateMascotByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -2063,10 +2059,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Mascot` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
+-  id: Int!
++  patch: MascotPatch!
+ }
+ 
+ """All input for the `updateMascot` mutation."""
+@@ -2078,14 +2078,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Mascot` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
++  patch: MascotPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Mascot` mutation."""
+@@ -2105,7 +2101,7 @@
+   query: Query
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """An edge for our `Mascot`. May be used by Relay 1."""
+   mascotEdge(
+@@ -2114,8 +2110,8 @@
+   ): MascotsEdge
  }
  
 -"""All input for the `updatePondById` mutation."""
