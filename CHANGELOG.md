@@ -1,8 +1,51 @@
+ALL MAJOR RELEASES ARE BREAKING.
+
+When the names in your GraphQL schema change you have to rewrite all your queries. You're not really meant to update major versions. Pick a major and stick to it.
+
+It's unlikely we'll have much in the way of minor releases since all naming changes are breaking.
+
 # v6.0.0
 
-Simplify multi-key relationships.
+#### Simplify multi-key relationships.
 
-Unique relations get shorter-named reverse field.
+```sql
+  foreign key (organization_id, team_id, goal_uuid) references goals
+```
+
+Now named better:
+
+```diff
+-  goalByOrganizationIdAndTeamIdAndGoalUuid: Goal
++  organizationTeamGoal: Goal
+```
+
+#### Unique relations get shorter-named reverse field.
+
+This was a bug (or, really, an omission) in v5.
+
+For this table:
+
+```sql
+create table mascots (
+    id serial primary key,
+    company_id int unique not null references companies,
+    name text not null
+);
+```
+
+Previously we had the plural relationship simplified:
+
+```diff
+-  mascotsByCompanyId(
++  mascots(
+```
+
+But the singular was not. This update changes the singular too:
+
+```diff
+-  mascotByCompanyId: Mascot
++  mascot: Mascot
+```
 
 # v5.0.0-beta.1
 
