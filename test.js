@@ -123,7 +123,7 @@ async function main() {
   for (const dir of dirs) {
     const stat = await fsp.stat(`${ROOT}/${dir}`);
     if (stat.isDirectory()) {
-      if (/^[a-z_]+$/.test(dir)) {
+      if (/^[a-z0-9_]+$/.test(dir)) {
         console.log(dir);
         await withCleanDb(pool => runTests(pool, dir));
       } else {
