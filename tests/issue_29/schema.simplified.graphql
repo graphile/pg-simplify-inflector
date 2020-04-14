@@ -146,7 +146,7 @@ input DeleteSomethingInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  somethingId: Int!
+  someId: Int!
 }
 
 """The output of our delete `Something` mutation."""
@@ -395,7 +395,7 @@ type Query implements Node {
     """
     condition: SomethingDatumCondition
   ): [SomethingDatum!]
-  something(somethingId: Int!): Something
+  something(someId: Int!): Something
   somethingDatum(somethingDataId: Int!): SomethingDatum
 
   """Reads a single `Something` using its globally unique `ID`."""
@@ -420,7 +420,7 @@ type Something implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-  somethingId: Int!
+  someId: Int!
   name: String
 
   """Reads and enables pagination through a set of `SomethingDatum`."""
@@ -475,8 +475,8 @@ A condition to be used against `Something` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input SomethingCondition {
-  """Checks for equality with the object’s `somethingId` field."""
-  somethingId: Int
+  """Checks for equality with the object’s `someId` field."""
+  someId: Int
 
   """Checks for equality with the object’s `name` field."""
   name: String
@@ -569,7 +569,7 @@ input SomethingDatumPatch {
 
 """An input for mutations affecting `Something`"""
 input SomethingInput {
-  somethingId: Int!
+  someId: Int!
   name: String
 }
 
@@ -577,7 +577,7 @@ input SomethingInput {
 Represents an update to a `Something`. Fields that are set will be updated.
 """
 input SomethingPatch {
-  somethingId: Int
+  someId: Int
   name: String
 }
 
@@ -610,8 +610,8 @@ type SomethingsEdge {
 """Methods to use when ordering `Something`."""
 enum SomethingsOrderBy {
   NATURAL
-  SOMETHING_ID_ASC
-  SOMETHING_ID_DESC
+  SOME_ID_ASC
+  SOME_ID_DESC
   NAME_ASC
   NAME_DESC
   PRIMARY_KEY_ASC
@@ -709,7 +709,7 @@ input UpdateSomethingInput {
   An object where the defined keys will be set on the `Something` being updated.
   """
   patch: SomethingPatch!
-  somethingId: Int!
+  someId: Int!
 }
 
 """The output of our update `Something` mutation."""

@@ -13,8 +13,8 @@
  """A location in a connection that can be used for resuming pagination."""
  scalar Cursor
  
--"""All input for the `deleteSomethingBySomethingId` mutation."""
--input DeleteSomethingBySomethingIdInput {
+-"""All input for the `deleteSomethingBySomeId` mutation."""
+-input DeleteSomethingBySomeIdInput {
 +"""All input for the `deleteSomethingByNodeId` mutation."""
 +input DeleteSomethingByNodeIdInput {
    """
@@ -22,7 +22,7 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
--  somethingId: Int!
+-  someId: Int!
 +
 +  """
 +  The globally unique `ID` which will identify a single `Something` to be deleted.
@@ -88,7 +88,7 @@
 -  The globally unique `ID` which will identify a single `Something` to be deleted.
 -  """
 -  nodeId: ID!
-+  somethingId: Int!
++  someId: Int!
  }
  
  """The output of our delete `Something` mutation."""
@@ -115,12 +115,12 @@
    ): UpdateSomethingPayload
  
    """Updates a single `Something` using a unique key and a patch."""
--  updateSomethingBySomethingId(
+-  updateSomethingBySomeId(
 +  updateSomething(
      """
      The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
      """
--    input: UpdateSomethingBySomethingIdInput!
+-    input: UpdateSomethingBySomeIdInput!
 +    input: UpdateSomethingInput!
    ): UpdateSomethingPayload
  
@@ -157,12 +157,12 @@
    ): DeleteSomethingPayload
  
    """Deletes a single `Something` using a unique key."""
--  deleteSomethingBySomethingId(
+-  deleteSomethingBySomeId(
 +  deleteSomething(
      """
      The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
      """
--    input: DeleteSomethingBySomethingIdInput!
+-    input: DeleteSomethingBySomeIdInput!
 +    input: DeleteSomethingInput!
    ): DeleteSomethingPayload
  
@@ -227,9 +227,9 @@
      """
      condition: SomethingDatumCondition
    ): [SomethingDatum!]
--  somethingBySomethingId(somethingId: Int!): Something
+-  somethingBySomeId(someId: Int!): Something
 -  somethingDatumBySomethingDataId(somethingDataId: Int!): SomethingDatum
-+  something(somethingId: Int!): Something
++  something(someId: Int!): Something
 +  somethingDatum(somethingDataId: Int!): SomethingDatum
  
    """Reads a single `Something` using its globally unique `ID`."""
@@ -278,8 +278,8 @@
    PRIMARY_KEY_DESC
  }
  
--"""All input for the `updateSomethingBySomethingId` mutation."""
--input UpdateSomethingBySomethingIdInput {
+-"""All input for the `updateSomethingBySomeId` mutation."""
+-input UpdateSomethingBySomeIdInput {
 +"""All input for the `updateSomethingByNodeId` mutation."""
 +input UpdateSomethingByNodeIdInput {
    """
@@ -297,7 +297,7 @@
    An object where the defined keys will be set on the `Something` being updated.
    """
 -  somethingPatch: SomethingPatch!
--  somethingId: Int!
+-  someId: Int!
 +  patch: SomethingPatch!
  }
  
@@ -364,7 +364,7 @@
    """
 -  somethingPatch: SomethingPatch!
 +  patch: SomethingPatch!
-+  somethingId: Int!
++  someId: Int!
  }
  
  """The output of our update `Something` mutation."""
