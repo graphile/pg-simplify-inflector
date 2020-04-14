@@ -43,11 +43,11 @@ const withClient = async (pool, cb) => {
 };
 
 async function withCleanDb(cb) {
-  await withPool(ROOT_CONNECTION_STRING, async pool => {
+  await withPool(ROOT_CONNECTION_STRING, async (pool) => {
     await pool.query(`DROP DATABASE IF EXISTS ${DATABASE_NAME};`);
     await pool.query(`CREATE DATABASE ${DATABASE_NAME};`);
   });
-  await withPool(DATABASE_NAME, async pool => cb(pool));
+  await withPool(DATABASE_NAME, async (pool) => cb(pool));
 }
 
 async function getSchema(client, withSimplify = false) {
@@ -59,7 +59,7 @@ async function getSchema(client, withSimplify = false) {
 
 async function runTests(pool, dir) {
   const schema = await fsp.readFile(`${ROOT}/${dir}/schema.sql`, "utf8");
-  await withClient(pool, async client => {
+  await withClient(pool, async (client) => {
     await client.query(`
       set search_path to public;
       create extension if not exists pgcrypto;
@@ -96,15 +96,15 @@ async function runTests(pool, dir) {
       );
       const buffers = [];
 
-      child.stdout.on("data", data => {
+      child.stdout.on("data", (data) => {
         buffers.push(data);
       });
 
-      child.stderr.on("data", data => {
+      child.stderr.on("data", (data) => {
         console.error(`stderr: ${data}`);
       });
 
-      child.on("close", code => {
+      child.on("close", (code) => {
         const data = Buffer.concat(buffers).toString("utf8");
         if (data.length) {
           resolve(data);
@@ -125,7 +125,7 @@ async function main() {
     if (stat.isDirectory()) {
       if (/^[a-z0-9_]+$/.test(dir)) {
         console.log(dir);
-        await withCleanDb(pool => runTests(pool, dir));
+        await withCleanDb((pool) => runTests(pool, dir));
       } else {
         console.warn(
           `Skipping '${dir}' because it does not adhere to the naming convention`
@@ -135,7 +135,7 @@ async function main() {
   }
 }
 
-withPool("postgres", main).catch(e => {
+withPool("postgres", main).catch((e) => {
   console.error(e);
   process.exit(1);
 });

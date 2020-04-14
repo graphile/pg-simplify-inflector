@@ -1,12 +1,14 @@
 function fixCapitalisedPlural(fn) {
-  return function(str) {
+  return function (str) {
     const original = fn.call(this, str);
-    return original.replace(/[0-9]S(?=[A-Z]|$)/g, match => match.toLowerCase());
+    return original.replace(/[0-9]S(?=[A-Z]|$)/g, (match) =>
+      match.toLowerCase()
+    );
   };
 }
 
 function fixChangePlural(fn) {
-  return function(str) {
+  return function (str) {
     const matches = str.match(/([A-Z]|_[a-z0-9])[a-z0-9]*_*$/);
     const index = matches ? matches.index + matches[1].length - 1 : 0;
     const suffixMatches = str.match(/_*$/);
@@ -51,7 +53,7 @@ function PgSimplifyInflectorPlugin(
   const listSuffix = pgOmitListSuffix ? "" : "-list";
   const ListSuffix = pgOmitListSuffix ? "" : "List";
 
-  builder.hook("inflection", oldInflection => {
+  builder.hook("inflection", (oldInflection) => {
     return {
       ...oldInflection,
 
@@ -140,12 +142,12 @@ function PgSimplifyInflectorPlugin(
           return this.getBaseName(columnName);
         }
         if (pgSimplifyMultikeyRelations) {
-          const columnNames = detailedKeys.map(key => this._columnName(key));
-          const baseNames = columnNames.map(columnName =>
+          const columnNames = detailedKeys.map((key) => this._columnName(key));
+          const baseNames = columnNames.map((columnName) =>
             this.getBaseName(columnName)
           );
           // Check none are null
-          if (baseNames.every(n => n)) {
+          if (baseNames.every((n) => n)) {
             return baseNames.join("-");
           }
         }
@@ -336,8 +338,10 @@ function PgSimplifyInflectorPlugin(
                 return this.camelCase(this._singularizedTableName(table));
               } else {
                 return this.camelCase(
-                  `${this._singularizedTableName(table)}-by-${detailedKeys
-                    .map(key => this.column(key))
+                  `${this._singularizedTableName(
+                    table
+                  )}-by-${detailedKeys
+                    .map((key) => this.column(key))
                     .join("-and-")}`
                 );
               }
@@ -356,7 +360,7 @@ function PgSimplifyInflectorPlugin(
                   `update-${this._singularizedTableName(
                     table
                   )}-by-${detailedKeys
-                    .map(key => this.column(key))
+                    .map((key) => this.column(key))
                     .join("-and-")}`
                 );
               }
@@ -375,7 +379,7 @@ function PgSimplifyInflectorPlugin(
                   `delete-${this._singularizedTableName(
                     table
                   )}-by-${detailedKeys
-                    .map(key => this.column(key))
+                    .map((key) => this.column(key))
                     .join("-and-")}`
                 );
               }
@@ -396,7 +400,7 @@ function PgSimplifyInflectorPlugin(
                   `update-${this._singularizedTableName(
                     table
                   )}-by-${detailedKeys
-                    .map(key => this.column(key))
+                    .map((key) => this.column(key))
                     .join("-and-")}-input`
                 );
               }
@@ -417,7 +421,7 @@ function PgSimplifyInflectorPlugin(
                   `delete-${this._singularizedTableName(
                     table
                   )}-by-${detailedKeys
-                    .map(key => this.column(key))
+                    .map((key) => this.column(key))
                     .join("-and-")}-input`
                 );
               }

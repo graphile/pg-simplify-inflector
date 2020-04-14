@@ -1,22 +1,23 @@
 # @graphile-contrib/pg-simplify-inflector
 
-This plugin simplifies field names in the PostGraphile schema; e.g.
-`allUsers` becomes simply `users`, `User.postsByAuthorId` becomes simply
-`User.posts`, and `Post.userByAuthorId` becomes simply `Post.author`.
+This plugin simplifies field names in the PostGraphile schema; e.g. `allUsers`
+becomes simply `users`, `User.postsByAuthorId` becomes simply `User.posts`, and
+`Post.userByAuthorId` becomes simply `Post.author`.
 
 **Adding this plugin to your schema is almost certainly a breaking change, so do
-it before you ship anything!** This is the primary reason this isn't enabled by default in PostGraphile.
+it before you ship anything!** This is the primary reason this isn't enabled by
+default in PostGraphile.
 
 _This plugin is recommended for all PostGraphile users._
 
 ## Customising
 
-This plugin is implemented as a single JS file that does not need to be
-compiled at all - you can simply copy it into your project and customise it as
-you see fit.
+This plugin is implemented as a single JS file that does not need to be compiled
+at all - you can simply copy it into your project and customise it as you see
+fit.
 
-Alternatively, you can [write your own inflection
-plugin](https://www.graphile.org/postgraphile/inflection/).
+Alternatively, you can
+[write your own inflection plugin](https://www.graphile.org/postgraphile/inflection/).
 
 ## Changes:
 
@@ -35,18 +36,24 @@ create table beverages (
 );
 ```
 
-- `Query.allCompanies` 👉 `Query.companies` (disable via `pgSimplifyAllRows = false`)
+- `Query.allCompanies` 👉 `Query.companies` (disable via
+  `pgSimplifyAllRows = false`)
 - `Query.allBeverages` 👉 `Query.beverages`
 - `Beverage.companyByCompanyId` 👉 `Beverage.company`
 - `Beverage.companyByDistributorId` 👉 `Beverage.distributor`
-- `Company.beveragesByCompanyId` 👉 `Company.beverages` (because the `company_id` column follows the `[table_name]_id` naming convention)
+- `Company.beveragesByCompanyId` 👉 `Company.beverages` (because the
+  `company_id` column follows the `[table_name]_id` naming convention)
 - All update mutations now accept `patch` instead of `companyPatch` /
   `beveragePatch` (disable via `pgSimplifyPatch = false`)
 - If you are using `pgSimpleCollections = "only"` then you can set
   `pgOmitListSuffix = true` to omit the `List` suffix
-- Fields where the singular and plural are the same and a distinct plural is required are force-pluralised ("fishes") to avoid conflicts (e.g. `singularize("fish") === pluralize("fish")`).
+- Fields where the singular and plural are the same and a distinct plural is
+  required are force-pluralised ("fishes") to avoid conflicts (e.g.
+  `singularize("fish") === pluralize("fish")`).
 
-Note: `Company.beveragesByDistributorId` will remain, because `distributor_id` does not follow the `[table_name]_id` naming convention, but you could rename this yourself with a smart comment:
+Note: `Company.beveragesByDistributorId` will remain, because `distributor_id`
+does not follow the `[table_name]_id` naming convention, but you could rename
+this yourself with a smart comment:
 
 ```sql
 comment on constraint "beverages_distributor_id_fkey" on "beverages" is
@@ -154,29 +161,27 @@ We can automatically extract the field prefix: `author` and call the relation
 `author`, `editor`, `reviewer`, etc. all which point to `users`.
 
 The reverse, however, is not so easy. On the User type, we can't call the
-reverse of all these different relations `posts`. The default inflector
-refers to these as `postsByAuthorId`, `postsByEditorId`, etc. However we'd
-rather use shorter names, so we introduce a new inflector:
-`getOppositeBaseName`. This inflector is passed a baseName (the part without
-the `_id`/`_fk` suffix, e.g. `author`, `editor`, `reviewer` above) and should
-return the opposite of that base name which will be prepended to the target
-type to produce, e.g. `authoredPosts`, `editedPosts`, `reviewedPosts`.
-Failing this, we just fall back to the default (verbose) inflector; it will be
-up to you to add smart comments or a custom inflector to override these.
+reverse of all these different relations `posts`. The default inflector refers
+to these as `postsByAuthorId`, `postsByEditorId`, etc. However we'd rather use
+shorter names, so we introduce a new inflector: `getOppositeBaseName`. This
+inflector is passed a baseName (the part without the `_id`/`_fk` suffix, e.g.
+`author`, `editor`, `reviewer` above) and should return the opposite of that
+base name which will be prepended to the target type to produce, e.g.
+`authoredPosts`, `editedPosts`, `reviewedPosts`. Failing this, we just fall back
+to the default (verbose) inflector; it will be up to you to add smart comments
+or a custom inflector to override these.
 
 ## Handling field conflicts:
 
 In most cases, the conflict errors will guide you on how to fix these issues
-using [smart
-comments](https://www.graphile.org/postgraphile/smart-comments/).
+using [smart comments](https://www.graphile.org/postgraphile/smart-comments/).
 
 ## New smart tags
 
-`@foreignSimpleFieldName` was added to override the naming of the
-foreign-side of a one-to-many relationship's simple collections field (if
-you're using simple collections). By default we'll take the
-`@foreignFieldName` and add the "list suffix" ("List" by default, but "" if
-`pgOmitListSuffix` is set), but if you prefer you can override it entirely
-with `@foreignSimpleFieldName`. If you set `@foreignSimpleFieldName` and
-you're using `simpleCollections 'both'` then you should also set
-`@foreignFieldName` explicitly or unexpected things may occur.
+`@foreignSimpleFieldName` was added to override the naming of the foreign-side
+of a one-to-many relationship's simple collections field (if you're using simple
+collections). By default we'll take the `@foreignFieldName` and add the "list
+suffix" ("List" by default, but "" if `pgOmitListSuffix` is set), but if you
+prefer you can override it entirely with `@foreignSimpleFieldName`. If you set
+`@foreignSimpleFieldName` and you're using `simpleCollections 'both'` then you
+should also set `@foreignFieldName` explicitly or unexpected things may occur.

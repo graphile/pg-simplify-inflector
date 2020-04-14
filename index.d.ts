@@ -1,2 +1,2 @@
-declare const PgSimplifyInflectorPlugin: import('graphile-build').Plugin;
+declare const PgSimplifyInflectorPlugin: import("graphile-build").Plugin;
 export default PgSimplifyInflectorPlugin;
