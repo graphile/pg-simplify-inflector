@@ -1,5 +1,5 @@
---- /home/benjie/Dev/graphile/pg-simplify-inflector/tests/fish/schema.unsimplified.graphql	2020-04-14 12:20:02.722937651 +0100
-+++ /home/benjie/Dev/graphile/pg-simplify-inflector/tests/fish/schema.simplified.graphql	2020-04-14 12:20:02.726937651 +0100
+--- unsimplified
++++ simplified
 @@ -27,7 +27,7 @@
    query: Query
  

@@ -1,5 +1,5 @@
---- /home/benjie/Dev/graphile/pg-simplify-inflector/tests/multikey_refs/schema.unsimplified.graphql	2020-04-14 12:28:00.530919438 +0100
-+++ /home/benjie/Dev/graphile/pg-simplify-inflector/tests/multikey_refs/schema.simplified.graphql	2020-04-14 12:28:00.530919438 +0100
+--- unsimplified
++++ simplified
 @@ -29,16 +29,16 @@
    """
    Reads a single `Organization` that is related to this `GoalContributor`.

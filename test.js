@@ -79,9 +79,21 @@ async function runTests(pool, dir) {
     await fsp.writeFile(afterPath, printSchema(after));
 
     const diff = await new Promise((resolve, reject) => {
-      const child = child_process.spawn("diff", ["-u", beforePath, afterPath], {
-        stdio: "pipe",
-      });
+      const child = child_process.spawn(
+        "diff",
+        [
+          "-u",
+          "--label",
+          "unsimplified",
+          beforePath,
+          "--label",
+          "simplified",
+          afterPath,
+        ],
+        {
+          stdio: "pipe",
+        }
+      );
       const buffers = [];
 
       child.stdout.on("data", data => {
