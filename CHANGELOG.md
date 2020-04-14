@@ -1,3 +1,9 @@
+# v6.0.0
+
+Simplify multi-key relationships.
+
+Unique relations get shorter-named reverse field.
+
 # v5.0.0-beta.1
 
 # v5.0.0-beta.0
