@@ -1,10 +1,25 @@
 ALL MAJOR RELEASES ARE BREAKING.
 
-When the names in your GraphQL schema change you have to rewrite all your queries. You're not really meant to update major versions. Pick a major and stick to it.
+When the names in your GraphQL schema change you have to rewrite all your
+queries. You're not really meant to update major versions. Pick a major and
+stick to it.
 
-It's unlikely we'll have much in the way of minor releases since all naming changes are breaking.
+It's unlikely we'll have much in the way of minor releases since all naming
+changes are breaking.
 
 # v6.0.0
+
+#### Pluralization fixes
+
+Previously we fed the entire table/etc name into `pluralize` but this causes
+issues for special cases, for example while `pluralize('genus')` correctly gives
+`genera`, `pluralize('old_genus')` would give `old_genus` which is not correct.
+
+Now we segment on underscores/capitals and only pluralize the final segment, so
+we're more likely to get the correct result.
+
+This affects everywhere in your entire GraphQL schema where
+pluralize/singularize is used.
 
 #### Simplify multi-key relationships.
 
@@ -51,8 +66,8 @@ But the singular was not. This update changes the singular too:
 
 # v5.0.0-beta.0
 
-More advanced guesses at field names for reverse relations. Ability to omit
-list suffix, simplify patch names, turn on/off simplifying of the 'all' from
+More advanced guesses at field names for reverse relations. Ability to omit list
+suffix, simplify patch names, turn on/off simplifying of the 'all' from
 'allUsers', ability to change the 'ById' primary key fields to not have that
 suffix and instead have the node ID fetchers have a suffix.
 
@@ -62,9 +77,9 @@ Simplifies naming in more of the schema.
 
 # v2.0.0
 
-Breaking change: single relation names based on a single key are now named
-after the key rather than the target table so long as the key is of the form
-`foo_id`, `foo_uuid`.
+Breaking change: single relation names based on a single key are now named after
+the key rather than the target table so long as the key is of the form `foo_id`,
+`foo_uuid`.
 
 ```sql
 create table posts (
