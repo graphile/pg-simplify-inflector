@@ -61,6 +61,9 @@ async function runTests(pool, dir) {
   const schema = await fsp.readFile(`${ROOT}/${dir}/schema.sql`, "utf8");
   await withClient(pool, async client => {
     await client.query(`
+      set search_path to public;
+      create extension if not exists pgcrypto;
+
       drop schema if exists app_public cascade;
       create schema app_public;
       set search_path to app_public, public;
