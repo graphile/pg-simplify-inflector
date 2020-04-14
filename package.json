@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "postgraphile": "postgraphile --append-plugins \"$(pwd)/index.js\"",
+    "lint:fix": "yarn prettier --write",
+    "prettier": "prettier --ignore-path ./.eslintignore '**/*.{js,jsx,ts,tsx,graphql,md,json,yml}'",
     "test": "node test.js"
   },
   "repository": {

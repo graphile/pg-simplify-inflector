@@ -1,0 +1,3 @@
+node_modules/
+tests/*/schema.simplified.graphql
+tests/*/schema.unsimplified.graphql
