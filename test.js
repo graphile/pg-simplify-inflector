@@ -121,9 +121,16 @@ async function runTests(pool, dir) {
 async function main() {
   const dirs = await fsp.readdir(ROOT);
   for (const dir of dirs) {
-    console.log(dir);
-    if (/^[a-z_]+$/.test(dir)) {
-      await withCleanDb(pool => runTests(pool, dir));
+    const stat = await fsp.stat(`${ROOT}/${dir}`);
+    if (stat.isDirectory()) {
+      if (/^[a-z_]+$/.test(dir)) {
+        console.log(dir);
+        await withCleanDb(pool => runTests(pool, dir));
+      } else {
+        console.warn(
+          `Skipping '${dir}' because it does not adhere to the naming convention`
+        );
+      }
     }
   }
 }
