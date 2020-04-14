@@ -169,3 +169,14 @@ up to you to add smart comments or a custom inflector to override these.
 In most cases, the conflict errors will guide you on how to fix these issues
 using [smart
 comments](https://www.graphile.org/postgraphile/smart-comments/).
+
+## New smart tags
+
+`@foreignSimpleFieldName` was added to override the naming of the
+foreign-side of a one-to-many relationship's simple collections field (if
+you're using simple collections). By default we'll take the
+`@foreignFieldName` and add the "list suffix" ("List" by default, but "" if
+`pgOmitListSuffix` is set), but if you prefer you can override it entirely
+with `@foreignSimpleFieldName`. If you set `@foreignSimpleFieldName` and
+you're using `simpleCollections 'both'` then you should also set
+`@foreignFieldName` explicitly or unexpected things may occur.
