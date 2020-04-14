@@ -1,3 +1,22 @@
+# v6.0.0
+
+Simplify multi-key relationships.
+
+Unique relations get shorter-named reverse field.
+
+# v5.0.0-beta.1
+
+# v5.0.0-beta.0
+
+More advanced guesses at field names for reverse relations. Ability to omit
+list suffix, simplify patch names, turn on/off simplifying of the 'all' from
+'allUsers', ability to change the 'ById' primary key fields to not have that
+suffix and instead have the node ID fetchers have a suffix.
+
+# v3.0.0
+
+Simplifies naming in more of the schema.
+
 # v2.0.0
 
 Breaking change: single relation names based on a single key are now named

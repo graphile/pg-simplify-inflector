@@ -1,0 +1,1006 @@
+--- unsimplified
++++ simplified
+@@ -29,16 +29,16 @@
+   """
+   Reads a single `Organization` that is related to this `GoalContributor`.
+   """
+-  organizationByOrganizationId: Organization
++  organization: Organization
+ 
+   """Reads a single `Goal` that is related to this `GoalContributor`."""
+-  goalByOrganizationIdAndTeamIdAndGoalUuid: Goal
++  organizationTeamGoal: Goal
+ 
+   """Reads a single `Team` that is related to this `GoalContributor`."""
+-  teamByTeamId: Team
++  team: Team
+ 
+   """Reads a single `User` that is related to this `GoalContributor`."""
+-  userByContributorId: User
++  contributor: User
+ 
+   """An edge for our `GoalContributor`. May be used by Relay 1."""
+   goalContributorEdge(
+@@ -76,10 +76,10 @@
+   query: Query
+ 
+   """Reads a single `Organization` that is related to this `Goal`."""
+-  organizationByOrganizationId: Organization
++  organization: Organization
+ 
+   """Reads a single `Team` that is related to this `Goal`."""
+-  teamByTeamId: Team
++  team: Team
+ 
+   """An edge for our `Goal`. May be used by Relay 1."""
+   goalEdge(
+@@ -196,28 +196,32 @@
+ """A location in a connection that can be used for resuming pagination."""
+ scalar Cursor
+ 
+-"""
+-All input for the `deleteGoalByOrganizationIdAndTeamIdAndGoalUuid` mutation.
+-"""
+-input DeleteGoalByOrganizationIdAndTeamIdAndGoalUuidInput {
++"""All input for the `deleteGoalByNodeId` mutation."""
++input DeleteGoalByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  organizationId: Int!
+-  teamId: Int!
+-  goalUuid: UUID!
++
++  """
++  The globally unique `ID` which will identify a single `Goal` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+-"""All input for the `deleteGoalContributorById` mutation."""
+-input DeleteGoalContributorByIdInput {
++"""All input for the `deleteGoalContributorByNodeId` mutation."""
++input DeleteGoalContributorByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `GoalContributor` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteGoalContributor` mutation."""
+@@ -227,11 +231,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `GoalContributor` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `GoalContributor` mutation."""
+@@ -244,7 +244,7 @@
+ 
+   """The `GoalContributor` that was deleted by this mutation."""
+   goalContributor: GoalContributor
+-  deletedGoalContributorId: ID
++  deletedGoalContributorNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -254,16 +254,16 @@
+   """
+   Reads a single `Organization` that is related to this `GoalContributor`.
+   """
+-  organizationByOrganizationId: Organization
++  organization: Organization
+ 
+   """Reads a single `Goal` that is related to this `GoalContributor`."""
+-  goalByOrganizationIdAndTeamIdAndGoalUuid: Goal
++  organizationTeamGoal: Goal
+ 
+   """Reads a single `Team` that is related to this `GoalContributor`."""
+-  teamByTeamId: Team
++  team: Team
+ 
+   """Reads a single `User` that is related to this `GoalContributor`."""
+-  userByContributorId: User
++  contributor: User
+ 
+   """An edge for our `GoalContributor`. May be used by Relay 1."""
+   goalContributorEdge(
+@@ -279,11 +279,9 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Goal` to be deleted.
+-  """
+-  nodeId: ID!
++  organizationId: Int!
++  teamId: Int!
++  goalUuid: UUID!
+ }
+ 
+ """The output of our delete `Goal` mutation."""
+@@ -296,7 +294,7 @@
+ 
+   """The `Goal` that was deleted by this mutation."""
+   goal: Goal
+-  deletedGoalId: ID
++  deletedGoalNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -304,10 +302,10 @@
+   query: Query
+ 
+   """Reads a single `Organization` that is related to this `Goal`."""
+-  organizationByOrganizationId: Organization
++  organization: Organization
+ 
+   """Reads a single `Team` that is related to this `Goal`."""
+-  teamByTeamId: Team
++  team: Team
+ 
+   """An edge for our `Goal`. May be used by Relay 1."""
+   goalEdge(
+@@ -316,14 +314,18 @@
+   ): GoalsEdge
+ }
+ 
+-"""All input for the `deleteOrganizationById` mutation."""
+-input DeleteOrganizationByIdInput {
++"""All input for the `deleteOrganizationByNodeId` mutation."""
++input DeleteOrganizationByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Organization` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteOrganization` mutation."""
+@@ -333,11 +335,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Organization` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Organization` mutation."""
+@@ -350,7 +348,7 @@
+ 
+   """The `Organization` that was deleted by this mutation."""
+   organization: Organization
+-  deletedOrganizationId: ID
++  deletedOrganizationNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -364,14 +362,18 @@
+   ): OrganizationsEdge
+ }
+ 
+-"""All input for the `deleteTeamById` mutation."""
+-input DeleteTeamByIdInput {
++"""All input for the `deleteTeamByNodeId` mutation."""
++input DeleteTeamByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Team` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteTeam` mutation."""
+@@ -381,11 +383,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Team` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Team` mutation."""
+@@ -398,7 +396,7 @@
+ 
+   """The `Team` that was deleted by this mutation."""
+   team: Team
+-  deletedTeamId: ID
++  deletedTeamNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -412,14 +410,18 @@
+   ): TeamsEdge
+ }
+ 
+-"""All input for the `deleteUserById` mutation."""
+-input DeleteUserByIdInput {
++"""All input for the `deleteUserByNodeId` mutation."""
++input DeleteUserByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `User` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteUser` mutation."""
+@@ -429,11 +431,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `User` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `User` mutation."""
+@@ -446,7 +444,7 @@
+ 
+   """The `User` that was deleted by this mutation."""
+   user: User
+-  deletedUserId: ID
++  deletedUserNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -471,10 +469,10 @@
+   aim: String
+ 
+   """Reads a single `Organization` that is related to this `Goal`."""
+-  organizationByOrganizationId: Organization
++  organization: Organization
+ 
+   """Reads a single `Team` that is related to this `Goal`."""
+-  teamByTeamId: Team
++  team: Team
+ 
+   """Reads and enables pagination through a set of `GoalContributor`."""
+   goalContributorsByOrganizationIdAndTeamIdAndGoalUuid(
+@@ -555,16 +553,16 @@
+   """
+   Reads a single `Organization` that is related to this `GoalContributor`.
+   """
+-  organizationByOrganizationId: Organization
++  organization: Organization
+ 
+   """Reads a single `Goal` that is related to this `GoalContributor`."""
+-  goalByOrganizationIdAndTeamIdAndGoalUuid: Goal
++  organizationTeamGoal: Goal
+ 
+   """Reads a single `Team` that is related to this `GoalContributor`."""
+-  teamByTeamId: Team
++  team: Team
+ 
+   """Reads a single `User` that is related to this `GoalContributor`."""
+-  userByContributorId: User
++  contributor: User
+ }
+ 
+ """
+@@ -766,165 +764,165 @@
+   """
+   Updates a single `GoalContributor` using its globally unique id and a patch.
+   """
+-  updateGoalContributor(
++  updateGoalContributorByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateGoalContributorInput!
++    input: UpdateGoalContributorByNodeIdInput!
+   ): UpdateGoalContributorPayload
+ 
+   """Updates a single `GoalContributor` using a unique key and a patch."""
+-  updateGoalContributorById(
++  updateGoalContributor(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateGoalContributorByIdInput!
++    input: UpdateGoalContributorInput!
+   ): UpdateGoalContributorPayload
+ 
+   """Updates a single `Goal` using its globally unique id and a patch."""
+-  updateGoal(
++  updateGoalByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateGoalInput!
++    input: UpdateGoalByNodeIdInput!
+   ): UpdateGoalPayload
+ 
+   """Updates a single `Goal` using a unique key and a patch."""
+-  updateGoalByOrganizationIdAndTeamIdAndGoalUuid(
++  updateGoal(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateGoalByOrganizationIdAndTeamIdAndGoalUuidInput!
++    input: UpdateGoalInput!
+   ): UpdateGoalPayload
+ 
+   """
+   Updates a single `Organization` using its globally unique id and a patch.
+   """
+-  updateOrganization(
++  updateOrganizationByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateOrganizationInput!
++    input: UpdateOrganizationByNodeIdInput!
+   ): UpdateOrganizationPayload
+ 
+   """Updates a single `Organization` using a unique key and a patch."""
+-  updateOrganizationById(
++  updateOrganization(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateOrganizationByIdInput!
++    input: UpdateOrganizationInput!
+   ): UpdateOrganizationPayload
+ 
+   """Updates a single `Team` using its globally unique id and a patch."""
+-  updateTeam(
++  updateTeamByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateTeamInput!
++    input: UpdateTeamByNodeIdInput!
+   ): UpdateTeamPayload
+ 
+   """Updates a single `Team` using a unique key and a patch."""
+-  updateTeamById(
++  updateTeam(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateTeamByIdInput!
++    input: UpdateTeamInput!
+   ): UpdateTeamPayload
+ 
+   """Updates a single `User` using its globally unique id and a patch."""
+-  updateUser(
++  updateUserByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateUserInput!
++    input: UpdateUserByNodeIdInput!
+   ): UpdateUserPayload
+ 
+   """Updates a single `User` using a unique key and a patch."""
+-  updateUserById(
++  updateUser(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateUserByIdInput!
++    input: UpdateUserInput!
+   ): UpdateUserPayload
+ 
+   """Deletes a single `GoalContributor` using its globally unique id."""
+-  deleteGoalContributor(
++  deleteGoalContributorByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteGoalContributorInput!
++    input: DeleteGoalContributorByNodeIdInput!
+   ): DeleteGoalContributorPayload
+ 
+   """Deletes a single `GoalContributor` using a unique key."""
+-  deleteGoalContributorById(
++  deleteGoalContributor(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteGoalContributorByIdInput!
++    input: DeleteGoalContributorInput!
+   ): DeleteGoalContributorPayload
+ 
+   """Deletes a single `Goal` using its globally unique id."""
+-  deleteGoal(
++  deleteGoalByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteGoalInput!
++    input: DeleteGoalByNodeIdInput!
+   ): DeleteGoalPayload
+ 
+   """Deletes a single `Goal` using a unique key."""
+-  deleteGoalByOrganizationIdAndTeamIdAndGoalUuid(
++  deleteGoal(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteGoalByOrganizationIdAndTeamIdAndGoalUuidInput!
++    input: DeleteGoalInput!
+   ): DeleteGoalPayload
+ 
+   """Deletes a single `Organization` using its globally unique id."""
+-  deleteOrganization(
++  deleteOrganizationByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteOrganizationInput!
++    input: DeleteOrganizationByNodeIdInput!
+   ): DeleteOrganizationPayload
+ 
+   """Deletes a single `Organization` using a unique key."""
+-  deleteOrganizationById(
++  deleteOrganization(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteOrganizationByIdInput!
++    input: DeleteOrganizationInput!
+   ): DeleteOrganizationPayload
+ 
+   """Deletes a single `Team` using its globally unique id."""
+-  deleteTeam(
++  deleteTeamByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteTeamInput!
++    input: DeleteTeamByNodeIdInput!
+   ): DeleteTeamPayload
+ 
+   """Deletes a single `Team` using a unique key."""
+-  deleteTeamById(
++  deleteTeam(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteTeamByIdInput!
++    input: DeleteTeamInput!
+   ): DeleteTeamPayload
+ 
+   """Deletes a single `User` using its globally unique id."""
+-  deleteUser(
++  deleteUserByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteUserInput!
++    input: DeleteUserByNodeIdInput!
+   ): DeleteUserPayload
+ 
+   """Deletes a single `User` using a unique key."""
+-  deleteUserById(
++  deleteUser(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteUserByIdInput!
++    input: DeleteUserInput!
+   ): DeleteUserPayload
+ }
+ 
+@@ -945,7 +943,7 @@
+   name: String
+ 
+   """Reads and enables pagination through a set of `Goal`."""
+-  goalsByOrganizationId(
++  goals(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -974,7 +972,7 @@
+   ): GoalsConnection!
+ 
+   """Reads and enables pagination through a set of `Goal`."""
+-  goalsByOrganizationIdList(
++  goalsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -991,7 +989,7 @@
+   ): [Goal!]!
+ 
+   """Reads and enables pagination through a set of `GoalContributor`."""
+-  goalContributorsByOrganizationId(
++  goalContributors(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1020,7 +1018,7 @@
+   ): GoalContributorsConnection!
+ 
+   """Reads and enables pagination through a set of `GoalContributor`."""
+-  goalContributorsByOrganizationIdList(
++  goalContributorsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1135,7 +1133,7 @@
+   ): Node
+ 
+   """Reads and enables pagination through a set of `GoalContributor`."""
+-  allGoalContributors(
++  goalContributors(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1164,7 +1162,7 @@
+   ): GoalContributorsConnection
+ 
+   """Reads a set of `GoalContributor`."""
+-  allGoalContributorsList(
++  goalContributorsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1181,7 +1179,7 @@
+   ): [GoalContributor!]
+ 
+   """Reads and enables pagination through a set of `Goal`."""
+-  allGoals(
++  goals(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1210,7 +1208,7 @@
+   ): GoalsConnection
+ 
+   """Reads a set of `Goal`."""
+-  allGoalsList(
++  goalsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1227,7 +1225,7 @@
+   ): [Goal!]
+ 
+   """Reads and enables pagination through a set of `Organization`."""
+-  allOrganizations(
++  organizations(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1256,7 +1254,7 @@
+   ): OrganizationsConnection
+ 
+   """Reads a set of `Organization`."""
+-  allOrganizationsList(
++  organizationsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1273,7 +1271,7 @@
+   ): [Organization!]
+ 
+   """Reads and enables pagination through a set of `Team`."""
+-  allTeams(
++  teams(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1302,7 +1300,7 @@
+   ): TeamsConnection
+ 
+   """Reads a set of `Team`."""
+-  allTeamsList(
++  teamsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1319,7 +1317,7 @@
+   ): [Team!]
+ 
+   """Reads and enables pagination through a set of `User`."""
+-  allUsers(
++  users(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1348,7 +1346,7 @@
+   ): UsersConnection
+ 
+   """Reads a set of `User`."""
+-  allUsersList(
++  usersList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1363,14 +1361,14 @@
+     """
+     condition: UserCondition
+   ): [User!]
+-  goalContributorById(id: Int!): GoalContributor
+-  goalByOrganizationIdAndTeamIdAndGoalUuid(organizationId: Int!, teamId: Int!, goalUuid: UUID!): Goal
+-  organizationById(id: Int!): Organization
+-  teamById(id: Int!): Team
+-  userById(id: Int!): User
++  goalContributor(id: Int!): GoalContributor
++  goal(organizationId: Int!, teamId: Int!, goalUuid: UUID!): Goal
++  organization(id: Int!): Organization
++  team(id: Int!): Team
++  user(id: Int!): User
+ 
+   """Reads a single `GoalContributor` using its globally unique `ID`."""
+-  goalContributor(
++  goalContributorByNodeId(
+     """
+     The globally unique `ID` to be used in selecting a single `GoalContributor`.
+     """
+@@ -1378,13 +1376,13 @@
+   ): GoalContributor
+ 
+   """Reads a single `Goal` using its globally unique `ID`."""
+-  goal(
++  goalByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Goal`."""
+     nodeId: ID!
+   ): Goal
+ 
+   """Reads a single `Organization` using its globally unique `ID`."""
+-  organization(
++  organizationByNodeId(
+     """
+     The globally unique `ID` to be used in selecting a single `Organization`.
+     """
+@@ -1392,13 +1390,13 @@
+   ): Organization
+ 
+   """Reads a single `Team` using its globally unique `ID`."""
+-  team(
++  teamByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Team`."""
+     nodeId: ID!
+   ): Team
+ 
+   """Reads a single `User` using its globally unique `ID`."""
+-  user(
++  userByNodeId(
+     """The globally unique `ID` to be used in selecting a single `User`."""
+     nodeId: ID!
+   ): User
+@@ -1413,7 +1411,7 @@
+   name: String
+ 
+   """Reads and enables pagination through a set of `Goal`."""
+-  goalsByTeamId(
++  goals(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1442,7 +1440,7 @@
+   ): GoalsConnection!
+ 
+   """Reads and enables pagination through a set of `Goal`."""
+-  goalsByTeamIdList(
++  goalsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1459,7 +1457,7 @@
+   ): [Goal!]!
+ 
+   """Reads and enables pagination through a set of `GoalContributor`."""
+-  goalContributorsByTeamId(
++  goalContributors(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1488,7 +1486,7 @@
+   ): GoalContributorsConnection!
+ 
+   """Reads and enables pagination through a set of `GoalContributor`."""
+-  goalContributorsByTeamIdList(
++  goalContributorsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1567,10 +1565,8 @@
+   PRIMARY_KEY_DESC
+ }
+ 
+-"""
+-All input for the `updateGoalByOrganizationIdAndTeamIdAndGoalUuid` mutation.
+-"""
+-input UpdateGoalByOrganizationIdAndTeamIdAndGoalUuidInput {
++"""All input for the `updateGoalByNodeId` mutation."""
++input UpdateGoalByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1578,16 +1574,18 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Goal` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Goal` being updated.
+   """
+-  goalPatch: GoalPatch!
+-  organizationId: Int!
+-  teamId: Int!
+-  goalUuid: UUID!
++  patch: GoalPatch!
+ }
+ 
+-"""All input for the `updateGoalContributorById` mutation."""
+-input UpdateGoalContributorByIdInput {
++"""All input for the `updateGoalContributorByNodeId` mutation."""
++input UpdateGoalContributorByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1595,10 +1593,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `GoalContributor` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `GoalContributor` being updated.
+   """
+-  goalContributorPatch: GoalContributorPatch!
+-  id: Int!
++  patch: GoalContributorPatch!
+ }
+ 
+ """All input for the `updateGoalContributor` mutation."""
+@@ -1610,14 +1612,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `GoalContributor` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `GoalContributor` being updated.
+   """
+-  goalContributorPatch: GoalContributorPatch!
++  patch: GoalContributorPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `GoalContributor` mutation."""
+@@ -1639,16 +1637,16 @@
+   """
+   Reads a single `Organization` that is related to this `GoalContributor`.
+   """
+-  organizationByOrganizationId: Organization
++  organization: Organization
+ 
+   """Reads a single `Goal` that is related to this `GoalContributor`."""
+-  goalByOrganizationIdAndTeamIdAndGoalUuid: Goal
++  organizationTeamGoal: Goal
+ 
+   """Reads a single `Team` that is related to this `GoalContributor`."""
+-  teamByTeamId: Team
++  team: Team
+ 
+   """Reads a single `User` that is related to this `GoalContributor`."""
+-  userByContributorId: User
++  contributor: User
+ 
+   """An edge for our `GoalContributor`. May be used by Relay 1."""
+   goalContributorEdge(
+@@ -1666,14 +1664,12 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Goal` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Goal` being updated.
+   """
+-  goalPatch: GoalPatch!
++  patch: GoalPatch!
++  organizationId: Int!
++  teamId: Int!
++  goalUuid: UUID!
+ }
+ 
+ """The output of our update `Goal` mutation."""
+@@ -1693,10 +1689,10 @@
+   query: Query
+ 
+   """Reads a single `Organization` that is related to this `Goal`."""
+-  organizationByOrganizationId: Organization
++  organization: Organization
+ 
+   """Reads a single `Team` that is related to this `Goal`."""
+-  teamByTeamId: Team
++  team: Team
+ 
+   """An edge for our `Goal`. May be used by Relay 1."""
+   goalEdge(
+@@ -1705,8 +1701,8 @@
+   ): GoalsEdge
+ }
+ 
+-"""All input for the `updateOrganizationById` mutation."""
+-input UpdateOrganizationByIdInput {
++"""All input for the `updateOrganizationByNodeId` mutation."""
++input UpdateOrganizationByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1714,10 +1710,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Organization` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Organization` being updated.
+   """
+-  organizationPatch: OrganizationPatch!
+-  id: Int!
++  patch: OrganizationPatch!
+ }
+ 
+ """All input for the `updateOrganization` mutation."""
+@@ -1729,14 +1729,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Organization` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Organization` being updated.
+   """
+-  organizationPatch: OrganizationPatch!
++  patch: OrganizationPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Organization` mutation."""
+@@ -1762,8 +1758,8 @@
+   ): OrganizationsEdge
+ }
+ 
+-"""All input for the `updateTeamById` mutation."""
+-input UpdateTeamByIdInput {
++"""All input for the `updateTeamByNodeId` mutation."""
++input UpdateTeamByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1771,10 +1767,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Team` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Team` being updated.
+   """
+-  teamPatch: TeamPatch!
+-  id: Int!
++  patch: TeamPatch!
+ }
+ 
+ """All input for the `updateTeam` mutation."""
+@@ -1786,14 +1786,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Team` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Team` being updated.
+   """
+-  teamPatch: TeamPatch!
++  patch: TeamPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Team` mutation."""
+@@ -1819,8 +1815,8 @@
+   ): TeamsEdge
+ }
+ 
+-"""All input for the `updateUserById` mutation."""
+-input UpdateUserByIdInput {
++"""All input for the `updateUserByNodeId` mutation."""
++input UpdateUserByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1828,10 +1824,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `User` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `User` being updated.
+   """
+-  userPatch: UserPatch!
+-  id: Int!
++  patch: UserPatch!
+ }
+ 
+ """All input for the `updateUser` mutation."""
+@@ -1843,14 +1843,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `User` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `User` being updated.
+   """
+-  userPatch: UserPatch!
++  patch: UserPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `User` mutation."""
