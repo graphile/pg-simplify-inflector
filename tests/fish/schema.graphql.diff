@@ -1,0 +1,374 @@
+--- /home/benjie/Dev/graphile/pg-simplify-inflector/tests/fish/schema.graphql	2020-04-14 12:10:33.810889912 +0100
++++ /home/benjie/Dev/graphile/pg-simplify-inflector/tests/fish/schema.simplified.graphql	2020-04-14 12:10:33.810889912 +0100
+@@ -27,7 +27,7 @@
+   query: Query
+ 
+   """Reads a single `Pond` that is related to this `Fish`."""
+-  pondByPondId: Pond
++  pond: Pond
+ 
+   """An edge for our `Fish`. May be used by Relay 1."""
+   fishEdge(
+@@ -74,14 +74,18 @@
+ """A location in a connection that can be used for resuming pagination."""
+ scalar Cursor
+ 
+-"""All input for the `deleteFishById` mutation."""
+-input DeleteFishByIdInput {
++"""All input for the `deleteFishByNodeId` mutation."""
++input DeleteFishByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Fish` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteFish` mutation."""
+@@ -91,11 +95,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Fish` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Fish` mutation."""
+@@ -108,7 +108,7 @@
+ 
+   """The `Fish` that was deleted by this mutation."""
+   fish: Fish
+-  deletedFishId: ID
++  deletedFishNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -116,7 +116,7 @@
+   query: Query
+ 
+   """Reads a single `Pond` that is related to this `Fish`."""
+-  pondByPondId: Pond
++  pond: Pond
+ 
+   """An edge for our `Fish`. May be used by Relay 1."""
+   fishEdge(
+@@ -125,14 +125,18 @@
+   ): FishEdge
+ }
+ 
+-"""All input for the `deletePondById` mutation."""
+-input DeletePondByIdInput {
++"""All input for the `deletePondByNodeId` mutation."""
++input DeletePondByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Pond` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deletePond` mutation."""
+@@ -142,11 +146,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Pond` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Pond` mutation."""
+@@ -159,7 +159,7 @@
+ 
+   """The `Pond` that was deleted by this mutation."""
+   pond: Pond
+-  deletedPondId: ID
++  deletedPondNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -183,7 +183,7 @@
+   name: String!
+ 
+   """Reads a single `Pond` that is related to this `Fish`."""
+-  pondByPondId: Pond
++  pond: Pond
+ }
+ 
+ """
+@@ -276,67 +276,67 @@
+   ): CreatePondPayload
+ 
+   """Updates a single `Fish` using its globally unique id and a patch."""
+-  updateFish(
++  updateFishByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateFishInput!
++    input: UpdateFishByNodeIdInput!
+   ): UpdateFishPayload
+ 
+   """Updates a single `Fish` using a unique key and a patch."""
+-  updateFishById(
++  updateFish(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateFishByIdInput!
++    input: UpdateFishInput!
+   ): UpdateFishPayload
+ 
+   """Updates a single `Pond` using its globally unique id and a patch."""
+-  updatePond(
++  updatePondByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdatePondInput!
++    input: UpdatePondByNodeIdInput!
+   ): UpdatePondPayload
+ 
+   """Updates a single `Pond` using a unique key and a patch."""
+-  updatePondById(
++  updatePond(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdatePondByIdInput!
++    input: UpdatePondInput!
+   ): UpdatePondPayload
+ 
+   """Deletes a single `Fish` using its globally unique id."""
+-  deleteFish(
++  deleteFishByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteFishInput!
++    input: DeleteFishByNodeIdInput!
+   ): DeleteFishPayload
+ 
+   """Deletes a single `Fish` using a unique key."""
+-  deleteFishById(
++  deleteFish(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteFishByIdInput!
++    input: DeleteFishInput!
+   ): DeleteFishPayload
+ 
+   """Deletes a single `Pond` using its globally unique id."""
+-  deletePond(
++  deletePondByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeletePondInput!
++    input: DeletePondByNodeIdInput!
+   ): DeletePondPayload
+ 
+   """Deletes a single `Pond` using a unique key."""
+-  deletePondById(
++  deletePond(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeletePondByIdInput!
++    input: DeletePondInput!
+   ): DeletePondPayload
+ }
+ 
+@@ -372,7 +372,7 @@
+   name: String!
+ 
+   """Reads and enables pagination through a set of `Fish`."""
+-  fishByPondId(
++  fishes(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -401,7 +401,7 @@
+   ): FishConnection!
+ 
+   """Reads and enables pagination through a set of `Fish`."""
+-  fishByPondIdList(
++  fishesList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -500,7 +500,7 @@
+   ): Node
+ 
+   """Reads and enables pagination through a set of `Fish`."""
+-  allFish(
++  fishes(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -529,7 +529,7 @@
+   ): FishConnection
+ 
+   """Reads a set of `Fish`."""
+-  allFishList(
++  fishesList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -546,7 +546,7 @@
+   ): [Fish!]
+ 
+   """Reads and enables pagination through a set of `Pond`."""
+-  allPonds(
++  ponds(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -575,7 +575,7 @@
+   ): PondsConnection
+ 
+   """Reads a set of `Pond`."""
+-  allPondsList(
++  pondsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -590,24 +590,24 @@
+     """
+     condition: PondCondition
+   ): [Pond!]
+-  fishById(id: Int!): Fish
+-  pondById(id: Int!): Pond
++  fish(id: Int!): Fish
++  pond(id: Int!): Pond
+ 
+   """Reads a single `Fish` using its globally unique `ID`."""
+-  fish(
++  fishByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Fish`."""
+     nodeId: ID!
+   ): Fish
+ 
+   """Reads a single `Pond` using its globally unique `ID`."""
+-  pond(
++  pondByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Pond`."""
+     nodeId: ID!
+   ): Pond
+ }
+ 
+-"""All input for the `updateFishById` mutation."""
+-input UpdateFishByIdInput {
++"""All input for the `updateFishByNodeId` mutation."""
++input UpdateFishByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -615,10 +615,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Fish` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Fish` being updated.
+   """
+-  fishPatch: FishPatch!
+-  id: Int!
++  patch: FishPatch!
+ }
+ 
+ """All input for the `updateFish` mutation."""
+@@ -630,14 +634,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Fish` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Fish` being updated.
+   """
+-  fishPatch: FishPatch!
++  patch: FishPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Fish` mutation."""
+@@ -657,7 +657,7 @@
+   query: Query
+ 
+   """Reads a single `Pond` that is related to this `Fish`."""
+-  pondByPondId: Pond
++  pond: Pond
+ 
+   """An edge for our `Fish`. May be used by Relay 1."""
+   fishEdge(
+@@ -666,8 +666,8 @@
+   ): FishEdge
+ }
+ 
+-"""All input for the `updatePondById` mutation."""
+-input UpdatePondByIdInput {
++"""All input for the `updatePondByNodeId` mutation."""
++input UpdatePondByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -675,10 +675,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Pond` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Pond` being updated.
+   """
+-  pondPatch: PondPatch!
+-  id: Int!
++  patch: PondPatch!
+ }
+ 
+ """All input for the `updatePond` mutation."""
+@@ -690,14 +694,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Pond` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Pond` being updated.
+   """
+-  pondPatch: PondPatch!
++  patch: PondPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Pond` mutation."""
