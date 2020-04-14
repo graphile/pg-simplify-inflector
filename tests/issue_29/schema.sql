@@ -10,4 +10,4 @@ create table something_data(
 );
 
 comment on column something.something_id is E'@name some_id';
-
+comment on column something_data.something_id is E'@name some_id';

@@ -27,7 +27,7 @@ type CreateSomethingDatumPayload {
   query: Query
 
   """Reads a single `Something` that is related to this `SomethingDatum`."""
-  something: Something
+  some: Something
 
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
@@ -130,7 +130,7 @@ type DeleteSomethingDatumPayload {
   query: Query
 
   """Reads a single `Something` that is related to this `SomethingDatum`."""
-  something: Something
+  some: Something
 
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
@@ -424,7 +424,7 @@ type Something implements Node {
   name: String
 
   """Reads and enables pagination through a set of `SomethingDatum`."""
-  somethingData(
+  somethingDataBySomeId(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -453,7 +453,7 @@ type Something implements Node {
   ): SomethingDataConnection!
 
   """Reads and enables pagination through a set of `SomethingDatum`."""
-  somethingDataList(
+  somethingDataBySomeIdList(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -515,8 +515,8 @@ enum SomethingDataOrderBy {
   NATURAL
   SOMETHING_DATA_ID_ASC
   SOMETHING_DATA_ID_DESC
-  SOMETHING_ID_ASC
-  SOMETHING_ID_DESC
+  SOME_ID_ASC
+  SOME_ID_DESC
   DATA_ASC
   DATA_DESC
   PRIMARY_KEY_ASC
@@ -529,11 +529,11 @@ type SomethingDatum implements Node {
   """
   nodeId: ID!
   somethingDataId: Int!
-  somethingId: Int!
+  someId: Int!
   data: String
 
   """Reads a single `Something` that is related to this `SomethingDatum`."""
-  something: Something
+  some: Something
 }
 
 """
@@ -544,8 +544,8 @@ input SomethingDatumCondition {
   """Checks for equality with the object’s `somethingDataId` field."""
   somethingDataId: Int
 
-  """Checks for equality with the object’s `somethingId` field."""
-  somethingId: Int
+  """Checks for equality with the object’s `someId` field."""
+  someId: Int
 
   """Checks for equality with the object’s `data` field."""
   data: String
@@ -554,7 +554,7 @@ input SomethingDatumCondition {
 """An input for mutations affecting `SomethingDatum`"""
 input SomethingDatumInput {
   somethingDataId: Int!
-  somethingId: Int!
+  someId: Int!
   data: String
 }
 
@@ -563,7 +563,7 @@ Represents an update to a `SomethingDatum`. Fields that are set will be updated.
 """
 input SomethingDatumPatch {
   somethingDataId: Int
-  somethingId: Int
+  someId: Int
   data: String
 }
 
@@ -688,7 +688,7 @@ type UpdateSomethingDatumPayload {
   query: Query
 
   """Reads a single `Something` that is related to this `SomethingDatum`."""
-  something: Something
+  some: Something
 
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
