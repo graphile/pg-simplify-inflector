@@ -1,5 +1,5 @@
---- /home/benjie/Dev/graphile/pg-simplify-inflector/tests/companies/schema.graphql	2020-04-14 12:10:33.294889805 +0100
-+++ /home/benjie/Dev/graphile/pg-simplify-inflector/tests/companies/schema.simplified.graphql	2020-04-14 12:10:33.298889806 +0100
+--- /home/benjie/Dev/graphile/pg-simplify-inflector/tests/companies/schema.unsimplified.graphql	2020-04-14 12:20:02.206937652 +0100
++++ /home/benjie/Dev/graphile/pg-simplify-inflector/tests/companies/schema.simplified.graphql	2020-04-14 12:20:02.210937652 +0100
 @@ -9,10 +9,10 @@
    name: String!
  

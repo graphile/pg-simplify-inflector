@@ -69,7 +69,7 @@ async function runTests(pool, dir) {
 
     const before = await getSchema(client);
     const after = await getSchema(client, true);
-    const beforePath = `${ROOT}/${dir}/schema.graphql`;
+    const beforePath = `${ROOT}/${dir}/schema.unsimplified.graphql`;
     const afterPath = `${ROOT}/${dir}/schema.simplified.graphql`;
     const diffPath = `${ROOT}/${dir}/schema.graphql.diff`;
     await fsp.writeFile(beforePath, printSchema(before));
