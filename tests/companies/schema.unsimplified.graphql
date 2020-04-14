@@ -324,7 +324,7 @@ type CreateBeveragePayload {
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
     """The method to use when ordering `Beverage`."""
-    orderBy: [BeveragesOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesEdge
 }
 
@@ -359,7 +359,7 @@ type CreateCompanyPayload {
   """An edge for our `Company`. May be used by Relay 1."""
   companyEdge(
     """The method to use when ordering `Company`."""
-    orderBy: [CompaniesOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompaniesEdge
 }
 
@@ -397,7 +397,7 @@ type CreateMascotPayload {
   """An edge for our `Mascot`. May be used by Relay 1."""
   mascotEdge(
     """The method to use when ordering `Mascot`."""
-    orderBy: [MascotsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
   ): MascotsEdge
 }
 
@@ -454,7 +454,7 @@ type DeleteBeveragePayload {
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
     """The method to use when ordering `Beverage`."""
-    orderBy: [BeveragesOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesEdge
 }
 
@@ -502,7 +502,7 @@ type DeleteCompanyPayload {
   """An edge for our `Company`. May be used by Relay 1."""
   companyEdge(
     """The method to use when ordering `Company`."""
-    orderBy: [CompaniesOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompaniesEdge
 }
 
@@ -563,7 +563,7 @@ type DeleteMascotPayload {
   """An edge for our `Mascot`. May be used by Relay 1."""
   mascotEdge(
     """The method to use when ordering `Mascot`."""
-    orderBy: [MascotsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
   ): MascotsEdge
 }
 
@@ -1052,7 +1052,7 @@ type UpdateBeveragePayload {
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
     """The method to use when ordering `Beverage`."""
-    orderBy: [BeveragesOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesEdge
 }
 
@@ -1109,7 +1109,7 @@ type UpdateCompanyPayload {
   """An edge for our `Company`. May be used by Relay 1."""
   companyEdge(
     """The method to use when ordering `Company`."""
-    orderBy: [CompaniesOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompaniesEdge
 }
 
@@ -1184,6 +1184,6 @@ type UpdateMascotPayload {
   """An edge for our `Mascot`. May be used by Relay 1."""
   mascotEdge(
     """The method to use when ordering `Mascot`."""
-    orderBy: [MascotsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
   ): MascotsEdge
 }

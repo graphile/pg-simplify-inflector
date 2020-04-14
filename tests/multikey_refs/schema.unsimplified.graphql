@@ -43,7 +43,7 @@ type CreateGoalContributorPayload {
   """An edge for our `GoalContributor`. May be used by Relay 1."""
   goalContributorEdge(
     """The method to use when ordering `GoalContributor`."""
-    orderBy: [GoalContributorsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [GoalContributorsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GoalContributorsEdge
 }
 
@@ -84,7 +84,7 @@ type CreateGoalPayload {
   """An edge for our `Goal`. May be used by Relay 1."""
   goalEdge(
     """The method to use when ordering `Goal`."""
-    orderBy: [GoalsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [GoalsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GoalsEdge
 }
 
@@ -119,7 +119,7 @@ type CreateOrganizationPayload {
   """An edge for our `Organization`. May be used by Relay 1."""
   organizationEdge(
     """The method to use when ordering `Organization`."""
-    orderBy: [OrganizationsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [OrganizationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): OrganizationsEdge
 }
 
@@ -154,7 +154,7 @@ type CreateTeamPayload {
   """An edge for our `Team`. May be used by Relay 1."""
   teamEdge(
     """The method to use when ordering `Team`."""
-    orderBy: [TeamsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [TeamsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TeamsEdge
 }
 
@@ -189,7 +189,7 @@ type CreateUserPayload {
   """An edge for our `User`. May be used by Relay 1."""
   userEdge(
     """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersEdge
 }
 
@@ -268,7 +268,7 @@ type DeleteGoalContributorPayload {
   """An edge for our `GoalContributor`. May be used by Relay 1."""
   goalContributorEdge(
     """The method to use when ordering `GoalContributor`."""
-    orderBy: [GoalContributorsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [GoalContributorsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GoalContributorsEdge
 }
 
@@ -312,7 +312,7 @@ type DeleteGoalPayload {
   """An edge for our `Goal`. May be used by Relay 1."""
   goalEdge(
     """The method to use when ordering `Goal`."""
-    orderBy: [GoalsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [GoalsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GoalsEdge
 }
 
@@ -360,7 +360,7 @@ type DeleteOrganizationPayload {
   """An edge for our `Organization`. May be used by Relay 1."""
   organizationEdge(
     """The method to use when ordering `Organization`."""
-    orderBy: [OrganizationsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [OrganizationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): OrganizationsEdge
 }
 
@@ -408,7 +408,7 @@ type DeleteTeamPayload {
   """An edge for our `Team`. May be used by Relay 1."""
   teamEdge(
     """The method to use when ordering `Team`."""
-    orderBy: [TeamsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [TeamsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TeamsEdge
 }
 
@@ -456,7 +456,7 @@ type DeleteUserPayload {
   """An edge for our `User`. May be used by Relay 1."""
   userEdge(
     """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersEdge
 }
 
@@ -668,9 +668,7 @@ input GoalInput {
   aim: String
 }
 
-"""
-Represents an update to a `Goal`. Fields that are set will be updated.
-"""
+"""Represents an update to a `Goal`. Fields that are set will be updated."""
 input GoalPatch {
   organizationId: Int
   teamId: Int
@@ -1522,9 +1520,7 @@ input TeamInput {
   name: String
 }
 
-"""
-Represents an update to a `Team`. Fields that are set will be updated.
-"""
+"""Represents an update to a `Team`. Fields that are set will be updated."""
 input TeamPatch {
   id: Int
   name: String
@@ -1653,7 +1649,7 @@ type UpdateGoalContributorPayload {
   """An edge for our `GoalContributor`. May be used by Relay 1."""
   goalContributorEdge(
     """The method to use when ordering `GoalContributor`."""
-    orderBy: [GoalContributorsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [GoalContributorsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GoalContributorsEdge
 }
 
@@ -1701,7 +1697,7 @@ type UpdateGoalPayload {
   """An edge for our `Goal`. May be used by Relay 1."""
   goalEdge(
     """The method to use when ordering `Goal`."""
-    orderBy: [GoalsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [GoalsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GoalsEdge
 }
 
@@ -1758,7 +1754,7 @@ type UpdateOrganizationPayload {
   """An edge for our `Organization`. May be used by Relay 1."""
   organizationEdge(
     """The method to use when ordering `Organization`."""
-    orderBy: [OrganizationsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [OrganizationsOrderBy!] = [PRIMARY_KEY_ASC]
   ): OrganizationsEdge
 }
 
@@ -1815,7 +1811,7 @@ type UpdateTeamPayload {
   """An edge for our `Team`. May be used by Relay 1."""
   teamEdge(
     """The method to use when ordering `Team`."""
-    orderBy: [TeamsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [TeamsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TeamsEdge
 }
 
@@ -1872,7 +1868,7 @@ type UpdateUserPayload {
   """An edge for our `User`. May be used by Relay 1."""
   userEdge(
     """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
   ): UsersEdge
 }
 
@@ -1948,9 +1944,7 @@ input UserInput {
   username: String
 }
 
-"""
-Represents an update to a `User`. Fields that are set will be updated.
-"""
+"""Represents an update to a `User`. Fields that are set will be updated."""
 input UserPatch {
   id: Int
   username: String

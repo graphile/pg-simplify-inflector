@@ -32,7 +32,7 @@ type CreateSomethingDatumPayload {
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
     """The method to use when ordering `SomethingDatum`."""
-    orderBy: [SomethingDataOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingDataEdge
 }
 
@@ -67,7 +67,7 @@ type CreateSomethingPayload {
   """An edge for our `Something`. May be used by Relay 1."""
   somethingEdge(
     """The method to use when ordering `Something`."""
-    orderBy: [SomethingsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingsEdge
 }
 
@@ -131,7 +131,7 @@ type DeleteSomethingDatumPayload {
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
     """The method to use when ordering `SomethingDatum`."""
-    orderBy: [SomethingDataOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingDataEdge
 }
 
@@ -169,7 +169,7 @@ type DeleteSomethingPayload {
   """An edge for our `Something`. May be used by Relay 1."""
   somethingEdge(
     """The method to use when ordering `Something`."""
-    orderBy: [SomethingsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingsEdge
 }
 
@@ -193,9 +193,7 @@ type Mutation {
     input: CreateSomethingDatumInput!
   ): CreateSomethingDatumPayload
 
-  """
-  Updates a single `Something` using its globally unique id and a patch.
-  """
+  """Updates a single `Something` using its globally unique id and a patch."""
   updateSomething(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -400,9 +398,7 @@ type Query implements Node {
 
   """Reads a single `Something` using its globally unique `ID`."""
   something(
-    """
-    The globally unique `ID` to be used in selecting a single `Something`.
-    """
+    """The globally unique `ID` to be used in selecting a single `Something`."""
     nodeId: ID!
   ): Something
 
@@ -495,9 +491,7 @@ type SomethingDataConnection {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  """
-  The count of *all* `SomethingDatum` you could get from the connection.
-  """
+  """The count of *all* `SomethingDatum` you could get from the connection."""
   totalCount: Int!
 }
 
@@ -689,7 +683,7 @@ type UpdateSomethingDatumPayload {
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
     """The method to use when ordering `SomethingDatum`."""
-    orderBy: [SomethingDataOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingDataEdge
 }
 
@@ -731,6 +725,6 @@ type UpdateSomethingPayload {
   """An edge for our `Something`. May be used by Relay 1."""
   somethingEdge(
     """The method to use when ordering `Something`."""
-    orderBy: [SomethingsOrderBy!] = PRIMARY_KEY_ASC
+    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingsEdge
 }

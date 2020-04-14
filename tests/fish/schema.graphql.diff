@@ -115,7 +115,7 @@
  }
  
  """
-@@ -276,67 +276,67 @@
+@@ -274,67 +274,67 @@
    ): CreatePondPayload
  
    """Updates a single `Fish` using its globally unique id and a patch."""
@@ -199,7 +199,7 @@
    ): DeletePondPayload
  }
  
-@@ -372,7 +372,7 @@
+@@ -370,7 +370,7 @@
    name: String!
  
    """Reads and enables pagination through a set of `Fish`."""
@@ -208,7 +208,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -401,7 +401,7 @@
+@@ -399,7 +399,7 @@
    ): FishConnection!
  
    """Reads and enables pagination through a set of `Fish`."""
@@ -217,7 +217,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -500,7 +500,7 @@
+@@ -496,7 +496,7 @@
    ): Node
  
    """Reads and enables pagination through a set of `Fish`."""
@@ -226,7 +226,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -529,7 +529,7 @@
+@@ -525,7 +525,7 @@
    ): FishConnection
  
    """Reads a set of `Fish`."""
@@ -235,7 +235,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -546,7 +546,7 @@
+@@ -542,7 +542,7 @@
    ): [Fish!]
  
    """Reads and enables pagination through a set of `Pond`."""
@@ -244,7 +244,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -575,7 +575,7 @@
+@@ -571,7 +571,7 @@
    ): PondsConnection
  
    """Reads a set of `Pond`."""
@@ -253,7 +253,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -590,24 +590,24 @@
+@@ -586,24 +586,24 @@
      """
      condition: PondCondition
    ): [Pond!]
@@ -284,7 +284,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -615,10 +615,14 @@
+@@ -611,10 +611,14 @@
    clientMutationId: String
  
    """
@@ -301,7 +301,7 @@
  }
  
  """All input for the `updateFish` mutation."""
-@@ -630,14 +634,10 @@
+@@ -626,14 +630,10 @@
    clientMutationId: String
  
    """
@@ -318,7 +318,7 @@
  }
  
  """The output of our update `Fish` mutation."""
-@@ -657,7 +657,7 @@
+@@ -653,7 +653,7 @@
    query: Query
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -327,7 +327,7 @@
  
    """An edge for our `Fish`. May be used by Relay 1."""
    fishEdge(
-@@ -666,8 +666,8 @@
+@@ -662,8 +662,8 @@
    ): FishEdge
  }
  
@@ -338,7 +338,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -675,10 +675,14 @@
+@@ -671,10 +671,14 @@
    clientMutationId: String
  
    """
@@ -355,7 +355,7 @@
  }
  
  """All input for the `updatePond` mutation."""
-@@ -690,14 +694,10 @@
+@@ -686,14 +690,10 @@
    clientMutationId: String
  
    """

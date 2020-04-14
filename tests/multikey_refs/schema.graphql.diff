@@ -323,7 +323,7 @@
  }
  
  """
-@@ -766,165 +764,165 @@
+@@ -764,165 +762,165 @@
    """
    Updates a single `GoalContributor` using its globally unique id and a patch.
    """
@@ -529,7 +529,7 @@
    ): DeleteUserPayload
  }
  
-@@ -945,7 +943,7 @@
+@@ -943,7 +941,7 @@
    name: String
  
    """Reads and enables pagination through a set of `Goal`."""
@@ -538,7 +538,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -974,7 +972,7 @@
+@@ -972,7 +970,7 @@
    ): GoalsConnection!
  
    """Reads and enables pagination through a set of `Goal`."""
@@ -547,7 +547,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -991,7 +989,7 @@
+@@ -989,7 +987,7 @@
    ): [Goal!]!
  
    """Reads and enables pagination through a set of `GoalContributor`."""
@@ -556,7 +556,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1020,7 +1018,7 @@
+@@ -1018,7 +1016,7 @@
    ): GoalContributorsConnection!
  
    """Reads and enables pagination through a set of `GoalContributor`."""
@@ -565,7 +565,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1135,7 +1133,7 @@
+@@ -1133,7 +1131,7 @@
    ): Node
  
    """Reads and enables pagination through a set of `GoalContributor`."""
@@ -574,7 +574,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1164,7 +1162,7 @@
+@@ -1162,7 +1160,7 @@
    ): GoalContributorsConnection
  
    """Reads a set of `GoalContributor`."""
@@ -583,7 +583,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1181,7 +1179,7 @@
+@@ -1179,7 +1177,7 @@
    ): [GoalContributor!]
  
    """Reads and enables pagination through a set of `Goal`."""
@@ -592,7 +592,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1210,7 +1208,7 @@
+@@ -1208,7 +1206,7 @@
    ): GoalsConnection
  
    """Reads a set of `Goal`."""
@@ -601,7 +601,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1227,7 +1225,7 @@
+@@ -1225,7 +1223,7 @@
    ): [Goal!]
  
    """Reads and enables pagination through a set of `Organization`."""
@@ -610,7 +610,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1256,7 +1254,7 @@
+@@ -1254,7 +1252,7 @@
    ): OrganizationsConnection
  
    """Reads a set of `Organization`."""
@@ -619,7 +619,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1273,7 +1271,7 @@
+@@ -1271,7 +1269,7 @@
    ): [Organization!]
  
    """Reads and enables pagination through a set of `Team`."""
@@ -628,7 +628,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1302,7 +1300,7 @@
+@@ -1300,7 +1298,7 @@
    ): TeamsConnection
  
    """Reads a set of `Team`."""
@@ -637,7 +637,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1319,7 +1317,7 @@
+@@ -1317,7 +1315,7 @@
    ): [Team!]
  
    """Reads and enables pagination through a set of `User`."""
@@ -646,7 +646,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1348,7 +1346,7 @@
+@@ -1346,7 +1344,7 @@
    ): UsersConnection
  
    """Reads a set of `User`."""
@@ -655,7 +655,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1363,14 +1361,14 @@
+@@ -1361,14 +1359,14 @@
      """
      condition: UserCondition
    ): [User!]
@@ -676,7 +676,7 @@
      """
      The globally unique `ID` to be used in selecting a single `GoalContributor`.
      """
-@@ -1378,13 +1376,13 @@
+@@ -1376,13 +1374,13 @@
    ): GoalContributor
  
    """Reads a single `Goal` using its globally unique `ID`."""
@@ -692,7 +692,7 @@
      """
      The globally unique `ID` to be used in selecting a single `Organization`.
      """
-@@ -1392,13 +1390,13 @@
+@@ -1390,13 +1388,13 @@
    ): Organization
  
    """Reads a single `Team` using its globally unique `ID`."""
@@ -708,7 +708,7 @@
      """The globally unique `ID` to be used in selecting a single `User`."""
      nodeId: ID!
    ): User
-@@ -1413,7 +1411,7 @@
+@@ -1411,7 +1409,7 @@
    name: String
  
    """Reads and enables pagination through a set of `Goal`."""
@@ -717,7 +717,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1442,7 +1440,7 @@
+@@ -1440,7 +1438,7 @@
    ): GoalsConnection!
  
    """Reads and enables pagination through a set of `Goal`."""
@@ -726,7 +726,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1459,7 +1457,7 @@
+@@ -1457,7 +1455,7 @@
    ): [Goal!]!
  
    """Reads and enables pagination through a set of `GoalContributor`."""
@@ -735,7 +735,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1488,7 +1486,7 @@
+@@ -1486,7 +1484,7 @@
    ): GoalContributorsConnection!
  
    """Reads and enables pagination through a set of `GoalContributor`."""
@@ -744,7 +744,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1567,10 +1565,8 @@
+@@ -1563,10 +1561,8 @@
    PRIMARY_KEY_DESC
  }
  
@@ -757,7 +757,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1578,16 +1574,18 @@
+@@ -1574,16 +1570,18 @@
    clientMutationId: String
  
    """
@@ -782,7 +782,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1595,10 +1593,14 @@
+@@ -1591,10 +1589,14 @@
    clientMutationId: String
  
    """
@@ -799,7 +799,7 @@
  }
  
  """All input for the `updateGoalContributor` mutation."""
-@@ -1610,14 +1612,10 @@
+@@ -1606,14 +1608,10 @@
    clientMutationId: String
  
    """
@@ -816,7 +816,7 @@
  }
  
  """The output of our update `GoalContributor` mutation."""
-@@ -1639,16 +1637,16 @@
+@@ -1635,16 +1633,16 @@
    """
    Reads a single `Organization` that is related to this `GoalContributor`.
    """
@@ -837,7 +837,7 @@
  
    """An edge for our `GoalContributor`. May be used by Relay 1."""
    goalContributorEdge(
-@@ -1666,14 +1664,12 @@
+@@ -1662,14 +1660,12 @@
    clientMutationId: String
  
    """
@@ -856,7 +856,7 @@
  }
  
  """The output of our update `Goal` mutation."""
-@@ -1693,10 +1689,10 @@
+@@ -1689,10 +1685,10 @@
    query: Query
  
    """Reads a single `Organization` that is related to this `Goal`."""
@@ -869,7 +869,7 @@
  
    """An edge for our `Goal`. May be used by Relay 1."""
    goalEdge(
-@@ -1705,8 +1701,8 @@
+@@ -1701,8 +1697,8 @@
    ): GoalsEdge
  }
  
@@ -880,7 +880,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1714,10 +1710,14 @@
+@@ -1710,10 +1706,14 @@
    clientMutationId: String
  
    """
@@ -897,7 +897,7 @@
  }
  
  """All input for the `updateOrganization` mutation."""
-@@ -1729,14 +1729,10 @@
+@@ -1725,14 +1725,10 @@
    clientMutationId: String
  
    """
@@ -914,7 +914,7 @@
  }
  
  """The output of our update `Organization` mutation."""
-@@ -1762,8 +1758,8 @@
+@@ -1758,8 +1754,8 @@
    ): OrganizationsEdge
  }
  
@@ -925,7 +925,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1771,10 +1767,14 @@
+@@ -1767,10 +1763,14 @@
    clientMutationId: String
  
    """
@@ -942,7 +942,7 @@
  }
  
  """All input for the `updateTeam` mutation."""
-@@ -1786,14 +1786,10 @@
+@@ -1782,14 +1782,10 @@
    clientMutationId: String
  
    """
@@ -959,7 +959,7 @@
  }
  
  """The output of our update `Team` mutation."""
-@@ -1819,8 +1815,8 @@
+@@ -1815,8 +1811,8 @@
    ): TeamsEdge
  }
  
@@ -970,7 +970,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1828,10 +1824,14 @@
+@@ -1824,10 +1820,14 @@
    clientMutationId: String
  
    """
@@ -987,7 +987,7 @@
  }
  
  """All input for the `updateUser` mutation."""
-@@ -1843,14 +1843,10 @@
+@@ -1839,14 +1839,10 @@
    clientMutationId: String
  
    """
