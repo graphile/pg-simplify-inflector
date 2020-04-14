@@ -28,6 +28,12 @@ create table beverages (
 comment on constraint "beverages_distributor_id_fkey" on "beverages" is
   E'@foreignFieldName distributedBeverages\n@foreignSimpleFieldName distributedBeveragesList';
 
+create table mascots (
+    id serial primary key,
+    company_id int unique not null references companies,
+    name text not null
+);
+
 create table foo_genera(
   id serial primary key,
   name text not null

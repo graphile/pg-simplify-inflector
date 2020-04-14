@@ -1,5 +1,5 @@
---- ./schema.graphql	2019-06-23 18:09:43.000000000 +0100
-+++ ./schema.simplified.graphql	2019-06-23 18:09:44.000000000 +0100
+--- ./schema.graphql	2020-04-08 15:16:33.000000000 +0200
++++ ./schema.simplified.graphql	2020-04-08 15:16:33.000000000 +0200
 @@ -9,10 +9,10 @@
    name: String!
  
@@ -31,7 +31,29 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -284,10 +284,10 @@
+@@ -230,10 +230,10 @@
+   ): [Beverage!]!
+ 
+   """Reads a single `Mascot` that is related to this `Company`."""
+-  mascotByCompanyId: Mascot
++  mascot: Mascot
+ 
+   """Reads and enables pagination through a set of `Mascot`."""
+-  mascotsByCompanyId(
++  mascots(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -259,7 +259,7 @@
+     A condition to be used in determining which values should be returned by the collection.
+     """
+     condition: MascotCondition
+-  ): MascotsConnection! @deprecated(reason: "Please use mascotByCompanyId instead")
++  ): MascotsConnection! @deprecated(reason: "Please use mascot instead")
+ }
+ 
+ """
+@@ -316,10 +316,10 @@
    query: Query
  
    """Reads a single `Company` that is related to this `Beverage`."""
@@ -44,7 +66,7 @@
  
    """An edge for our `Beverage`. May be used by Relay 1."""
    beverageEdge(
-@@ -360,7 +360,7 @@
+@@ -392,7 +392,7 @@
    query: Query
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -53,7 +75,7 @@
  
    """An edge for our `Fish`. May be used by Relay 1."""
    fishEdge(
-@@ -369,39 +369,39 @@
+@@ -401,39 +401,39 @@
    ): FishEdge
  }
  
@@ -105,8 +127,17 @@
 +  ): FooGeneraEdge
  }
  
- """All input for the create `Pond` mutation."""
-@@ -442,14 +442,18 @@
+ """All input for the create `Mascot` mutation."""
+@@ -465,7 +465,7 @@
+   query: Query
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """An edge for our `Mascot`. May be used by Relay 1."""
+   mascotEdge(
+@@ -512,14 +512,18 @@
  """A location in a connection that can be used for resuming pagination."""
  scalar Cursor
  
@@ -128,7 +159,7 @@
  }
  
  """All input for the `deleteBeverage` mutation."""
-@@ -459,11 +463,7 @@
+@@ -529,11 +533,7 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -141,7 +172,7 @@
  }
  
  """The output of our delete `Beverage` mutation."""
-@@ -476,7 +476,7 @@
+@@ -546,7 +546,7 @@
  
    """The `Beverage` that was deleted by this mutation."""
    beverage: Beverage
@@ -150,7 +181,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -484,10 +484,10 @@
+@@ -554,10 +554,10 @@
    query: Query
  
    """Reads a single `Company` that is related to this `Beverage`."""
@@ -163,7 +194,7 @@
  
    """An edge for our `Beverage`. May be used by Relay 1."""
    beverageEdge(
-@@ -496,14 +496,18 @@
+@@ -566,14 +566,18 @@
    ): BeveragesEdge
  }
  
@@ -185,7 +216,7 @@
  }
  
  """All input for the `deleteCompany` mutation."""
-@@ -513,11 +517,7 @@
+@@ -583,11 +587,7 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -198,7 +229,7 @@
  }
  
  """The output of our delete `Company` mutation."""
-@@ -530,7 +530,7 @@
+@@ -600,7 +600,7 @@
  
    """The `Company` that was deleted by this mutation."""
    company: Company
@@ -207,7 +238,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -544,14 +544,18 @@
+@@ -614,14 +614,18 @@
    ): CompaniesEdge
  }
  
@@ -229,7 +260,7 @@
  }
  
  """All input for the `deleteFish` mutation."""
-@@ -561,11 +565,7 @@
+@@ -631,11 +635,7 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -242,7 +273,7 @@
  }
  
  """The output of our delete `Fish` mutation."""
-@@ -578,7 +578,7 @@
+@@ -648,7 +648,7 @@
  
    """The `Fish` that was deleted by this mutation."""
    fish: Fish
@@ -251,7 +282,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -586,7 +586,7 @@
+@@ -656,7 +656,7 @@
    query: Query
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -260,7 +291,7 @@
  
    """An edge for our `Fish`. May be used by Relay 1."""
    fishEdge(
-@@ -595,62 +595,66 @@
+@@ -665,52 +665,52 @@
    ): FishEdge
  }
  
@@ -332,6 +363,64 @@
 +  ): FooGeneraEdge
  }
  
+ """All input for the `deleteMascotByCompanyId` mutation."""
+@@ -723,14 +723,18 @@
+   companyId: Int!
+ }
+ 
+-"""All input for the `deleteMascotById` mutation."""
+-input DeleteMascotByIdInput {
++"""All input for the `deleteMascotByNodeId` mutation."""
++input DeleteMascotByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Mascot` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteMascot` mutation."""
+@@ -740,11 +744,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Mascot` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Mascot` mutation."""
+@@ -757,7 +757,7 @@
+ 
+   """The `Mascot` that was deleted by this mutation."""
+   mascot: Mascot
+-  deletedMascotId: ID
++  deletedMascotNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -765,7 +765,7 @@
+   query: Query
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """An edge for our `Mascot`. May be used by Relay 1."""
+   mascotEdge(
+@@ -774,14 +774,18 @@
+   ): MascotsEdge
+ }
+ 
 -"""All input for the `deletePondById` mutation."""
 -input DeletePondByIdInput {
 +"""All input for the `deletePondByNodeId` mutation."""
@@ -350,7 +439,7 @@
  }
  
  """All input for the `deletePond` mutation."""
-@@ -660,11 +664,7 @@
+@@ -791,11 +795,7 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -363,7 +452,7 @@
  }
  
  """The output of our delete `Pond` mutation."""
-@@ -677,7 +677,7 @@
+@@ -808,7 +808,7 @@
  
    """The `Pond` that was deleted by this mutation."""
    pond: Pond
@@ -372,7 +461,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -701,7 +701,7 @@
+@@ -832,7 +832,7 @@
    name: String!
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -381,7 +470,7 @@
  }
  
  """
-@@ -773,7 +773,44 @@
+@@ -904,7 +904,44 @@
    name: String
  }
  
@@ -427,7 +516,7 @@
    """
    A globally unique identifier. Can be used in various places throughout the system to identify this single value.
    """
-@@ -783,10 +820,10 @@
+@@ -914,10 +951,10 @@
  }
  
  """
@@ -440,7 +529,7 @@
    """Checks for equality with the object’s `id` field."""
    id: Int
  
-@@ -794,57 +831,20 @@
+@@ -925,57 +962,20 @@
    name: String
  }
  
@@ -499,10 +588,19 @@
 -  PRIMARY_KEY_DESC
 -}
 -
+ type Mascot implements Node {
+   """
+   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+@@ -986,7 +986,7 @@
+   name: String!
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ }
+ 
  """
- The root mutation type which contains root level fields which mutate data.
- """
-@@ -873,13 +873,13 @@
+@@ -1086,13 +1086,13 @@
      input: CreateFishInput!
    ): CreateFishPayload
  
@@ -518,9 +616,9 @@
 +    input: CreateFooGenusInput!
 +  ): CreateFooGenusPayload
  
-   """Creates a single `Pond`."""
-   createPond(
-@@ -890,165 +890,163 @@
+   """Creates a single `Mascot`."""
+   createMascot(
+@@ -1111,85 +1111,83 @@
    ): CreatePondPayload
  
    """Updates a single `Beverage` using its globally unique id and a patch."""
@@ -608,6 +706,30 @@
 -  ): UpdateFooGeneraPayload
 +    input: UpdateFooGenusInput!
 +  ): UpdateFooGenusPayload
+ 
+   """Updates a single `Mascot` using its globally unique id and a patch."""
+-  updateMascot(
++  updateMascotByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateMascotInput!
++    input: UpdateMascotByNodeIdInput!
+   ): UpdateMascotPayload
+ 
+   """Updates a single `Mascot` using a unique key and a patch."""
+-  updateMascotById(
++  updateMascot(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateMascotByIdInput!
++    input: UpdateMascotInput!
+   ): UpdateMascotPayload
+ 
+   """Updates a single `Mascot` using a unique key and a patch."""
+@@ -1201,99 +1199,99 @@
+   ): UpdateMascotPayload
  
    """Updates a single `Pond` using its globally unique id and a patch."""
 -  updatePond(
@@ -713,6 +835,30 @@
 +    input: DeleteFooGenusInput!
 +  ): DeleteFooGenusPayload
  
+   """Deletes a single `Mascot` using its globally unique id."""
+-  deleteMascot(
++  deleteMascotByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteMascotInput!
++    input: DeleteMascotByNodeIdInput!
+   ): DeleteMascotPayload
+ 
+   """Deletes a single `Mascot` using a unique key."""
+-  deleteMascotById(
++  deleteMascot(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteMascotByIdInput!
++    input: DeleteMascotInput!
+   ): DeleteMascotPayload
+ 
+   """Deletes a single `Mascot` using a unique key."""
+@@ -1305,19 +1303,19 @@
+   ): DeleteMascotPayload
+ 
    """Deletes a single `Pond` using its globally unique id."""
 -  deletePond(
 +  deletePondByNodeId(
@@ -734,7 +880,7 @@
    ): DeletePondPayload
  }
  
-@@ -1084,7 +1082,7 @@
+@@ -1353,7 +1351,7 @@
    name: String!
  
    """Reads and enables pagination through a set of `Fish`."""
@@ -743,7 +889,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1113,7 +1111,7 @@
+@@ -1382,7 +1380,7 @@
    ): FishConnection!
  
    """Reads and enables pagination through a set of `Fish`."""
@@ -752,7 +898,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1212,7 +1210,7 @@
+@@ -1481,7 +1479,7 @@
    ): Node
  
    """Reads and enables pagination through a set of `Beverage`."""
@@ -761,7 +907,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1241,7 +1239,7 @@
+@@ -1510,7 +1508,7 @@
    ): BeveragesConnection
  
    """Reads a set of `Beverage`."""
@@ -770,7 +916,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1258,7 +1256,7 @@
+@@ -1527,7 +1525,7 @@
    ): [Beverage!]
  
    """Reads and enables pagination through a set of `Company`."""
@@ -779,7 +925,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1287,7 +1285,7 @@
+@@ -1556,7 +1554,7 @@
    ): CompaniesConnection
  
    """Reads a set of `Company`."""
@@ -788,7 +934,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1304,7 +1302,7 @@
+@@ -1573,7 +1571,7 @@
    ): [Company!]
  
    """Reads and enables pagination through a set of `Fish`."""
@@ -797,7 +943,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1333,7 +1331,7 @@
+@@ -1602,7 +1600,7 @@
    ): FishConnection
  
    """Reads a set of `Fish`."""
@@ -806,7 +952,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1349,8 +1347,8 @@
+@@ -1618,8 +1616,8 @@
      condition: FishCondition
    ): [Fish!]
  
@@ -817,7 +963,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1369,34 +1367,34 @@
+@@ -1638,34 +1636,34 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
@@ -857,13 +1003,31 @@
 +    condition: FooGenusCondition
 +  ): [FooGenus!]
  
+   """Reads and enables pagination through a set of `Mascot`."""
+-  allMascots(
++  mascots(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1694,7 +1692,7 @@
+   ): MascotsConnection
+ 
+   """Reads a set of `Mascot`."""
+-  allMascotsList(
++  mascotsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1711,7 +1709,7 @@
+   ): [Mascot!]
+ 
    """Reads and enables pagination through a set of `Pond`."""
 -  allPonds(
 +  ponds(
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1425,7 +1423,7 @@
+@@ -1740,7 +1738,7 @@
    ): PondsConnection
  
    """Reads a set of `Pond`."""
@@ -872,7 +1036,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -1440,47 +1438,45 @@
+@@ -1755,55 +1753,53 @@
      """
      condition: PondCondition
    ): [Pond!]
@@ -880,11 +1044,14 @@
 -  companyById(id: Int!): Company
 -  fishById(id: Int!): Fish
 -  fooGeneraById(id: Int!): FooGenera
--  pondById(id: Int!): Pond
+-  mascotById(id: Int!): Mascot
 +  beverage(id: Int!): Beverage
 +  company(id: Int!): Company
 +  fish(id: Int!): Fish
 +  fooGenus(id: Int!): FooGenus
++  mascot(id: Int!): Mascot
+   mascotByCompanyId(companyId: Int!): Mascot
+-  pondById(id: Int!): Pond
 +  pond(id: Int!): Pond
  
    """Reads a single `Beverage` using its globally unique `ID`."""
@@ -920,6 +1087,13 @@
 -  ): FooGenera
 +  ): FooGenus
  
+   """Reads a single `Mascot` using its globally unique `ID`."""
+-  mascot(
++  mascotByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Mascot`."""
+     nodeId: ID!
+   ): Mascot
+ 
    """Reads a single `Pond` using its globally unique `ID`."""
 -  pond(
 +  pondByNodeId(
@@ -935,7 +1109,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1488,10 +1484,14 @@
+@@ -1811,10 +1807,14 @@
    clientMutationId: String
  
    """
@@ -952,7 +1126,7 @@
  }
  
  """All input for the `updateBeverage` mutation."""
-@@ -1503,14 +1503,10 @@
+@@ -1826,14 +1826,10 @@
    clientMutationId: String
  
    """
@@ -969,7 +1143,7 @@
  }
  
  """The output of our update `Beverage` mutation."""
-@@ -1530,10 +1526,10 @@
+@@ -1853,10 +1849,10 @@
    query: Query
  
    """Reads a single `Company` that is related to this `Beverage`."""
@@ -982,7 +1156,7 @@
  
    """An edge for our `Beverage`. May be used by Relay 1."""
    beverageEdge(
-@@ -1542,8 +1538,8 @@
+@@ -1865,8 +1861,8 @@
    ): BeveragesEdge
  }
  
@@ -993,7 +1167,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1551,10 +1547,14 @@
+@@ -1874,10 +1870,14 @@
    clientMutationId: String
  
    """
@@ -1010,7 +1184,7 @@
  }
  
  """All input for the `updateCompany` mutation."""
-@@ -1566,14 +1566,10 @@
+@@ -1889,14 +1889,10 @@
    clientMutationId: String
  
    """
@@ -1027,7 +1201,7 @@
  }
  
  """The output of our update `Company` mutation."""
-@@ -1599,8 +1595,8 @@
+@@ -1922,8 +1918,8 @@
    ): CompaniesEdge
  }
  
@@ -1038,7 +1212,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1608,10 +1604,14 @@
+@@ -1931,10 +1927,14 @@
    clientMutationId: String
  
    """
@@ -1055,7 +1229,7 @@
  }
  
  """All input for the `updateFish` mutation."""
-@@ -1623,14 +1623,10 @@
+@@ -1946,14 +1946,10 @@
    clientMutationId: String
  
    """
@@ -1072,7 +1246,7 @@
  }
  
  """The output of our update `Fish` mutation."""
-@@ -1650,7 +1646,7 @@
+@@ -1973,7 +1969,7 @@
    query: Query
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -1081,7 +1255,7 @@
  
    """An edge for our `Fish`. May be used by Relay 1."""
    fishEdge(
-@@ -1659,8 +1655,8 @@
+@@ -1982,8 +1978,8 @@
    ): FishEdge
  }
  
@@ -1092,7 +1266,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1668,14 +1664,18 @@
+@@ -1991,14 +1987,18 @@
    clientMutationId: String
  
    """
@@ -1116,18 +1290,18 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1683,41 +1683,37 @@
+@@ -2006,37 +2006,33 @@
    clientMutationId: String
  
    """
 -  The globally unique `ID` which will identify a single `FooGenera` to be updated.
--  """
++  An object where the defined keys will be set on the `FooGenus` being updated.
+   """
 -  nodeId: ID!
 -
 -  """
 -  An object where the defined keys will be set on the `FooGenera` being updated.
-+  An object where the defined keys will be set on the `FooGenus` being updated.
-   """
+-  """
 -  fooGeneraPatch: FooGeneraPatch!
 +  patch: FooGenusPatch!
 +  id: Int!
@@ -1165,6 +1339,70 @@
 +  ): FooGeneraEdge
  }
  
+ """All input for the `updateMascotByCompanyId` mutation."""
+@@ -2050,12 +2046,12 @@
+   """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
++  patch: MascotPatch!
+   companyId: Int!
+ }
+ 
+-"""All input for the `updateMascotById` mutation."""
+-input UpdateMascotByIdInput {
++"""All input for the `updateMascotByNodeId` mutation."""
++input UpdateMascotByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -2063,10 +2059,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Mascot` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
+-  id: Int!
++  patch: MascotPatch!
+ }
+ 
+ """All input for the `updateMascot` mutation."""
+@@ -2078,14 +2078,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Mascot` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
++  patch: MascotPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Mascot` mutation."""
+@@ -2105,7 +2101,7 @@
+   query: Query
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """An edge for our `Mascot`. May be used by Relay 1."""
+   mascotEdge(
+@@ -2114,8 +2110,8 @@
+   ): MascotsEdge
+ }
+ 
 -"""All input for the `updatePondById` mutation."""
 -input UpdatePondByIdInput {
 +"""All input for the `updatePondByNodeId` mutation."""
@@ -1172,7 +1410,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1725,10 +1721,14 @@
+@@ -2123,10 +2119,14 @@
    clientMutationId: String
  
    """
@@ -1189,7 +1427,7 @@
  }
  
  """All input for the `updatePond` mutation."""
-@@ -1740,14 +1740,10 @@
+@@ -2138,14 +2138,10 @@
    clientMutationId: String
  
    """

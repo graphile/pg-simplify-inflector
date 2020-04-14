@@ -202,7 +202,7 @@ function PgSimplifyInflectorPlugin(
       singleRelationByKeysBackwards(
         detailedKeys,
         table,
-        _foreignTable,
+        foreignTable,
         constraint
       ) {
         if (constraint.tags.foreignSingleFieldName) {
@@ -218,13 +218,13 @@ function PgSimplifyInflectorPlugin(
             `${oppositeBaseName}-${this._singularizedTableName(table)}`
           );
         }
-        if (this.baseNameMatches(baseName, table.name)) {
+        if (this.baseNameMatches(baseName, foreignTable.name)) {
           return this.camelCase(`${this._singularizedTableName(table)}`);
         }
         return oldInflection.singleRelationByKeysBackwards(
           detailedKeys,
           table,
-          _foreignTable,
+          foreignTable,
           constraint
         );
       },
