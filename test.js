@@ -50,15 +50,26 @@ async function withCleanDb(cb) {
   await withPool(DATABASE_NAME, async (pool) => cb(pool));
 }
 
-async function getSchema(client, withSimplify = false) {
+async function getSettings(dir) {
+  try {
+    const json = await fsp.readFile(`${ROOT}/${dir}/settings.json`, "utf8");
+    return JSON.parse(json);
+  } catch {
+    return {};
+  }
+}
+
+async function getSchema(client, withSimplify, settings) {
   return await createPostGraphileSchema(DATABASE_NAME, "app_public", {
     ...BASE_SETTINGS,
+    ...settings,
     appendPlugins: withSimplify ? [SimplifyPlugin] : [],
   });
 }
 
 async function runTests(pool, dir) {
   const schema = await fsp.readFile(`${ROOT}/${dir}/schema.sql`, "utf8");
+  const settings = await getSettings(dir);
   await withClient(pool, async (client) => {
     await client.query(`
       set search_path to public;
@@ -70,8 +81,8 @@ async function runTests(pool, dir) {
     `);
     await client.query(schema);
 
-    const before = await getSchema(client);
-    const after = await getSchema(client, true);
+    const before = await getSchema(client, false, settings);
+    const after = await getSchema(client, true, settings);
     const beforePath = `${ROOT}/${dir}/schema.unsimplified.graphql`;
     const afterPath = `${ROOT}/${dir}/schema.simplified.graphql`;
     const diffPath = `${ROOT}/${dir}/schema.graphql.diff`;
