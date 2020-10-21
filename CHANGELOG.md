@@ -7,6 +7,32 @@ stick to it.
 It's unlikely we'll have much in the way of minor releases since all naming
 changes are breaking.
 
+# v6.1.0
+
+### Add `@listSuffix` smart tag
+
+Previously there was no easy way to override `pgOmitListSuffix` on a per-entity
+basis. With the `@listSuffix` tag you can selectively control naming of both
+collection types:
+
+```sql
+create table companies (id serial primary key);
+comment on table companies is E'@listSuffix omit';
+```
+
+By default (`pgOmitListSuffix = null` and `simpleCollections = 'both'`) this
+produces:
+
+```diff
+-  allCompanies(
++  companiesConnection(
+```
+
+```diff
+-  allCompaniesList(
++  companies(
+```
+
 # v6.0.0
 
 #### Pluralization fixes
