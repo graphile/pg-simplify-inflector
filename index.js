@@ -48,10 +48,33 @@ function PgSimplifyInflectorPlugin(
     );
   }
 
-  const connectionSuffix = pgOmitListSuffix ? "-connection" : "";
-  const ConnectionSuffix = pgOmitListSuffix ? "Connection" : "";
-  const listSuffix = pgOmitListSuffix ? "" : "-list";
-  const ListSuffix = pgOmitListSuffix ? "" : "List";
+  /** @typedef {import('graphile-build-pg').PgEntity} PgEntity */
+
+  function omitListSuffix(/** @type PgEntity */ entity) {
+    const tag = entity.tags.listSuffix;
+    if (tag == null) return !!pgOmitListSuffix;
+    if (tag !== "include" && tag !== "omit")
+      throw new Error(
+        `Unrecognized @listSuffix value "${tag}" on ${entity.kind} "${entity.name}". If @listSuffix is set, it must be "omit" or "include".`
+      );
+    return tag === "omit";
+  }
+
+  function connectionSuffix(/** @type PgEntity */ entity) {
+    return omitListSuffix(entity) ? "-connection" : "";
+  }
+
+  function ConnectionSuffix(/** @type PgEntity */ entity) {
+    return omitListSuffix(entity) ? "Connection" : "";
+  }
+
+  function listSuffix(/** @type PgEntity */ entity) {
+    return omitListSuffix(entity) ? "" : "-list";
+  }
+
+  function ListSuffix(/** @type PgEntity */ entity) {
+    return omitListSuffix(entity) ? "" : "List";
+  }
 
   builder.hook("inflection", (oldInflection) => {
     return {
@@ -167,13 +190,13 @@ function PgSimplifyInflectorPlugin(
             allRows(table) {
               return this.camelCase(
                 this.distinctPluralize(this._singularizedTableName(table)) +
-                  connectionSuffix
+                  connectionSuffix(table)
               );
             },
             allRowsSimple(table) {
               return this.camelCase(
                 this.distinctPluralize(this._singularizedTableName(table)) +
-                  listSuffix
+                  listSuffix(table)
               );
             },
           }
@@ -181,16 +204,17 @@ function PgSimplifyInflectorPlugin(
 
       computedColumn(pseudoColumnName, proc, _table) {
         return proc.tags.fieldName
-          ? proc.tags.fieldName + (proc.returnsSet ? ConnectionSuffix : "")
+          ? proc.tags.fieldName +
+              (proc.returnsSet ? ConnectionSuffix(proc) : "")
           : this.camelCase(
-              pseudoColumnName + (proc.returnsSet ? connectionSuffix : "")
+              pseudoColumnName + (proc.returnsSet ? connectionSuffix(proc) : "")
             );
       },
 
       computedColumnList(pseudoColumnName, proc, _table) {
         return proc.tags.fieldName
-          ? proc.tags.fieldName + ListSuffix
-          : this.camelCase(pseudoColumnName + listSuffix);
+          ? proc.tags.fieldName + ListSuffix(proc)
+          : this.camelCase(pseudoColumnName + listSuffix(proc));
       },
 
       singleRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
@@ -265,7 +289,9 @@ function PgSimplifyInflectorPlugin(
           if (constraint.tags.foreignSimpleFieldName) {
             return constraint.tags.foreignFieldName;
           } else {
-            return constraint.tags.foreignFieldName + ConnectionSuffix;
+            return (
+              constraint.tags.foreignFieldName + ConnectionSuffix(constraint)
+            );
           }
         }
         const base = this._manyRelationByKeysBase(
@@ -275,7 +301,7 @@ function PgSimplifyInflectorPlugin(
           constraint
         );
         if (base) {
-          return base + ConnectionSuffix;
+          return base + ConnectionSuffix(constraint);
         }
         return (
           oldInflection.manyRelationByKeys(
@@ -283,7 +309,7 @@ function PgSimplifyInflectorPlugin(
             table,
             foreignTable,
             constraint
-          ) + ConnectionSuffix
+          ) + ConnectionSuffix(constraint)
         );
       },
 
@@ -292,7 +318,7 @@ function PgSimplifyInflectorPlugin(
           return constraint.tags.foreignSimpleFieldName;
         }
         if (constraint.tags.foreignFieldName) {
-          return constraint.tags.foreignFieldName + ListSuffix;
+          return constraint.tags.foreignFieldName + ListSuffix(constraint);
         }
         const base = this._manyRelationByKeysBase(
           detailedKeys,
@@ -301,7 +327,7 @@ function PgSimplifyInflectorPlugin(
           constraint
         );
         if (base) {
-          return base + ListSuffix;
+          return base + ListSuffix(constraint);
         }
         return (
           oldInflection.manyRelationByKeys(
@@ -309,17 +335,18 @@ function PgSimplifyInflectorPlugin(
             table,
             foreignTable,
             constraint
-          ) + ListSuffix
+          ) + ListSuffix(constraint)
         );
       },
 
       functionQueryName(proc) {
         return this.camelCase(
-          this._functionName(proc) + (proc.returnsSet ? connectionSuffix : "")
+          this._functionName(proc) +
+            (proc.returnsSet ? connectionSuffix(proc) : "")
         );
       },
       functionQueryNameList(proc) {
-        return this.camelCase(this._functionName(proc) + listSuffix);
+        return this.camelCase(this._functionName(proc) + listSuffix(proc));
       },
 
       ...(pgShortPk

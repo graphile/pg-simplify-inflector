@@ -176,7 +176,9 @@ or a custom inflector to override these.
 In most cases, the conflict errors will guide you on how to fix these issues
 using [smart comments](https://www.graphile.org/postgraphile/smart-comments/).
 
-## New smart tags
+## Smart Tags
+
+### `@foreignSimpleFieldName`
 
 `@foreignSimpleFieldName` was added to override the naming of the foreign-side
 of a one-to-many relationship's simple collections field (if you're using simple
@@ -185,3 +187,33 @@ suffix" ("List" by default, but "" if `pgOmitListSuffix` is set), but if you
 prefer you can override it entirely with `@foreignSimpleFieldName`. If you set
 `@foreignSimpleFieldName` and you're using `simpleCollections 'both'` then you
 should also set `@foreignFieldName` explicitly or unexpected things may occur.
+
+Applies to:
+
+- foreign key constraints
+
+### `@listSuffix`
+
+`@listSuffix` allows you to override the default naming on a per-entity basis,
+overriding `pgOmitListSuffix`. For example, with `pgOmitListSuffix: true`, you
+can apply `@listSuffix include` to have the `-List` suffix appended to the simple
+collection generated for that table, and remove the `-Connection` suffix from the
+Relay connection. When `pgOmitListSuffix` is not `true`, you can use
+`@listSuffix omit` to selectively omit the `-List` suffix on simple collections
+and append `-Connection` to the Relay connection instead.
+
+If `@listSuffix` is set, the only valid values are `"omit"` and `"include"`. Any
+other value will cause an error.
+
+|                   | @listSuffix omit    | @listSuffix include |
+| ----------------: | :------------------ | :------------------ |
+|  Relay Connection | companiesConnection | companies           |
+| Simple Collection | companies           | companiesList       |
+
+> NOTE: `@listSuffix` will have no effect when using `@foreignSimpleFieldName`.
+
+Applies to:
+
+- tables
+- foreign key constraints
+- computed column functions returning `SETOF <record type>`
