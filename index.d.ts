@@ -1,2 +1,3 @@
-declare const PgSimplifyInflectorPlugin: import("graphile-build").Plugin;
+import type { Plugin } from "graphile-build";
+declare const PgSimplifyInflectorPlugin: Plugin;
 export default PgSimplifyInflectorPlugin;
