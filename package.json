@@ -1,6 +1,6 @@
 {
   "name": "@graphile-contrib/pg-simplify-inflector",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Simplifies the graphile-build-pg inflector to trim the `ByFooIdAndBarId` from relations",
   "main": "index.js",
   "scripts": {
