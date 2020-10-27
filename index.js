@@ -25,7 +25,7 @@ function fixChangePlural(fn) {
         return `${prefix}${fn.call(this, word)}${suffix}`;
     };
 }
-function SimplifyInflectorPlugin(builder, { pgSimpleCollections, pgOmitListSuffix, pgSimplifyPatch = true, pgSimplifyAllRows = true, pgShortPk = true, pgSimplifyMultikeyRelations = true, nodeIdFieldName = "nodeId", }) {
+function PgSimplifyInflectorPlugin(builder, { pgSimpleCollections, pgOmitListSuffix, pgSimplifyPatch = true, pgSimplifyAllRows = true, pgShortPk = true, pgSimplifyMultikeyRelations = true, nodeIdFieldName = "nodeId", }) {
     const hasConnections = pgSimpleCollections !== "only";
     const hasSimpleCollections = pgSimpleCollections === "only" || pgSimpleCollections === "both";
     if (hasSimpleCollections &&
@@ -328,9 +328,8 @@ function SimplifyInflectorPlugin(builder, { pgSimpleCollections, pgOmitListSuffi
             : null));
     });
 }
-// Hack to set the name in declaration emit
-const PgSimplifyInflectorPlugin = SimplifyInflectorPlugin;
-// Hack for CJS import
 module.exports = PgSimplifyInflectorPlugin;
-exports.default = PgSimplifyInflectorPlugin;
+// Hacks for TypeScript/Babel import
+module.exports.default = PgSimplifyInflectorPlugin;
+Object.defineProperty(module.exports, "__esModule", { value: true });
 //# sourceMappingURL=index.js.map

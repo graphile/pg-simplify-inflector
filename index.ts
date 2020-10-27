@@ -1,9 +1,4 @@
-import type {
-  Inflection,
-  Options,
-  Plugin,
-  SchemaBuilder,
-} from "graphile-build";
+import type { Inflection, Options, SchemaBuilder } from "graphile-build";
 import type {
   PgClass,
   PgConstraint,
@@ -44,7 +39,7 @@ function fixChangePlural(fn: (this: Inflection, str: string) => string) {
   };
 }
 
-function SimplifyInflectorPlugin(
+function PgSimplifyInflectorPlugin(
   builder: SchemaBuilder,
   {
     pgSimpleCollections,
@@ -552,10 +547,7 @@ function SimplifyInflectorPlugin(
   });
 }
 
-// Hack to set the name in declaration emit
-const PgSimplifyInflectorPlugin: Plugin = SimplifyInflectorPlugin;
-
-// Hack for CJS import
 module.exports = PgSimplifyInflectorPlugin;
-
-export default PgSimplifyInflectorPlugin;
+// Hacks for TypeScript/Babel import
+module.exports.default = PgSimplifyInflectorPlugin;
+Object.defineProperty(module.exports, "__esModule", { value: true });
