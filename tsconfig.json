@@ -4,7 +4,7 @@
     "module": "commonjs",
     "lib": ["es2018"],
     "declaration": false,
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true

@@ -4,6 +4,7 @@
   "description": "Simplifies the graphile-build-pg inflector to trim the `ByFooIdAndBarId` from relations",
   "main": "index.js",
   "scripts": {
+    "prepack": "tsc && prettier --write index.js",
     "postgraphile": "postgraphile --append-plugins \"$(pwd)/index.js\"",
     "lint:fix": "yarn prettier --write",
     "prettier": "prettier --ignore-path ./.eslintignore '**/*.{js,jsx,ts,tsx,graphql,md,json,yml}'",
