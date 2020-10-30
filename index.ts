@@ -6,13 +6,6 @@ import type {
   PgProc,
 } from "graphile-build-pg";
 
-function assert(
-  condition: boolean,
-  message = "Failed Assertion"
-): asserts condition {
-  if (!condition) throw new Error(message);
-}
-
 function fixCapitalisedPlural(fn: (this: Inflection, str: string) => string) {
   return function (this: Inflection, str: string) {
     const original = fn.call(this, str);
@@ -152,22 +145,23 @@ function PgSimplifyInflectorPlugin(
 
       /* This is a good method to override. */
       getOppositeBaseName(baseName: string) {
-        const lookup: Record<string, string | undefined> = {
-          /*
-           * Changes to this list are breaking changes and will require a
-           * major version update, so we need to group as many together as
-           * possible! Rather than sending a PR, please look for an open
-           * issue called something like "Add more opposites" (if there isn't
-           * one then please open it) and add your suggestions to the GitHub
-           * comments.
-           */
-          parent: "child",
-          child: "parent",
-          author: "authored",
-          editor: "edited",
-          reviewer: "reviewed",
-        };
-        return lookup[baseName] || null;
+        return (
+          ({
+            /*
+             * Changes to this list are breaking changes and will require a
+             * major version update, so we need to group as many together as
+             * possible! Rather than sending a PR, please look for an open
+             * issue called something like "Add more opposites" (if there isn't
+             * one then please open it) and add your suggestions to the GitHub
+             * comments.
+             */
+            parent: "child",
+            child: "parent",
+            author: "authored",
+            editor: "edited",
+            reviewer: "reviewed",
+          } as { [key: string]: string })[baseName] || null
+        );
       },
 
       getBaseNameFromKeys(detailedKeys: string[]) {
