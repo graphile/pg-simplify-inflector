@@ -1,27 +1,35 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-function fixCapitalisedPlural(fn) {
-  return function (str) {
+import type { Inflection, Options, SchemaBuilder } from "graphile-build";
+import type {
+  PgClass,
+  PgConstraint,
+  PgEntity,
+  PgProc,
+} from "graphile-build-pg";
+
+function fixCapitalisedPlural(fn: (this: Inflection, str: string) => string) {
+  return function (this: Inflection, str: string) {
     const original = fn.call(this, str);
     return original.replace(/[0-9]S(?=[A-Z]|$)/g, (match) =>
       match.toLowerCase()
     );
   };
 }
-function fixChangePlural(fn) {
-  return function (str) {
+
+function fixChangePlural(fn: (this: Inflection, str: string) => string) {
+  return function (this: Inflection, str: string) {
     const matches = str.match(/([A-Z]|_[a-z0-9])[a-z0-9]*_*$/);
-    const index = matches ? matches.index + matches[1].length - 1 : 0;
+    const index = matches ? matches.index! + matches[1].length - 1 : 0;
     const suffixMatches = str.match(/_*$/);
-    const suffixIndex = suffixMatches.index;
+    const suffixIndex = suffixMatches!.index!;
     const prefix = str.substr(0, index);
     const word = str.substr(index, suffixIndex - index);
     const suffix = str.substr(suffixIndex);
     return `${prefix}${fn.call(this, word)}${suffix}`;
   };
 }
+
 function PgSimplifyInflectorPlugin(
-  builder,
+  builder: SchemaBuilder,
   {
     pgSimpleCollections,
     pgOmitListSuffix,
@@ -30,11 +38,12 @@ function PgSimplifyInflectorPlugin(
     pgShortPk = true,
     pgSimplifyMultikeyRelations = true,
     nodeIdFieldName = "nodeId",
-  }
+  }: Options
 ) {
   const hasConnections = pgSimpleCollections !== "only";
   const hasSimpleCollections =
     pgSimpleCollections === "only" || pgSimpleCollections === "both";
+
   if (
     hasSimpleCollections &&
     !hasConnections &&
@@ -46,7 +55,8 @@ function PgSimplifyInflectorPlugin(
       "You can simplify the inflector further by adding `{graphileBuildOptions: {pgOmitListSuffix: true}}` to the options passed to PostGraphile, however be aware that doing so will mean that later enabling relay connections will be a breaking change. To dismiss this message, set `pgOmitListSuffix` to false instead."
     );
   }
-  function omitListSuffix(entity) {
+
+  function omitListSuffix(entity: PgEntity) {
     const tag = entity.tags.listSuffix;
     if (tag == null) return !!pgOmitListSuffix;
     if (tag !== "include" && tag !== "omit")
@@ -55,34 +65,42 @@ function PgSimplifyInflectorPlugin(
       );
     return tag === "omit";
   }
-  function connectionSuffix(entity) {
+
+  function connectionSuffix(entity: PgEntity) {
     return omitListSuffix(entity) ? "-connection" : "";
   }
-  function ConnectionSuffix(entity) {
+
+  function ConnectionSuffix(entity: PgEntity) {
     return omitListSuffix(entity) ? "Connection" : "";
   }
-  function listSuffix(entity) {
+
+  function listSuffix(entity: PgEntity) {
     return omitListSuffix(entity) ? "" : "-list";
   }
-  function ListSuffix(entity) {
+
+  function ListSuffix(entity: PgEntity) {
     return omitListSuffix(entity) ? "" : "List";
   }
+
   builder.hook("inflection", (oldInflection) => {
     return {
       ...oldInflection,
+
       /*
        * This solves the issue with `blah-table1s` becoming `blahTable1S`
        * (i.e. the capital S at the end) or `table1-connection becoming `Table1SConnection`
        */
       camelCase: fixCapitalisedPlural(oldInflection.camelCase),
       upperCamelCase: fixCapitalisedPlural(oldInflection.upperCamelCase),
+
       /*
        * Pluralize/singularize only supports single words, so only run
        * on the final segment of a name.
        */
       pluralize: fixChangePlural(oldInflection.pluralize),
       singularize: fixChangePlural(oldInflection.singularize),
-      distinctPluralize(str) {
+
+      distinctPluralize(str: string) {
         const singular = this.singularize(str);
         const plural = this.pluralize(singular);
         if (singular !== plural) {
@@ -102,13 +120,15 @@ function PgSimplifyInflectorPlugin(
           return plural + "s";
         }
       },
+
       // Fix a naming bug
-      deletedNodeId(table) {
+      deletedNodeId(table: PgClass) {
         return this.camelCase(
           `deleted-${this.singularize(table.name)}-${nodeIdFieldName}`
         );
       },
-      getBaseName(columnName) {
+
+      getBaseName(columnName: string) {
         const matches = columnName.match(
           /^(.+?)(_row_id|_id|_uuid|_fk|_pk|RowId|Id|Uuid|UUID|Fk|Pk)$/
         );
@@ -117,14 +137,16 @@ function PgSimplifyInflectorPlugin(
         }
         return null;
       },
-      baseNameMatches(baseName, otherName) {
+
+      baseNameMatches(baseName: string, otherName: string) {
         const singularizedName = this.singularize(otherName);
         return baseName === singularizedName;
       },
+
       /* This is a good method to override. */
-      getOppositeBaseName(baseName) {
+      getOppositeBaseName(baseName: string) {
         return (
-          {
+          ({
             /*
              * Changes to this list are breaking changes and will require a
              * major version update, so we need to group as many together as
@@ -138,10 +160,11 @@ function PgSimplifyInflectorPlugin(
             author: "authored",
             editor: "edited",
             reviewer: "reviewed",
-          }[baseName] || null
+          } as { [key: string]: string })[baseName] || null
         );
       },
-      getBaseNameFromKeys(detailedKeys) {
+
+      getBaseNameFromKeys(detailedKeys: string[]) {
         if (detailedKeys.length === 1) {
           const key = detailedKeys[0];
           const columnName = this._columnName(key);
@@ -159,6 +182,7 @@ function PgSimplifyInflectorPlugin(
         }
         return null;
       },
+
       ...(pgSimplifyPatch
         ? {
             patchField() {
@@ -166,15 +190,16 @@ function PgSimplifyInflectorPlugin(
             },
           }
         : null),
+
       ...(pgSimplifyAllRows
         ? {
-            allRows(table) {
+            allRows(table: PgClass) {
               return this.camelCase(
                 this.distinctPluralize(this._singularizedTableName(table)) +
                   connectionSuffix(table)
               );
             },
-            allRowsSimple(table) {
+            allRowsSimple(table: PgClass) {
               return this.camelCase(
                 this.distinctPluralize(this._singularizedTableName(table)) +
                   listSuffix(table)
@@ -182,7 +207,8 @@ function PgSimplifyInflectorPlugin(
             },
           }
         : null),
-      computedColumn(pseudoColumnName, proc, _table) {
+
+      computedColumn(pseudoColumnName: string, proc: PgProc, _table: PgClass) {
         return proc.tags.fieldName
           ? proc.tags.fieldName +
               (proc.returnsSet ? ConnectionSuffix(proc) : "")
@@ -190,12 +216,23 @@ function PgSimplifyInflectorPlugin(
               pseudoColumnName + (proc.returnsSet ? connectionSuffix(proc) : "")
             );
       },
-      computedColumnList(pseudoColumnName, proc, _table) {
+
+      computedColumnList(
+        pseudoColumnName: string,
+        proc: PgProc,
+        _table: PgClass
+      ) {
         return proc.tags.fieldName
           ? proc.tags.fieldName + ListSuffix(proc)
           : this.camelCase(pseudoColumnName + listSuffix(proc));
       },
-      singleRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
+
+      singleRelationByKeys(
+        detailedKeys: string[],
+        table: PgClass,
+        _foreignTable: PgClass,
+        constraint: PgConstraint
+      ) {
         if (constraint.tags.fieldName) {
           return constraint.tags.fieldName;
         }
@@ -213,11 +250,12 @@ function PgSimplifyInflectorPlugin(
           constraint
         );
       },
+
       singleRelationByKeysBackwards(
-        detailedKeys,
-        table,
-        foreignTable,
-        constraint
+        detailedKeys: string[],
+        table: PgClass,
+        foreignTable: PgClass,
+        constraint: PgConstraint
       ) {
         if (constraint.tags.foreignSingleFieldName) {
           return constraint.tags.foreignSingleFieldName;
@@ -242,7 +280,13 @@ function PgSimplifyInflectorPlugin(
           constraint
         );
       },
-      _manyRelationByKeysBase(detailedKeys, table, _foreignTable, _constraint) {
+
+      _manyRelationByKeysBase(
+        detailedKeys: string[],
+        table: PgClass,
+        _foreignTable: PgClass,
+        _constraint: PgConstraint
+      ) {
         const baseName = this.getBaseNameFromKeys(detailedKeys);
         const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
         if (oppositeBaseName) {
@@ -259,7 +303,13 @@ function PgSimplifyInflectorPlugin(
         }
         return null;
       },
-      manyRelationByKeys(detailedKeys, table, foreignTable, constraint) {
+
+      manyRelationByKeys(
+        detailedKeys: string,
+        table: PgClass,
+        foreignTable: PgClass,
+        constraint: PgConstraint
+      ) {
         if (constraint.tags.foreignFieldName) {
           if (constraint.tags.foreignSimpleFieldName) {
             return constraint.tags.foreignFieldName;
@@ -287,7 +337,13 @@ function PgSimplifyInflectorPlugin(
           ) + ConnectionSuffix(constraint)
         );
       },
-      manyRelationByKeysSimple(detailedKeys, table, foreignTable, constraint) {
+
+      manyRelationByKeysSimple(
+        detailedKeys: string,
+        table: PgClass,
+        foreignTable: PgClass,
+        constraint: PgConstraint
+      ) {
         if (constraint.tags.foreignSimpleFieldName) {
           return constraint.tags.foreignSimpleFieldName;
         }
@@ -312,23 +368,29 @@ function PgSimplifyInflectorPlugin(
           ) + ListSuffix(constraint)
         );
       },
-      functionQueryName(proc) {
+
+      functionQueryName(proc: PgProc) {
         return this.camelCase(
           this._functionName(proc) +
             (proc.returnsSet ? connectionSuffix(proc) : "")
         );
       },
-      functionQueryNameList(proc) {
+      functionQueryNameList(proc: PgProc) {
         return this.camelCase(this._functionName(proc) + listSuffix(proc));
       },
+
       ...(pgShortPk
         ? {
-            tableNode(table) {
+            tableNode(table: PgClass) {
               return this.camelCase(
                 `${this._singularizedTableName(table)}-by-${nodeIdFieldName}`
               );
             },
-            rowByUniqueKeys(detailedKeys, table, constraint) {
+            rowByUniqueKeys(
+              detailedKeys: string[],
+              table: PgClass,
+              constraint: PgConstraint
+            ) {
               if (constraint.tags.fieldName) {
                 return constraint.tags.fieldName;
               }
@@ -345,7 +407,12 @@ function PgSimplifyInflectorPlugin(
                 );
               }
             },
-            updateByKeys(detailedKeys, table, constraint) {
+
+            updateByKeys(
+              detailedKeys: string[],
+              table: PgClass,
+              constraint: PgConstraint
+            ) {
               if (constraint.tags.updateFieldName) {
                 return constraint.tags.updateFieldName;
               }
@@ -363,7 +430,11 @@ function PgSimplifyInflectorPlugin(
                 );
               }
             },
-            deleteByKeys(detailedKeys, table, constraint) {
+            deleteByKeys(
+              detailedKeys: string[],
+              table: PgClass,
+              constraint: PgConstraint
+            ) {
               if (constraint.tags.deleteFieldName) {
                 return constraint.tags.deleteFieldName;
               }
@@ -382,7 +453,11 @@ function PgSimplifyInflectorPlugin(
                 );
               }
             },
-            updateByKeysInputType(detailedKeys, table, constraint) {
+            updateByKeysInputType(
+              detailedKeys: string[],
+              table: PgClass,
+              constraint: PgConstraint
+            ) {
               if (constraint.tags.updateFieldName) {
                 return this.upperCamelCase(
                   `${constraint.tags.updateFieldName}-input`
@@ -403,7 +478,11 @@ function PgSimplifyInflectorPlugin(
                 );
               }
             },
-            deleteByKeysInputType(detailedKeys, table, constraint) {
+            deleteByKeysInputType(
+              detailedKeys: string[],
+              table: PgClass,
+              constraint: PgConstraint
+            ) {
               if (constraint.tags.deleteFieldName) {
                 return this.upperCamelCase(
                   `${constraint.tags.deleteFieldName}-input`
@@ -424,28 +503,28 @@ function PgSimplifyInflectorPlugin(
                 );
               }
             },
-            updateNode(table) {
+            updateNode(table: PgClass) {
               return this.camelCase(
                 `update-${this._singularizedTableName(
                   table
                 )}-by-${nodeIdFieldName}`
               );
             },
-            deleteNode(table) {
+            deleteNode(table: PgClass) {
               return this.camelCase(
                 `delete-${this._singularizedTableName(
                   table
                 )}-by-${nodeIdFieldName}`
               );
             },
-            updateNodeInputType(table) {
+            updateNodeInputType(table: PgClass) {
               return this.upperCamelCase(
                 `update-${this._singularizedTableName(
                   table
                 )}-by-${nodeIdFieldName}-input`
               );
             },
-            deleteNodeInputType(table) {
+            deleteNodeInputType(table: PgClass) {
               return this.upperCamelCase(
                 `delete-${this._singularizedTableName(
                   table
@@ -457,6 +536,7 @@ function PgSimplifyInflectorPlugin(
     };
   });
 }
+
 module.exports = PgSimplifyInflectorPlugin;
 // Hacks for TypeScript/Babel import
 module.exports.default = PgSimplifyInflectorPlugin;

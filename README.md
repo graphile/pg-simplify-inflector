@@ -196,9 +196,9 @@ Applies to:
 
 `@listSuffix` allows you to override the default naming on a per-entity basis,
 overriding `pgOmitListSuffix`. For example, with `pgOmitListSuffix: true`, you
-can apply `@listSuffix include` to have the `-List` suffix appended to the simple
-collection generated for that table, and remove the `-Connection` suffix from the
-Relay connection. When `pgOmitListSuffix` is not `true`, you can use
+can apply `@listSuffix include` to have the `-List` suffix appended to the
+simple collection generated for that table, and remove the `-Connection` suffix
+from the Relay connection. When `pgOmitListSuffix` is not `true`, you can use
 `@listSuffix omit` to selectively omit the `-List` suffix on simple collections
 and append `-Connection` to the Relay connection instead.
 
