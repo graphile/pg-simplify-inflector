@@ -25,13 +25,9 @@ function fixCapitalisedPlural(fn: (this: Inflection, str: string) => string) {
 function fixChangePlural(fn: (this: Inflection, str: string) => string) {
   return function (this: Inflection, str: string) {
     const matches = str.match(/([A-Z]|_[a-z0-9])[a-z0-9]*_*$/);
-    const index =
-      typeof matches?.index === "number"
-        ? matches.index + matches[1].length - 1
-        : 0;
+    const index = matches ? matches.index! + matches[1].length - 1 : 0;
     const suffixMatches = str.match(/_*$/);
-    const suffixIndex = suffixMatches?.index;
-    assert(typeof suffixIndex === "number");
+    const suffixIndex = suffixMatches!.index!;
     const prefix = str.substr(0, index);
     const word = str.substr(index, suffixIndex - index);
     const suffix = str.substr(suffixIndex);
