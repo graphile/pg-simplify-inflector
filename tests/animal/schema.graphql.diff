@@ -1,0 +1,378 @@
+--- unsimplified
++++ simplified
+@@ -6,10 +6,10 @@
+   id: Int!
+ 
+   """Reads a single `Dog` that is related to this `Animal`."""
+-  dogById: Dog
++  dog: Dog
+ 
+   """Reads and enables pagination through a set of `Dog`."""
+-  dogsById(
++  dogs(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -35,7 +35,7 @@
+     A condition to be used in determining which values should be returned by the collection.
+     """
+     condition: DogCondition
+-  ): DogsConnection! @deprecated(reason: "Please use dogById instead")
++  ): DogsConnection! @deprecated(reason: "Please use dog instead")
+ }
+ 
+ """
+@@ -157,7 +157,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Dog`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Dog`. May be used by Relay 1."""
+   dogEdge(
+@@ -169,14 +169,18 @@
+ """A location in a connection that can be used for resuming pagination."""
+ scalar Cursor
+ 
+-"""All input for the `deleteAnimalById` mutation."""
+-input DeleteAnimalByIdInput {
++"""All input for the `deleteAnimalByNodeId` mutation."""
++input DeleteAnimalByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Animal` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteAnimal` mutation."""
+@@ -186,11 +190,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Animal` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Animal` mutation."""
+@@ -203,7 +203,7 @@
+ 
+   """The `Animal` that was deleted by this mutation."""
+   animal: Animal
+-  deletedAnimalId: ID
++  deletedAnimalNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -217,14 +217,18 @@
+   ): AnimalsEdge
+ }
+ 
+-"""All input for the `deleteDogById` mutation."""
+-input DeleteDogByIdInput {
++"""All input for the `deleteDogByNodeId` mutation."""
++input DeleteDogByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Dog` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteDog` mutation."""
+@@ -234,11 +238,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Dog` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Dog` mutation."""
+@@ -251,7 +251,7 @@
+ 
+   """The `Dog` that was deleted by this mutation."""
+   dog: Dog
+-  deletedDogId: ID
++  deletedDogNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -259,7 +259,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Dog`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Dog`. May be used by Relay 1."""
+   dogEdge(
+@@ -276,7 +276,7 @@
+   id: Int!
+ 
+   """Reads a single `Animal` that is related to this `Dog`."""
+-  animalById: Animal
++  animal: Animal
+ }
+ 
+ """
+@@ -353,67 +353,67 @@
+   ): CreateDogPayload
+ 
+   """Updates a single `Animal` using its globally unique id and a patch."""
+-  updateAnimal(
++  updateAnimalByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateAnimalInput!
++    input: UpdateAnimalByNodeIdInput!
+   ): UpdateAnimalPayload
+ 
+   """Updates a single `Animal` using a unique key and a patch."""
+-  updateAnimalById(
++  updateAnimal(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateAnimalByIdInput!
++    input: UpdateAnimalInput!
+   ): UpdateAnimalPayload
+ 
+   """Updates a single `Dog` using its globally unique id and a patch."""
+-  updateDog(
++  updateDogByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateDogInput!
++    input: UpdateDogByNodeIdInput!
+   ): UpdateDogPayload
+ 
+   """Updates a single `Dog` using a unique key and a patch."""
+-  updateDogById(
++  updateDog(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateDogByIdInput!
++    input: UpdateDogInput!
+   ): UpdateDogPayload
+ 
+   """Deletes a single `Animal` using its globally unique id."""
+-  deleteAnimal(
++  deleteAnimalByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteAnimalInput!
++    input: DeleteAnimalByNodeIdInput!
+   ): DeleteAnimalPayload
+ 
+   """Deletes a single `Animal` using a unique key."""
+-  deleteAnimalById(
++  deleteAnimal(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteAnimalByIdInput!
++    input: DeleteAnimalInput!
+   ): DeleteAnimalPayload
+ 
+   """Deletes a single `Dog` using its globally unique id."""
+-  deleteDog(
++  deleteDogByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteDogInput!
++    input: DeleteDogByNodeIdInput!
+   ): DeleteDogPayload
+ 
+   """Deletes a single `Dog` using a unique key."""
+-  deleteDogById(
++  deleteDog(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteDogByIdInput!
++    input: DeleteDogInput!
+   ): DeleteDogPayload
+ }
+ 
+@@ -460,7 +460,7 @@
+   ): Node
+ 
+   """Reads and enables pagination through a set of `Animal`."""
+-  allAnimals(
++  animals(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -489,7 +489,7 @@
+   ): AnimalsConnection
+ 
+   """Reads a set of `Animal`."""
+-  allAnimalsList(
++  animalsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -506,7 +506,7 @@
+   ): [Animal!]
+ 
+   """Reads and enables pagination through a set of `Dog`."""
+-  allDogs(
++  dogs(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -535,7 +535,7 @@
+   ): DogsConnection
+ 
+   """Reads a set of `Dog`."""
+-  allDogsList(
++  dogsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -550,24 +550,24 @@
+     """
+     condition: DogCondition
+   ): [Dog!]
+-  animalById(id: Int!): Animal
+-  dogById(id: Int!): Dog
++  animal(id: Int!): Animal
++  dog(id: Int!): Dog
+ 
+   """Reads a single `Animal` using its globally unique `ID`."""
+-  animal(
++  animalByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Animal`."""
+     nodeId: ID!
+   ): Animal
+ 
+   """Reads a single `Dog` using its globally unique `ID`."""
+-  dog(
++  dogByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Dog`."""
+     nodeId: ID!
+   ): Dog
+ }
+ 
+-"""All input for the `updateAnimalById` mutation."""
+-input UpdateAnimalByIdInput {
++"""All input for the `updateAnimalByNodeId` mutation."""
++input UpdateAnimalByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -575,10 +575,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Animal` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Animal` being updated.
+   """
+-  animalPatch: AnimalPatch!
+-  id: Int!
++  patch: AnimalPatch!
+ }
+ 
+ """All input for the `updateAnimal` mutation."""
+@@ -590,14 +594,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Animal` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Animal` being updated.
+   """
+-  animalPatch: AnimalPatch!
++  patch: AnimalPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Animal` mutation."""
+@@ -623,8 +623,8 @@
+   ): AnimalsEdge
+ }
+ 
+-"""All input for the `updateDogById` mutation."""
+-input UpdateDogByIdInput {
++"""All input for the `updateDogByNodeId` mutation."""
++input UpdateDogByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -632,10 +632,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Dog` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Dog` being updated.
+   """
+-  dogPatch: DogPatch!
+-  id: Int!
++  patch: DogPatch!
+ }
+ 
+ """All input for the `updateDog` mutation."""
+@@ -647,14 +651,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Dog` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Dog` being updated.
+   """
+-  dogPatch: DogPatch!
++  patch: DogPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Dog` mutation."""
+@@ -674,7 +674,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Dog`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Dog`. May be used by Relay 1."""
+   dogEdge(
