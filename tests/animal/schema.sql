@@ -5,3 +5,11 @@ create table animal (
 create table dog (
   id integer primary key references animal
 );
+
+create table cat (
+  id integer primary key references animal
+);
+
+create table gerbil (
+  animal_id integer primary key references animal
+);

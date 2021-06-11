@@ -36,6 +36,70 @@ type Animal implements Node {
     """
     condition: DogCondition
   ): DogsConnection! @deprecated(reason: "Please use dogById instead")
+
+  """Reads a single `Cat` that is related to this `Animal`."""
+  catById: Cat
+
+  """Reads and enables pagination through a set of `Cat`."""
+  catsById(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Cat`."""
+    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CatCondition
+  ): CatsConnection! @deprecated(reason: "Please use catById instead")
+
+  """Reads a single `Gerbil` that is related to this `Animal`."""
+  gerbilByAnimalId: Gerbil
+
+  """Reads and enables pagination through a set of `Gerbil`."""
+  gerbilsByAnimalId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Gerbil`."""
+    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GerbilCondition
+  ): GerbilsConnection! @deprecated(reason: "Please use gerbilByAnimalId instead")
 }
 
 """
@@ -93,6 +157,70 @@ enum AnimalsOrderBy {
   PRIMARY_KEY_DESC
 }
 
+type Cat implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+
+  """Reads a single `Animal` that is related to this `Cat`."""
+  animalById: Animal
+}
+
+"""
+A condition to be used against `Cat` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input CatCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+}
+
+"""An input for mutations affecting `Cat`"""
+input CatInput {
+  id: Int!
+}
+
+"""Represents an update to a `Cat`. Fields that are set will be updated."""
+input CatPatch {
+  id: Int
+}
+
+"""A connection to a list of `Cat` values."""
+type CatsConnection {
+  """A list of `Cat` objects."""
+  nodes: [Cat]!
+
+  """
+  A list of edges which contains the `Cat` and cursor to aid in pagination.
+  """
+  edges: [CatsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Cat` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Cat` edge in the connection."""
+type CatsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Cat` at the end of the edge."""
+  node: Cat
+}
+
+"""Methods to use when ordering `Cat`."""
+enum CatsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """All input for the create `Animal` mutation."""
 input CreateAnimalInput {
   """
@@ -126,6 +254,44 @@ type CreateAnimalPayload {
     """The method to use when ordering `Animal`."""
     orderBy: [AnimalsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnimalsEdge
+}
+
+"""All input for the create `Cat` mutation."""
+input CreateCatInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Cat` to be created by this mutation."""
+  cat: CatInput!
+}
+
+"""The output of our create `Cat` mutation."""
+type CreateCatPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Cat` that was created by this mutation."""
+  cat: Cat
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Animal` that is related to this `Cat`."""
+  animalById: Animal
+
+  """An edge for our `Cat`. May be used by Relay 1."""
+  catEdge(
+    """The method to use when ordering `Cat`."""
+    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CatsEdge
 }
 
 """All input for the create `Dog` mutation."""
@@ -164,6 +330,44 @@ type CreateDogPayload {
     """The method to use when ordering `Dog`."""
     orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
   ): DogsEdge
+}
+
+"""All input for the create `Gerbil` mutation."""
+input CreateGerbilInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Gerbil` to be created by this mutation."""
+  gerbil: GerbilInput!
+}
+
+"""The output of our create `Gerbil` mutation."""
+type CreateGerbilPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Gerbil` that was created by this mutation."""
+  gerbil: Gerbil
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Animal` that is related to this `Gerbil`."""
+  animalByAnimalId: Animal
+
+  """An edge for our `Gerbil`. May be used by Relay 1."""
+  gerbilEdge(
+    """The method to use when ordering `Gerbil`."""
+    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GerbilsEdge
 }
 
 """A location in a connection that can be used for resuming pagination."""
@@ -217,6 +421,57 @@ type DeleteAnimalPayload {
   ): AnimalsEdge
 }
 
+"""All input for the `deleteCatById` mutation."""
+input DeleteCatByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""All input for the `deleteCat` mutation."""
+input DeleteCatInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Cat` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The output of our delete `Cat` mutation."""
+type DeleteCatPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Cat` that was deleted by this mutation."""
+  cat: Cat
+  deletedCatId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Animal` that is related to this `Cat`."""
+  animalById: Animal
+
+  """An edge for our `Cat`. May be used by Relay 1."""
+  catEdge(
+    """The method to use when ordering `Cat`."""
+    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CatsEdge
+}
+
 """All input for the `deleteDogById` mutation."""
 input DeleteDogByIdInput {
   """
@@ -266,6 +521,57 @@ type DeleteDogPayload {
     """The method to use when ordering `Dog`."""
     orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
   ): DogsEdge
+}
+
+"""All input for the `deleteGerbilByAnimalId` mutation."""
+input DeleteGerbilByAnimalIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  animalId: Int!
+}
+
+"""All input for the `deleteGerbil` mutation."""
+input DeleteGerbilInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Gerbil` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The output of our delete `Gerbil` mutation."""
+type DeleteGerbilPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Gerbil` that was deleted by this mutation."""
+  gerbil: Gerbil
+  deletedGerbilId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Animal` that is related to this `Gerbil`."""
+  animalByAnimalId: Animal
+
+  """An edge for our `Gerbil`. May be used by Relay 1."""
+  gerbilEdge(
+    """The method to use when ordering `Gerbil`."""
+    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GerbilsEdge
 }
 
 type Dog implements Node {
@@ -332,6 +638,72 @@ enum DogsOrderBy {
   PRIMARY_KEY_DESC
 }
 
+type Gerbil implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  animalId: Int!
+
+  """Reads a single `Animal` that is related to this `Gerbil`."""
+  animalByAnimalId: Animal
+}
+
+"""
+A condition to be used against `Gerbil` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input GerbilCondition {
+  """Checks for equality with the object’s `animalId` field."""
+  animalId: Int
+}
+
+"""An input for mutations affecting `Gerbil`"""
+input GerbilInput {
+  animalId: Int!
+}
+
+"""
+Represents an update to a `Gerbil`. Fields that are set will be updated.
+"""
+input GerbilPatch {
+  animalId: Int
+}
+
+"""A connection to a list of `Gerbil` values."""
+type GerbilsConnection {
+  """A list of `Gerbil` objects."""
+  nodes: [Gerbil]!
+
+  """
+  A list of edges which contains the `Gerbil` and cursor to aid in pagination.
+  """
+  edges: [GerbilsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Gerbil` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Gerbil` edge in the connection."""
+type GerbilsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Gerbil` at the end of the edge."""
+  node: Gerbil
+}
+
+"""Methods to use when ordering `Gerbil`."""
+enum GerbilsOrderBy {
+  NATURAL
+  ANIMAL_ID_ASC
+  ANIMAL_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
 """
 The root mutation type which contains root level fields which mutate data.
 """
@@ -344,6 +716,14 @@ type Mutation {
     input: CreateAnimalInput!
   ): CreateAnimalPayload
 
+  """Creates a single `Cat`."""
+  createCat(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateCatInput!
+  ): CreateCatPayload
+
   """Creates a single `Dog`."""
   createDog(
     """
@@ -351,6 +731,14 @@ type Mutation {
     """
     input: CreateDogInput!
   ): CreateDogPayload
+
+  """Creates a single `Gerbil`."""
+  createGerbil(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateGerbilInput!
+  ): CreateGerbilPayload
 
   """Updates a single `Animal` using its globally unique id and a patch."""
   updateAnimal(
@@ -368,6 +756,22 @@ type Mutation {
     input: UpdateAnimalByIdInput!
   ): UpdateAnimalPayload
 
+  """Updates a single `Cat` using its globally unique id and a patch."""
+  updateCat(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCatInput!
+  ): UpdateCatPayload
+
+  """Updates a single `Cat` using a unique key and a patch."""
+  updateCatById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateCatByIdInput!
+  ): UpdateCatPayload
+
   """Updates a single `Dog` using its globally unique id and a patch."""
   updateDog(
     """
@@ -383,6 +787,22 @@ type Mutation {
     """
     input: UpdateDogByIdInput!
   ): UpdateDogPayload
+
+  """Updates a single `Gerbil` using its globally unique id and a patch."""
+  updateGerbil(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGerbilInput!
+  ): UpdateGerbilPayload
+
+  """Updates a single `Gerbil` using a unique key and a patch."""
+  updateGerbilByAnimalId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGerbilByAnimalIdInput!
+  ): UpdateGerbilPayload
 
   """Deletes a single `Animal` using its globally unique id."""
   deleteAnimal(
@@ -400,6 +820,22 @@ type Mutation {
     input: DeleteAnimalByIdInput!
   ): DeleteAnimalPayload
 
+  """Deletes a single `Cat` using its globally unique id."""
+  deleteCat(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCatInput!
+  ): DeleteCatPayload
+
+  """Deletes a single `Cat` using a unique key."""
+  deleteCatById(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteCatByIdInput!
+  ): DeleteCatPayload
+
   """Deletes a single `Dog` using its globally unique id."""
   deleteDog(
     """
@@ -415,6 +851,22 @@ type Mutation {
     """
     input: DeleteDogByIdInput!
   ): DeleteDogPayload
+
+  """Deletes a single `Gerbil` using its globally unique id."""
+  deleteGerbil(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGerbilInput!
+  ): DeleteGerbilPayload
+
+  """Deletes a single `Gerbil` using a unique key."""
+  deleteGerbilByAnimalId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGerbilByAnimalIdInput!
+  ): DeleteGerbilPayload
 }
 
 """An object with a globally unique `ID`."""
@@ -505,6 +957,52 @@ type Query implements Node {
     condition: AnimalCondition
   ): [Animal!]
 
+  """Reads and enables pagination through a set of `Cat`."""
+  allCats(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Cat`."""
+    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CatCondition
+  ): CatsConnection
+
+  """Reads a set of `Cat`."""
+  allCatsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Cat`."""
+    orderBy: [CatsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: CatCondition
+  ): [Cat!]
+
   """Reads and enables pagination through a set of `Dog`."""
   allDogs(
     """Only read the first `n` values of the set."""
@@ -550,8 +1048,56 @@ type Query implements Node {
     """
     condition: DogCondition
   ): [Dog!]
+
+  """Reads and enables pagination through a set of `Gerbil`."""
+  allGerbils(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Gerbil`."""
+    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GerbilCondition
+  ): GerbilsConnection
+
+  """Reads a set of `Gerbil`."""
+  allGerbilsList(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Gerbil`."""
+    orderBy: [GerbilsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GerbilCondition
+  ): [Gerbil!]
   animalById(id: Int!): Animal
+  catById(id: Int!): Cat
   dogById(id: Int!): Dog
+  gerbilByAnimalId(animalId: Int!): Gerbil
 
   """Reads a single `Animal` using its globally unique `ID`."""
   animal(
@@ -559,11 +1105,23 @@ type Query implements Node {
     nodeId: ID!
   ): Animal
 
+  """Reads a single `Cat` using its globally unique `ID`."""
+  cat(
+    """The globally unique `ID` to be used in selecting a single `Cat`."""
+    nodeId: ID!
+  ): Cat
+
   """Reads a single `Dog` using its globally unique `ID`."""
   dog(
     """The globally unique `ID` to be used in selecting a single `Dog`."""
     nodeId: ID!
   ): Dog
+
+  """Reads a single `Gerbil` using its globally unique `ID`."""
+  gerbil(
+    """The globally unique `ID` to be used in selecting a single `Gerbil`."""
+    nodeId: ID!
+  ): Gerbil
 }
 
 """All input for the `updateAnimalById` mutation."""
@@ -621,6 +1179,66 @@ type UpdateAnimalPayload {
     """The method to use when ordering `Animal`."""
     orderBy: [AnimalsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnimalsEdge
+}
+
+"""All input for the `updateCatById` mutation."""
+input UpdateCatByIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Cat` being updated.
+  """
+  catPatch: CatPatch!
+  id: Int!
+}
+
+"""All input for the `updateCat` mutation."""
+input UpdateCatInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Cat` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Cat` being updated.
+  """
+  catPatch: CatPatch!
+}
+
+"""The output of our update `Cat` mutation."""
+type UpdateCatPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Cat` that was updated by this mutation."""
+  cat: Cat
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Animal` that is related to this `Cat`."""
+  animalById: Animal
+
+  """An edge for our `Cat`. May be used by Relay 1."""
+  catEdge(
+    """The method to use when ordering `Cat`."""
+    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): CatsEdge
 }
 
 """All input for the `updateDogById` mutation."""
@@ -681,4 +1299,64 @@ type UpdateDogPayload {
     """The method to use when ordering `Dog`."""
     orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
   ): DogsEdge
+}
+
+"""All input for the `updateGerbilByAnimalId` mutation."""
+input UpdateGerbilByAnimalIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Gerbil` being updated.
+  """
+  gerbilPatch: GerbilPatch!
+  animalId: Int!
+}
+
+"""All input for the `updateGerbil` mutation."""
+input UpdateGerbilInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Gerbil` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Gerbil` being updated.
+  """
+  gerbilPatch: GerbilPatch!
+}
+
+"""The output of our update `Gerbil` mutation."""
+type UpdateGerbilPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Gerbil` that was updated by this mutation."""
+  gerbil: Gerbil
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Animal` that is related to this `Gerbil`."""
+  animalByAnimalId: Animal
+
+  """An edge for our `Gerbil`. May be used by Relay 1."""
+  gerbilEdge(
+    """The method to use when ordering `Gerbil`."""
+    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): GerbilsEdge
 }
