@@ -9,7 +9,7 @@ type Animal implements Node {
   dog: Dog
 
   """Reads and enables pagination through a set of `Dog`."""
-  dogsById(
+  dogs(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -41,7 +41,7 @@ type Animal implements Node {
   cat: Cat
 
   """Reads and enables pagination through a set of `Cat`."""
-  catsById(
+  cats(
     """Only read the first `n` values of the set."""
     first: Int
 

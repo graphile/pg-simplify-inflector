@@ -295,6 +295,13 @@ function PgSimplifyInflectorPlugin(
         if (base) {
           return base + ConnectionSuffix(constraint);
         }
+        if (isPrimaryKey(detailedKeys, table)) {
+          return (
+            this.camelCase(
+              `${this.distinctPluralize(this._singularizedTableName(table))}`
+            ) + ConnectionSuffix(constraint)
+          );
+        }
         return (
           oldInflection.manyRelationByKeys(
             detailedKeys,
@@ -324,7 +331,7 @@ function PgSimplifyInflectorPlugin(
           return (
             this.camelCase(
               `${this.distinctPluralize(this._singularizedTableName(table))}`
-            ) + ConnectionSuffix(constraint)
+            ) + ListSuffix(constraint)
           );
         }
         return (
