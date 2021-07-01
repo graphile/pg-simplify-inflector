@@ -1,112 +1,64 @@
 --- unsimplified
 +++ simplified
-@@ -27,7 +27,7 @@
-   query: Query
+@@ -18,7 +18,7 @@
+   ): Node
  
-   """Reads a single `Pond` that is related to this `Fish`."""
--  pondByPondId: Pond
-+  pond: Pond
+   """Reads and enables pagination through a set of `Fish`."""
+-  allFish(
++  fishes(
+     """Only read the first `n` values of the set."""
+     first: Int
  
-   """An edge for our `Fish`. May be used by Relay 1."""
-   fishEdge(
-@@ -74,14 +74,18 @@
- """A location in a connection that can be used for resuming pagination."""
- scalar Cursor
+@@ -47,7 +47,7 @@
+   ): FishConnection
  
--"""All input for the `deleteFishById` mutation."""
--input DeleteFishByIdInput {
-+"""All input for the `deleteFishByNodeId` mutation."""
-+input DeleteFishByNodeIdInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-   """
-   clientMutationId: String
--  id: Int!
-+
-+  """
-+  The globally unique `ID` which will identify a single `Fish` to be deleted.
-+  """
-+  nodeId: ID!
- }
+   """Reads a set of `Fish`."""
+-  allFishList(
++  fishesList(
+     """Only read the first `n` values of the set."""
+     first: Int
  
- """All input for the `deleteFish` mutation."""
-@@ -91,11 +95,7 @@
-   payload verbatim. May be used to track mutations by the client.
-   """
-   clientMutationId: String
--
--  """
--  The globally unique `ID` which will identify a single `Fish` to be deleted.
--  """
--  nodeId: ID!
-+  id: Int!
- }
+@@ -64,7 +64,7 @@
+   ): [Fish!]
  
- """The output of our delete `Fish` mutation."""
-@@ -108,7 +108,7 @@
+   """Reads and enables pagination through a set of `Pond`."""
+-  allPonds(
++  ponds(
+     """Only read the first `n` values of the set."""
+     first: Int
  
-   """The `Fish` that was deleted by this mutation."""
-   fish: Fish
--  deletedFishId: ID
-+  deletedFishNodeId: ID
+@@ -93,7 +93,7 @@
+   ): PondsConnection
  
-   """
-   Our root query field type. Allows us to run any query from our mutation payload.
-@@ -116,7 +116,7 @@
-   query: Query
+   """Reads a set of `Pond`."""
+-  allPondsList(
++  pondsList(
+     """Only read the first `n` values of the set."""
+     first: Int
  
-   """Reads a single `Pond` that is related to this `Fish`."""
--  pondByPondId: Pond
-+  pond: Pond
+@@ -108,17 +108,17 @@
+     """
+     condition: PondCondition
+   ): [Pond!]
+-  fishById(id: Int!): Fish
+-  pondById(id: Int!): Pond
++  fish(id: Int!): Fish
++  pond(id: Int!): Pond
  
-   """An edge for our `Fish`. May be used by Relay 1."""
-   fishEdge(
-@@ -125,14 +125,18 @@
-   ): FishEdge
- }
+   """Reads a single `Fish` using its globally unique `ID`."""
+-  fish(
++  fishByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Fish`."""
+     nodeId: ID!
+   ): Fish
  
--"""All input for the `deletePondById` mutation."""
--input DeletePondByIdInput {
-+"""All input for the `deletePondByNodeId` mutation."""
-+input DeletePondByNodeIdInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-   """
-   clientMutationId: String
--  id: Int!
-+
-+  """
-+  The globally unique `ID` which will identify a single `Pond` to be deleted.
-+  """
-+  nodeId: ID!
- }
- 
- """All input for the `deletePond` mutation."""
-@@ -142,11 +146,7 @@
-   payload verbatim. May be used to track mutations by the client.
-   """
-   clientMutationId: String
--
--  """
--  The globally unique `ID` which will identify a single `Pond` to be deleted.
--  """
--  nodeId: ID!
-+  id: Int!
- }
- 
- """The output of our delete `Pond` mutation."""
+   """Reads a single `Pond` using its globally unique `ID`."""
+-  pond(
++  pondByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Pond`."""
+     nodeId: ID!
+   ): Pond
 @@ -159,7 +159,7 @@
- 
-   """The `Pond` that was deleted by this mutation."""
-   pond: Pond
--  deletedPondId: ID
-+  deletedPondNodeId: ID
- 
-   """
-   Our root query field type. Allows us to run any query from our mutation payload.
-@@ -183,7 +183,7 @@
    name: String!
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -114,8 +66,26 @@
 +  pond: Pond
  }
  
- """
-@@ -274,67 +274,67 @@
+ type Pond implements Node {
+@@ -171,7 +171,7 @@
+   name: String!
+ 
+   """Reads and enables pagination through a set of `Fish`."""
+-  fishByPondId(
++  fishes(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -200,7 +200,7 @@
+   ): FishConnection!
+ 
+   """Reads and enables pagination through a set of `Fish`."""
+-  fishByPondIdList(
++  fishesList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -340,67 +340,67 @@
    ): CreatePondPayload
  
    """Updates a single `Fish` using its globally unique id and a patch."""
@@ -199,126 +169,7 @@
    ): DeletePondPayload
  }
  
-@@ -370,7 +370,7 @@
-   name: String!
- 
-   """Reads and enables pagination through a set of `Fish`."""
--  fishByPondId(
-+  fishes(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -399,7 +399,7 @@
-   ): FishConnection!
- 
-   """Reads and enables pagination through a set of `Fish`."""
--  fishByPondIdList(
-+  fishesList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -496,7 +496,7 @@
-   ): Node
- 
-   """Reads and enables pagination through a set of `Fish`."""
--  allFish(
-+  fishes(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -525,7 +525,7 @@
-   ): FishConnection
- 
-   """Reads a set of `Fish`."""
--  allFishList(
-+  fishesList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -542,7 +542,7 @@
-   ): [Fish!]
- 
-   """Reads and enables pagination through a set of `Pond`."""
--  allPonds(
-+  ponds(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -571,7 +571,7 @@
-   ): PondsConnection
- 
-   """Reads a set of `Pond`."""
--  allPondsList(
-+  pondsList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -586,24 +586,24 @@
-     """
-     condition: PondCondition
-   ): [Pond!]
--  fishById(id: Int!): Fish
--  pondById(id: Int!): Pond
-+  fish(id: Int!): Fish
-+  pond(id: Int!): Pond
- 
-   """Reads a single `Fish` using its globally unique `ID`."""
--  fish(
-+  fishByNodeId(
-     """The globally unique `ID` to be used in selecting a single `Fish`."""
-     nodeId: ID!
-   ): Fish
- 
-   """Reads a single `Pond` using its globally unique `ID`."""
--  pond(
-+  pondByNodeId(
-     """The globally unique `ID` to be used in selecting a single `Pond`."""
-     nodeId: ID!
-   ): Pond
- }
- 
--"""All input for the `updateFishById` mutation."""
--input UpdateFishByIdInput {
-+"""All input for the `updateFishByNodeId` mutation."""
-+input UpdateFishByNodeIdInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-@@ -611,10 +611,14 @@
-   clientMutationId: String
- 
-   """
-+  The globally unique `ID` which will identify a single `Fish` to be updated.
-+  """
-+  nodeId: ID!
-+
-+  """
-   An object where the defined keys will be set on the `Fish` being updated.
-   """
--  fishPatch: FishPatch!
--  id: Int!
-+  patch: FishPatch!
- }
- 
- """All input for the `updateFish` mutation."""
-@@ -626,14 +630,10 @@
-   clientMutationId: String
- 
-   """
--  The globally unique `ID` which will identify a single `Fish` to be updated.
--  """
--  nodeId: ID!
--
--  """
-   An object where the defined keys will be set on the `Fish` being updated.
-   """
--  fishPatch: FishPatch!
-+  patch: FishPatch!
-+  id: Int!
- }
- 
- """The output of our update `Fish` mutation."""
-@@ -653,7 +653,7 @@
+@@ -421,7 +421,7 @@
    query: Query
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -327,48 +178,163 @@
  
    """An edge for our `Fish`. May be used by Relay 1."""
    fishEdge(
-@@ -662,8 +662,8 @@
+@@ -507,7 +507,7 @@
+   query: Query
+ 
+   """Reads a single `Pond` that is related to this `Fish`."""
+-  pondByPondId: Pond
++  pond: Pond
+ 
+   """An edge for our `Fish`. May be used by Relay 1."""
+   fishEdge(
+@@ -516,8 +516,8 @@
    ): FishEdge
  }
  
--"""All input for the `updatePondById` mutation."""
--input UpdatePondByIdInput {
+-"""All input for the `updateFish` mutation."""
+-input UpdateFishInput {
++"""All input for the `updateFishByNodeId` mutation."""
++input UpdateFishByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -532,7 +532,7 @@
+   """
+   An object where the defined keys will be set on the `Fish` being updated.
+   """
+-  fishPatch: FishPatch!
++  patch: FishPatch!
+ }
+ 
+ """Represents an update to a `Fish`. Fields that are set will be updated."""
+@@ -542,8 +542,8 @@
+   name: String
+ }
+ 
+-"""All input for the `updateFishById` mutation."""
+-input UpdateFishByIdInput {
++"""All input for the `updateFish` mutation."""
++input UpdateFishInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -553,7 +553,7 @@
+   """
+   An object where the defined keys will be set on the `Fish` being updated.
+   """
+-  fishPatch: FishPatch!
++  patch: FishPatch!
+   id: Int!
+ }
+ 
+@@ -580,8 +580,8 @@
+   ): PondsEdge
+ }
+ 
+-"""All input for the `updatePond` mutation."""
+-input UpdatePondInput {
 +"""All input for the `updatePondByNodeId` mutation."""
 +input UpdatePondByNodeIdInput {
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -671,10 +671,14 @@
-   clientMutationId: String
- 
+@@ -596,7 +596,7 @@
    """
-+  The globally unique `ID` which will identify a single `Pond` to be updated.
-+  """
-+  nodeId: ID!
-+
-+  """
-   An object where the defined keys will be set on the `Pond` being updated.
-   """
--  pondPatch: PondPatch!
--  id: Int!
-+  patch: PondPatch!
- }
- 
- """All input for the `updatePond` mutation."""
-@@ -686,14 +690,10 @@
-   clientMutationId: String
- 
-   """
--  The globally unique `ID` which will identify a single `Pond` to be updated.
--  """
--  nodeId: ID!
--
--  """
    An object where the defined keys will be set on the `Pond` being updated.
    """
 -  pondPatch: PondPatch!
 +  patch: PondPatch!
-+  id: Int!
  }
  
- """The output of our update `Pond` mutation."""
+ """Represents an update to a `Pond`. Fields that are set will be updated."""
+@@ -605,8 +605,8 @@
+   name: String
+ }
+ 
+-"""All input for the `updatePondById` mutation."""
+-input UpdatePondByIdInput {
++"""All input for the `updatePond` mutation."""
++input UpdatePondInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -616,7 +616,7 @@
+   """
+   An object where the defined keys will be set on the `Pond` being updated.
+   """
+-  pondPatch: PondPatch!
++  patch: PondPatch!
+   id: Int!
+ }
+ 
+@@ -630,7 +630,7 @@
+ 
+   """The `Fish` that was deleted by this mutation."""
+   fish: Fish
+-  deletedFishId: ID
++  deletedFishNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -638,7 +638,7 @@
+   query: Query
+ 
+   """Reads a single `Pond` that is related to this `Fish`."""
+-  pondByPondId: Pond
++  pond: Pond
+ 
+   """An edge for our `Fish`. May be used by Relay 1."""
+   fishEdge(
+@@ -647,8 +647,8 @@
+   ): FishEdge
+ }
+ 
+-"""All input for the `deleteFish` mutation."""
+-input DeleteFishInput {
++"""All input for the `deleteFishByNodeId` mutation."""
++input DeleteFishByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -661,8 +661,8 @@
+   nodeId: ID!
+ }
+ 
+-"""All input for the `deleteFishById` mutation."""
+-input DeleteFishByIdInput {
++"""All input for the `deleteFish` mutation."""
++input DeleteFishInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -681,7 +681,7 @@
+ 
+   """The `Pond` that was deleted by this mutation."""
+   pond: Pond
+-  deletedPondId: ID
++  deletedPondNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -695,8 +695,8 @@
+   ): PondsEdge
+ }
+ 
+-"""All input for the `deletePond` mutation."""
+-input DeletePondInput {
++"""All input for the `deletePondByNodeId` mutation."""
++input DeletePondByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -709,8 +709,8 @@
+   nodeId: ID!
+ }
+ 
+-"""All input for the `deletePondById` mutation."""
+-input DeletePondByIdInput {
++"""All input for the `deletePond` mutation."""
++input DeletePondInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.

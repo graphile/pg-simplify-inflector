@@ -1,288 +1,3 @@
-"""All input for the create `SomethingDatum` mutation."""
-input CreateSomethingDatumInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `SomethingDatum` to be created by this mutation."""
-  somethingDatum: SomethingDatumInput!
-}
-
-"""The output of our create `SomethingDatum` mutation."""
-type CreateSomethingDatumPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `SomethingDatum` that was created by this mutation."""
-  somethingDatum: SomethingDatum
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Something` that is related to this `SomethingDatum`."""
-  some: Something
-
-  """An edge for our `SomethingDatum`. May be used by Relay 1."""
-  somethingDatumEdge(
-    """The method to use when ordering `SomethingDatum`."""
-    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SomethingDataEdge
-}
-
-"""All input for the create `Something` mutation."""
-input CreateSomethingInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `Something` to be created by this mutation."""
-  something: SomethingInput!
-}
-
-"""The output of our create `Something` mutation."""
-type CreateSomethingPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Something` that was created by this mutation."""
-  something: Something
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Something`. May be used by Relay 1."""
-  somethingEdge(
-    """The method to use when ordering `Something`."""
-    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SomethingsEdge
-}
-
-"""A location in a connection that can be used for resuming pagination."""
-scalar Cursor
-
-"""All input for the `deleteSomethingByNodeId` mutation."""
-input DeleteSomethingByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `Something` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""All input for the `deleteSomethingDatumByNodeId` mutation."""
-input DeleteSomethingDatumByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `SomethingDatum` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""All input for the `deleteSomethingDatum` mutation."""
-input DeleteSomethingDatumInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  somethingDataId: Int!
-}
-
-"""The output of our delete `SomethingDatum` mutation."""
-type DeleteSomethingDatumPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `SomethingDatum` that was deleted by this mutation."""
-  somethingDatum: SomethingDatum
-  deletedSomethingDatumNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """Reads a single `Something` that is related to this `SomethingDatum`."""
-  some: Something
-
-  """An edge for our `SomethingDatum`. May be used by Relay 1."""
-  somethingDatumEdge(
-    """The method to use when ordering `SomethingDatum`."""
-    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SomethingDataEdge
-}
-
-"""All input for the `deleteSomething` mutation."""
-input DeleteSomethingInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  someId: Int!
-}
-
-"""The output of our delete `Something` mutation."""
-type DeleteSomethingPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `Something` that was deleted by this mutation."""
-  something: Something
-  deletedSomethingNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `Something`. May be used by Relay 1."""
-  somethingEdge(
-    """The method to use when ordering `Something`."""
-    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): SomethingsEdge
-}
-
-"""
-The root mutation type which contains root level fields which mutate data.
-"""
-type Mutation {
-  """Creates a single `Something`."""
-  createSomething(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateSomethingInput!
-  ): CreateSomethingPayload
-
-  """Creates a single `SomethingDatum`."""
-  createSomethingDatum(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateSomethingDatumInput!
-  ): CreateSomethingDatumPayload
-
-  """Updates a single `Something` using its globally unique id and a patch."""
-  updateSomethingByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSomethingByNodeIdInput!
-  ): UpdateSomethingPayload
-
-  """Updates a single `Something` using a unique key and a patch."""
-  updateSomething(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSomethingInput!
-  ): UpdateSomethingPayload
-
-  """
-  Updates a single `SomethingDatum` using its globally unique id and a patch.
-  """
-  updateSomethingDatumByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSomethingDatumByNodeIdInput!
-  ): UpdateSomethingDatumPayload
-
-  """Updates a single `SomethingDatum` using a unique key and a patch."""
-  updateSomethingDatum(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateSomethingDatumInput!
-  ): UpdateSomethingDatumPayload
-
-  """Deletes a single `Something` using its globally unique id."""
-  deleteSomethingByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSomethingByNodeIdInput!
-  ): DeleteSomethingPayload
-
-  """Deletes a single `Something` using a unique key."""
-  deleteSomething(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSomethingInput!
-  ): DeleteSomethingPayload
-
-  """Deletes a single `SomethingDatum` using its globally unique id."""
-  deleteSomethingDatumByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSomethingDatumByNodeIdInput!
-  ): DeleteSomethingDatumPayload
-
-  """Deletes a single `SomethingDatum` using a unique key."""
-  deleteSomethingDatum(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteSomethingDatumInput!
-  ): DeleteSomethingDatumPayload
-}
-
-"""An object with a globally unique `ID`."""
-interface Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-}
-
-"""Information about pagination in a connection."""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: Cursor
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: Cursor
-}
-
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
   """
@@ -411,6 +126,31 @@ type Query implements Node {
   ): SomethingDatum
 }
 
+"""An object with a globally unique `ID`."""
+interface Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+}
+
+"""A connection to a list of `Something` values."""
+type SomethingsConnection {
+  """A list of `Something` objects."""
+  nodes: [Something]!
+
+  """
+  A list of edges which contains the `Something` and cursor to aid in pagination.
+  """
+  edges: [SomethingsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Something` you could get from the connection."""
+  totalCount: Int!
+}
+
 type Something implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -466,18 +206,6 @@ type Something implements Node {
   ): [SomethingDatum!]!
 }
 
-"""
-A condition to be used against `Something` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input SomethingCondition {
-  """Checks for equality with the object’s `someId` field."""
-  someId: Int
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-}
-
 """A connection to a list of `SomethingDatum` values."""
 type SomethingDataConnection {
   """A list of `SomethingDatum` objects."""
@@ -495,6 +223,19 @@ type SomethingDataConnection {
   totalCount: Int!
 }
 
+type SomethingDatum implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  somethingDataId: Int!
+  someId: Int!
+  data: String
+
+  """Reads a single `Something` that is related to this `SomethingDatum`."""
+  some: Something
+}
+
 """A `SomethingDatum` edge in the connection."""
 type SomethingDataEdge {
   """A cursor for use in pagination."""
@@ -502,6 +243,24 @@ type SomethingDataEdge {
 
   """The `SomethingDatum` at the end of the edge."""
   node: SomethingDatum
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
 }
 
 """Methods to use when ordering `SomethingDatum`."""
@@ -517,19 +276,6 @@ enum SomethingDataOrderBy {
   PRIMARY_KEY_DESC
 }
 
-type SomethingDatum implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  somethingDataId: Int!
-  someId: Int!
-  data: String
-
-  """Reads a single `Something` that is related to this `SomethingDatum`."""
-  some: Something
-}
-
 """
 A condition to be used against `SomethingDatum` object types. All fields are
 tested for equality and combined with a logical ‘and.’
@@ -543,53 +289,6 @@ input SomethingDatumCondition {
 
   """Checks for equality with the object’s `data` field."""
   data: String
-}
-
-"""An input for mutations affecting `SomethingDatum`"""
-input SomethingDatumInput {
-  somethingDataId: Int!
-  someId: Int!
-  data: String
-}
-
-"""
-Represents an update to a `SomethingDatum`. Fields that are set will be updated.
-"""
-input SomethingDatumPatch {
-  somethingDataId: Int
-  someId: Int
-  data: String
-}
-
-"""An input for mutations affecting `Something`"""
-input SomethingInput {
-  someId: Int!
-  name: String
-}
-
-"""
-Represents an update to a `Something`. Fields that are set will be updated.
-"""
-input SomethingPatch {
-  someId: Int
-  name: String
-}
-
-"""A connection to a list of `Something` values."""
-type SomethingsConnection {
-  """A list of `Something` objects."""
-  nodes: [Something]!
-
-  """
-  A list of edges which contains the `Something` and cursor to aid in pagination.
-  """
-  edges: [SomethingsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `Something` you could get from the connection."""
-  totalCount: Int!
 }
 
 """A `Something` edge in the connection."""
@@ -612,6 +311,214 @@ enum SomethingsOrderBy {
   PRIMARY_KEY_DESC
 }
 
+"""
+A condition to be used against `Something` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input SomethingCondition {
+  """Checks for equality with the object’s `someId` field."""
+  someId: Int
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+}
+
+"""
+The root mutation type which contains root level fields which mutate data.
+"""
+type Mutation {
+  """Creates a single `Something`."""
+  createSomething(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSomethingInput!
+  ): CreateSomethingPayload
+
+  """Creates a single `SomethingDatum`."""
+  createSomethingDatum(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSomethingDatumInput!
+  ): CreateSomethingDatumPayload
+
+  """Updates a single `Something` using its globally unique id and a patch."""
+  updateSomethingByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSomethingByNodeIdInput!
+  ): UpdateSomethingPayload
+
+  """Updates a single `Something` using a unique key and a patch."""
+  updateSomething(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSomethingInput!
+  ): UpdateSomethingPayload
+
+  """
+  Updates a single `SomethingDatum` using its globally unique id and a patch.
+  """
+  updateSomethingDatumByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSomethingDatumByNodeIdInput!
+  ): UpdateSomethingDatumPayload
+
+  """Updates a single `SomethingDatum` using a unique key and a patch."""
+  updateSomethingDatum(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSomethingDatumInput!
+  ): UpdateSomethingDatumPayload
+
+  """Deletes a single `Something` using its globally unique id."""
+  deleteSomethingByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSomethingByNodeIdInput!
+  ): DeleteSomethingPayload
+
+  """Deletes a single `Something` using a unique key."""
+  deleteSomething(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSomethingInput!
+  ): DeleteSomethingPayload
+
+  """Deletes a single `SomethingDatum` using its globally unique id."""
+  deleteSomethingDatumByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSomethingDatumByNodeIdInput!
+  ): DeleteSomethingDatumPayload
+
+  """Deletes a single `SomethingDatum` using a unique key."""
+  deleteSomethingDatum(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSomethingDatumInput!
+  ): DeleteSomethingDatumPayload
+}
+
+"""The output of our create `Something` mutation."""
+type CreateSomethingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Something` that was created by this mutation."""
+  something: Something
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Something`. May be used by Relay 1."""
+  somethingEdge(
+    """The method to use when ordering `Something`."""
+    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SomethingsEdge
+}
+
+"""All input for the create `Something` mutation."""
+input CreateSomethingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Something` to be created by this mutation."""
+  something: SomethingInput!
+}
+
+"""An input for mutations affecting `Something`"""
+input SomethingInput {
+  someId: Int!
+  name: String
+}
+
+"""The output of our create `SomethingDatum` mutation."""
+type CreateSomethingDatumPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SomethingDatum` that was created by this mutation."""
+  somethingDatum: SomethingDatum
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Something` that is related to this `SomethingDatum`."""
+  some: Something
+
+  """An edge for our `SomethingDatum`. May be used by Relay 1."""
+  somethingDatumEdge(
+    """The method to use when ordering `SomethingDatum`."""
+    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SomethingDataEdge
+}
+
+"""All input for the create `SomethingDatum` mutation."""
+input CreateSomethingDatumInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `SomethingDatum` to be created by this mutation."""
+  somethingDatum: SomethingDatumInput!
+}
+
+"""An input for mutations affecting `SomethingDatum`"""
+input SomethingDatumInput {
+  somethingDataId: Int!
+  someId: Int!
+  data: String
+}
+
+"""The output of our update `Something` mutation."""
+type UpdateSomethingPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Something` that was updated by this mutation."""
+  something: Something
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Something`. May be used by Relay 1."""
+  somethingEdge(
+    """The method to use when ordering `Something`."""
+    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SomethingsEdge
+}
+
 """All input for the `updateSomethingByNodeId` mutation."""
 input UpdateSomethingByNodeIdInput {
   """
@@ -631,27 +538,16 @@ input UpdateSomethingByNodeIdInput {
   patch: SomethingPatch!
 }
 
-"""All input for the `updateSomethingDatumByNodeId` mutation."""
-input UpdateSomethingDatumByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `SomethingDatum` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `SomethingDatum` being updated.
-  """
-  patch: SomethingDatumPatch!
+"""
+Represents an update to a `Something`. Fields that are set will be updated.
+"""
+input SomethingPatch {
+  someId: Int
+  name: String
 }
 
-"""All input for the `updateSomethingDatum` mutation."""
-input UpdateSomethingDatumInput {
+"""All input for the `updateSomething` mutation."""
+input UpdateSomethingInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -659,10 +555,10 @@ input UpdateSomethingDatumInput {
   clientMutationId: String
 
   """
-  An object where the defined keys will be set on the `SomethingDatum` being updated.
+  An object where the defined keys will be set on the `Something` being updated.
   """
-  patch: SomethingDatumPatch!
-  somethingDataId: Int!
+  patch: SomethingPatch!
+  someId: Int!
 }
 
 """The output of our update `SomethingDatum` mutation."""
@@ -691,8 +587,8 @@ type UpdateSomethingDatumPayload {
   ): SomethingDataEdge
 }
 
-"""All input for the `updateSomething` mutation."""
-input UpdateSomethingInput {
+"""All input for the `updateSomethingDatumByNodeId` mutation."""
+input UpdateSomethingDatumByNodeIdInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -700,22 +596,51 @@ input UpdateSomethingInput {
   clientMutationId: String
 
   """
-  An object where the defined keys will be set on the `Something` being updated.
+  The globally unique `ID` which will identify a single `SomethingDatum` to be updated.
   """
-  patch: SomethingPatch!
-  someId: Int!
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `SomethingDatum` being updated.
+  """
+  patch: SomethingDatumPatch!
 }
 
-"""The output of our update `Something` mutation."""
-type UpdateSomethingPayload {
+"""
+Represents an update to a `SomethingDatum`. Fields that are set will be updated.
+"""
+input SomethingDatumPatch {
+  somethingDataId: Int
+  someId: Int
+  data: String
+}
+
+"""All input for the `updateSomethingDatum` mutation."""
+input UpdateSomethingDatumInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `SomethingDatum` being updated.
+  """
+  patch: SomethingDatumPatch!
+  somethingDataId: Int!
+}
+
+"""The output of our delete `Something` mutation."""
+type DeleteSomethingPayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
 
-  """The `Something` that was updated by this mutation."""
+  """The `Something` that was deleted by this mutation."""
   something: Something
+  deletedSomethingNodeId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -727,4 +652,79 @@ type UpdateSomethingPayload {
     """The method to use when ordering `Something`."""
     orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingsEdge
+}
+
+"""All input for the `deleteSomethingByNodeId` mutation."""
+input DeleteSomethingByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Something` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteSomething` mutation."""
+input DeleteSomethingInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  someId: Int!
+}
+
+"""The output of our delete `SomethingDatum` mutation."""
+type DeleteSomethingDatumPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SomethingDatum` that was deleted by this mutation."""
+  somethingDatum: SomethingDatum
+  deletedSomethingDatumNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Something` that is related to this `SomethingDatum`."""
+  some: Something
+
+  """An edge for our `SomethingDatum`. May be used by Relay 1."""
+  somethingDatumEdge(
+    """The method to use when ordering `SomethingDatum`."""
+    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
+  ): SomethingDataEdge
+}
+
+"""All input for the `deleteSomethingDatumByNodeId` mutation."""
+input DeleteSomethingDatumByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `SomethingDatum` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteSomethingDatum` mutation."""
+input DeleteSomethingDatumInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  somethingDataId: Int!
 }

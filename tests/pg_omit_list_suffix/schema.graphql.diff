@@ -1,55 +1,6 @@
 --- unsimplified
 +++ simplified
-@@ -9,10 +9,10 @@
-   name: String!
- 
-   """Reads a single `Company` that is related to this `Beverage`."""
--  companyByCompanyId: Company
-+  company: Company
- 
-   """Reads a single `Company` that is related to this `Beverage`."""
--  companyByDistributorId: Company
-+  distributor: Company
- }
- 
- """
-@@ -120,7 +120,7 @@
-   name: String!
- 
-   """Reads and enables pagination through a set of `Beverage`."""
--  beveragesByCompanyId(
-+  beverages(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -149,7 +149,7 @@
-   ): BeveragesConnection!
- 
-   """Reads and enables pagination through a set of `Beverage`."""
--  beveragesByCompanyIdList(
-+  beveragesList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -242,7 +242,7 @@
-   ): [Beverage]
- 
-   """Reads and enables pagination through a set of `Beverage`."""
--  computedListOmit(
-+  computedListOmitConnection(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -263,7 +263,7 @@
-   ): BeveragesConnection!
- 
-   """Reads and enables pagination through a set of `Beverage`."""
--  computedListOmitList(
-+  computedListOmit(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -329,7 +329,7 @@
+@@ -18,7 +18,7 @@
    ): Node
  
    """Reads and enables pagination through a set of `Beverage`."""
@@ -58,7 +9,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -358,7 +358,7 @@
+@@ -47,7 +47,7 @@
    ): BeveragesConnection
  
    """Reads a set of `Beverage`."""
@@ -67,7 +18,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -375,7 +375,7 @@
+@@ -64,7 +64,7 @@
    ): [Beverage!]
  
    """Reads and enables pagination through a set of `Company`."""
@@ -76,7 +27,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -404,7 +404,7 @@
+@@ -93,7 +93,7 @@
    ): CompaniesConnection
  
    """Reads a set of `Company`."""
@@ -85,7 +36,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -419,8 +419,8 @@
+@@ -108,8 +108,8 @@
      """
      condition: CompanyCondition
    ): [Company!]
@@ -96,7 +47,7 @@
  
    """Reads and enables pagination through a set of `Beverage`."""
    listInclude(
-@@ -453,7 +453,7 @@
+@@ -142,7 +142,7 @@
    ): [Beverage]
  
    """Reads and enables pagination through a set of `Beverage`."""
@@ -105,7 +56,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -474,7 +474,7 @@
+@@ -163,7 +163,7 @@
    ): BeveragesConnection
  
    """Reads and enables pagination through a set of `Beverage`."""
@@ -114,7 +65,7 @@
      """Only read the first `n` values of the set."""
      first: Int
  
-@@ -483,13 +483,13 @@
+@@ -172,13 +172,13 @@
    ): [Beverage]
  
    """Reads a single `Beverage` using its globally unique `ID`."""
@@ -130,3 +81,52 @@
      """The globally unique `ID` to be used in selecting a single `Company`."""
      nodeId: ID!
    ): Company
+@@ -220,10 +220,10 @@
+   name: String!
+ 
+   """Reads a single `Company` that is related to this `Beverage`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """Reads a single `Company` that is related to this `Beverage`."""
+-  companyByDistributorId: Company
++  distributor: Company
+ }
+ 
+ type Company implements Node {
+@@ -235,7 +235,7 @@
+   name: String!
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+-  beveragesByCompanyId(
++  beverages(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -264,7 +264,7 @@
+   ): BeveragesConnection!
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+-  beveragesByCompanyIdList(
++  beveragesList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -357,7 +357,7 @@
+   ): [Beverage]
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+-  computedListOmit(
++  computedListOmitConnection(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -378,7 +378,7 @@
+   ): BeveragesConnection!
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+-  computedListOmitList(
++  computedListOmit(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
