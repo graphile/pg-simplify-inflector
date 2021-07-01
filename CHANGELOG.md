@@ -7,6 +7,28 @@ stick to it.
 It's unlikely we'll have much in the way of minor releases since all naming
 changes are breaking.
 
+# v7.0.0
+
+### Simplify primary key to primary key references
+
+If you have two tables that share a primary key value, this version will
+simplify the reference. For example with the following database schema:
+
+```sql
+create table animals (
+  id serial primary key,
+  name text
+);
+
+create table dogs (
+  animal_id int primary key references animals,
+  wags_tail bool
+);
+```
+
+This will create `Animal.dog` (rather than `Animal.dogById`) and `Dog.animal`
+(rather than `Dog.animalById`).
+
 # v6.1.0
 
 ### Add `@listSuffix` smart tag
