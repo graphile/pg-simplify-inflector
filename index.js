@@ -368,9 +368,7 @@ function PgSimplifyInflectorPlugin(
                 return this.camelCase(this._singularizedTableName(table));
               } else {
                 return this.camelCase(
-                  `${this._singularizedTableName(
-                    table
-                  )}-by-${detailedKeys
+                  `${this._singularizedTableName(table)}-by-${detailedKeys
                     .map((key) => this.column(key))
                     .join("-and-")}`
                 );
