@@ -1,0 +1,796 @@
+--- unsimplified
++++ simplified
+@@ -6,10 +6,10 @@
+   id: Int!
+ 
+   """Reads a single `Dog` that is related to this `Animal`."""
+-  dogById: Dog
++  dog: Dog
+ 
+   """Reads and enables pagination through a set of `Dog`."""
+-  dogsById(
++  dogs(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -35,13 +35,13 @@
+     A condition to be used in determining which values should be returned by the collection.
+     """
+     condition: DogCondition
+-  ): DogsConnection! @deprecated(reason: "Please use dogById instead")
++  ): DogsConnection! @deprecated(reason: "Please use dog instead")
+ 
+   """Reads a single `Cat` that is related to this `Animal`."""
+-  catById: Cat
++  cat: Cat
+ 
+   """Reads and enables pagination through a set of `Cat`."""
+-  catsById(
++  cats(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -67,13 +67,13 @@
+     A condition to be used in determining which values should be returned by the collection.
+     """
+     condition: CatCondition
+-  ): CatsConnection! @deprecated(reason: "Please use catById instead")
++  ): CatsConnection! @deprecated(reason: "Please use cat instead")
+ 
+   """Reads a single `Gerbil` that is related to this `Animal`."""
+-  gerbilByAnimalId: Gerbil
++  gerbil: Gerbil
+ 
+   """Reads and enables pagination through a set of `Gerbil`."""
+-  gerbilsByAnimalId(
++  gerbils(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -99,7 +99,7 @@
+     A condition to be used in determining which values should be returned by the collection.
+     """
+     condition: GerbilCondition
+-  ): GerbilsConnection! @deprecated(reason: "Please use gerbilByAnimalId instead")
++  ): GerbilsConnection! @deprecated(reason: "Please use gerbil instead")
+ }
+ 
+ """
+@@ -165,7 +165,7 @@
+   id: Int!
+ 
+   """Reads a single `Animal` that is related to this `Cat`."""
+-  animalById: Animal
++  animal: Animal
+ }
+ 
+ """
+@@ -285,7 +285,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Cat`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Cat`. May be used by Relay 1."""
+   catEdge(
+@@ -323,7 +323,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Dog`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Dog`. May be used by Relay 1."""
+   dogEdge(
+@@ -361,7 +361,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Gerbil`."""
+-  animalByAnimalId: Animal
++  animal: Animal
+ 
+   """An edge for our `Gerbil`. May be used by Relay 1."""
+   gerbilEdge(
+@@ -373,14 +373,18 @@
+ """A location in a connection that can be used for resuming pagination."""
+ scalar Cursor
+ 
+-"""All input for the `deleteAnimalById` mutation."""
+-input DeleteAnimalByIdInput {
++"""All input for the `deleteAnimalByNodeId` mutation."""
++input DeleteAnimalByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Animal` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteAnimal` mutation."""
+@@ -390,11 +394,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Animal` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Animal` mutation."""
+@@ -407,7 +407,7 @@
+ 
+   """The `Animal` that was deleted by this mutation."""
+   animal: Animal
+-  deletedAnimalId: ID
++  deletedAnimalNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -421,14 +421,18 @@
+   ): AnimalsEdge
+ }
+ 
+-"""All input for the `deleteCatById` mutation."""
+-input DeleteCatByIdInput {
++"""All input for the `deleteCatByNodeId` mutation."""
++input DeleteCatByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Cat` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteCat` mutation."""
+@@ -438,11 +442,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Cat` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Cat` mutation."""
+@@ -455,7 +455,7 @@
+ 
+   """The `Cat` that was deleted by this mutation."""
+   cat: Cat
+-  deletedCatId: ID
++  deletedCatNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -463,7 +463,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Cat`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Cat`. May be used by Relay 1."""
+   catEdge(
+@@ -472,14 +472,18 @@
+   ): CatsEdge
+ }
+ 
+-"""All input for the `deleteDogById` mutation."""
+-input DeleteDogByIdInput {
++"""All input for the `deleteDogByNodeId` mutation."""
++input DeleteDogByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Dog` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteDog` mutation."""
+@@ -489,11 +493,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Dog` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Dog` mutation."""
+@@ -506,7 +506,7 @@
+ 
+   """The `Dog` that was deleted by this mutation."""
+   dog: Dog
+-  deletedDogId: ID
++  deletedDogNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -514,7 +514,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Dog`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Dog`. May be used by Relay 1."""
+   dogEdge(
+@@ -523,14 +523,18 @@
+   ): DogsEdge
+ }
+ 
+-"""All input for the `deleteGerbilByAnimalId` mutation."""
+-input DeleteGerbilByAnimalIdInput {
++"""All input for the `deleteGerbilByNodeId` mutation."""
++input DeleteGerbilByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  animalId: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Gerbil` to be deleted.
++  """
++  nodeId: ID!
+ }
+ 
+ """All input for the `deleteGerbil` mutation."""
+@@ -540,11 +544,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Gerbil` to be deleted.
+-  """
+-  nodeId: ID!
++  animalId: Int!
+ }
+ 
+ """The output of our delete `Gerbil` mutation."""
+@@ -557,7 +557,7 @@
+ 
+   """The `Gerbil` that was deleted by this mutation."""
+   gerbil: Gerbil
+-  deletedGerbilId: ID
++  deletedGerbilNodeId: ID
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -565,7 +565,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Gerbil`."""
+-  animalByAnimalId: Animal
++  animal: Animal
+ 
+   """An edge for our `Gerbil`. May be used by Relay 1."""
+   gerbilEdge(
+@@ -582,7 +582,7 @@
+   id: Int!
+ 
+   """Reads a single `Animal` that is related to this `Dog`."""
+-  animalById: Animal
++  animal: Animal
+ }
+ 
+ """
+@@ -646,7 +646,7 @@
+   animalId: Int!
+ 
+   """Reads a single `Animal` that is related to this `Gerbil`."""
+-  animalByAnimalId: Animal
++  animal: Animal
+ }
+ 
+ """
+@@ -741,131 +741,131 @@
+   ): CreateGerbilPayload
+ 
+   """Updates a single `Animal` using its globally unique id and a patch."""
+-  updateAnimal(
++  updateAnimalByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateAnimalInput!
++    input: UpdateAnimalByNodeIdInput!
+   ): UpdateAnimalPayload
+ 
+   """Updates a single `Animal` using a unique key and a patch."""
+-  updateAnimalById(
++  updateAnimal(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateAnimalByIdInput!
++    input: UpdateAnimalInput!
+   ): UpdateAnimalPayload
+ 
+   """Updates a single `Cat` using its globally unique id and a patch."""
+-  updateCat(
++  updateCatByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateCatInput!
++    input: UpdateCatByNodeIdInput!
+   ): UpdateCatPayload
+ 
+   """Updates a single `Cat` using a unique key and a patch."""
+-  updateCatById(
++  updateCat(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateCatByIdInput!
++    input: UpdateCatInput!
+   ): UpdateCatPayload
+ 
+   """Updates a single `Dog` using its globally unique id and a patch."""
+-  updateDog(
++  updateDogByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateDogInput!
++    input: UpdateDogByNodeIdInput!
+   ): UpdateDogPayload
+ 
+   """Updates a single `Dog` using a unique key and a patch."""
+-  updateDogById(
++  updateDog(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateDogByIdInput!
++    input: UpdateDogInput!
+   ): UpdateDogPayload
+ 
+   """Updates a single `Gerbil` using its globally unique id and a patch."""
+-  updateGerbil(
++  updateGerbilByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateGerbilInput!
++    input: UpdateGerbilByNodeIdInput!
+   ): UpdateGerbilPayload
+ 
+   """Updates a single `Gerbil` using a unique key and a patch."""
+-  updateGerbilByAnimalId(
++  updateGerbil(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateGerbilByAnimalIdInput!
++    input: UpdateGerbilInput!
+   ): UpdateGerbilPayload
+ 
+   """Deletes a single `Animal` using its globally unique id."""
+-  deleteAnimal(
++  deleteAnimalByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteAnimalInput!
++    input: DeleteAnimalByNodeIdInput!
+   ): DeleteAnimalPayload
+ 
+   """Deletes a single `Animal` using a unique key."""
+-  deleteAnimalById(
++  deleteAnimal(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteAnimalByIdInput!
++    input: DeleteAnimalInput!
+   ): DeleteAnimalPayload
+ 
+   """Deletes a single `Cat` using its globally unique id."""
+-  deleteCat(
++  deleteCatByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteCatInput!
++    input: DeleteCatByNodeIdInput!
+   ): DeleteCatPayload
+ 
+   """Deletes a single `Cat` using a unique key."""
+-  deleteCatById(
++  deleteCat(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteCatByIdInput!
++    input: DeleteCatInput!
+   ): DeleteCatPayload
+ 
+   """Deletes a single `Dog` using its globally unique id."""
+-  deleteDog(
++  deleteDogByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteDogInput!
++    input: DeleteDogByNodeIdInput!
+   ): DeleteDogPayload
+ 
+   """Deletes a single `Dog` using a unique key."""
+-  deleteDogById(
++  deleteDog(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteDogByIdInput!
++    input: DeleteDogInput!
+   ): DeleteDogPayload
+ 
+   """Deletes a single `Gerbil` using its globally unique id."""
+-  deleteGerbil(
++  deleteGerbilByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteGerbilInput!
++    input: DeleteGerbilByNodeIdInput!
+   ): DeleteGerbilPayload
+ 
+   """Deletes a single `Gerbil` using a unique key."""
+-  deleteGerbilByAnimalId(
++  deleteGerbil(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteGerbilByAnimalIdInput!
++    input: DeleteGerbilInput!
+   ): DeleteGerbilPayload
+ }
+ 
+@@ -912,7 +912,7 @@
+   ): Node
+ 
+   """Reads and enables pagination through a set of `Animal`."""
+-  allAnimals(
++  animals(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -941,7 +941,7 @@
+   ): AnimalsConnection
+ 
+   """Reads a set of `Animal`."""
+-  allAnimalsList(
++  animalsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -958,7 +958,7 @@
+   ): [Animal!]
+ 
+   """Reads and enables pagination through a set of `Cat`."""
+-  allCats(
++  cats(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -987,7 +987,7 @@
+   ): CatsConnection
+ 
+   """Reads a set of `Cat`."""
+-  allCatsList(
++  catsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1004,7 +1004,7 @@
+   ): [Cat!]
+ 
+   """Reads and enables pagination through a set of `Dog`."""
+-  allDogs(
++  dogs(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1033,7 +1033,7 @@
+   ): DogsConnection
+ 
+   """Reads a set of `Dog`."""
+-  allDogsList(
++  dogsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1050,7 +1050,7 @@
+   ): [Dog!]
+ 
+   """Reads and enables pagination through a set of `Gerbil`."""
+-  allGerbils(
++  gerbils(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1079,7 +1079,7 @@
+   ): GerbilsConnection
+ 
+   """Reads a set of `Gerbil`."""
+-  allGerbilsList(
++  gerbilsList(
+     """Only read the first `n` values of the set."""
+     first: Int
+ 
+@@ -1094,38 +1094,38 @@
+     """
+     condition: GerbilCondition
+   ): [Gerbil!]
+-  animalById(id: Int!): Animal
+-  catById(id: Int!): Cat
+-  dogById(id: Int!): Dog
+-  gerbilByAnimalId(animalId: Int!): Gerbil
++  animal(id: Int!): Animal
++  cat(id: Int!): Cat
++  dog(id: Int!): Dog
++  gerbil(animalId: Int!): Gerbil
+ 
+   """Reads a single `Animal` using its globally unique `ID`."""
+-  animal(
++  animalByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Animal`."""
+     nodeId: ID!
+   ): Animal
+ 
+   """Reads a single `Cat` using its globally unique `ID`."""
+-  cat(
++  catByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Cat`."""
+     nodeId: ID!
+   ): Cat
+ 
+   """Reads a single `Dog` using its globally unique `ID`."""
+-  dog(
++  dogByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Dog`."""
+     nodeId: ID!
+   ): Dog
+ 
+   """Reads a single `Gerbil` using its globally unique `ID`."""
+-  gerbil(
++  gerbilByNodeId(
+     """The globally unique `ID` to be used in selecting a single `Gerbil`."""
+     nodeId: ID!
+   ): Gerbil
+ }
+ 
+-"""All input for the `updateAnimalById` mutation."""
+-input UpdateAnimalByIdInput {
++"""All input for the `updateAnimalByNodeId` mutation."""
++input UpdateAnimalByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1133,10 +1133,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Animal` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Animal` being updated.
+   """
+-  animalPatch: AnimalPatch!
+-  id: Int!
++  patch: AnimalPatch!
+ }
+ 
+ """All input for the `updateAnimal` mutation."""
+@@ -1148,14 +1152,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Animal` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Animal` being updated.
+   """
+-  animalPatch: AnimalPatch!
++  patch: AnimalPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Animal` mutation."""
+@@ -1181,8 +1181,8 @@
+   ): AnimalsEdge
+ }
+ 
+-"""All input for the `updateCatById` mutation."""
+-input UpdateCatByIdInput {
++"""All input for the `updateCatByNodeId` mutation."""
++input UpdateCatByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1190,10 +1190,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Cat` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Cat` being updated.
+   """
+-  catPatch: CatPatch!
+-  id: Int!
++  patch: CatPatch!
+ }
+ 
+ """All input for the `updateCat` mutation."""
+@@ -1205,14 +1209,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Cat` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Cat` being updated.
+   """
+-  catPatch: CatPatch!
++  patch: CatPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Cat` mutation."""
+@@ -1232,7 +1232,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Cat`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Cat`. May be used by Relay 1."""
+   catEdge(
+@@ -1241,8 +1241,8 @@
+   ): CatsEdge
+ }
+ 
+-"""All input for the `updateDogById` mutation."""
+-input UpdateDogByIdInput {
++"""All input for the `updateDogByNodeId` mutation."""
++input UpdateDogByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1250,10 +1250,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Dog` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Dog` being updated.
+   """
+-  dogPatch: DogPatch!
+-  id: Int!
++  patch: DogPatch!
+ }
+ 
+ """All input for the `updateDog` mutation."""
+@@ -1265,14 +1269,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Dog` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Dog` being updated.
+   """
+-  dogPatch: DogPatch!
++  patch: DogPatch!
++  id: Int!
+ }
+ 
+ """The output of our update `Dog` mutation."""
+@@ -1292,7 +1292,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Dog`."""
+-  animalById: Animal
++  animal: Animal
+ 
+   """An edge for our `Dog`. May be used by Relay 1."""
+   dogEdge(
+@@ -1301,8 +1301,8 @@
+   ): DogsEdge
+ }
+ 
+-"""All input for the `updateGerbilByAnimalId` mutation."""
+-input UpdateGerbilByAnimalIdInput {
++"""All input for the `updateGerbilByNodeId` mutation."""
++input UpdateGerbilByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1310,10 +1310,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Gerbil` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Gerbil` being updated.
+   """
+-  gerbilPatch: GerbilPatch!
+-  animalId: Int!
++  patch: GerbilPatch!
+ }
+ 
+ """All input for the `updateGerbil` mutation."""
+@@ -1325,14 +1329,10 @@
+   clientMutationId: String
+ 
+   """
+-  The globally unique `ID` which will identify a single `Gerbil` to be updated.
+-  """
+-  nodeId: ID!
+-
+-  """
+   An object where the defined keys will be set on the `Gerbil` being updated.
+   """
+-  gerbilPatch: GerbilPatch!
++  patch: GerbilPatch!
++  animalId: Int!
+ }
+ 
+ """The output of our update `Gerbil` mutation."""
+@@ -1352,7 +1352,7 @@
+   query: Query
+ 
+   """Reads a single `Animal` that is related to this `Gerbil`."""
+-  animalByAnimalId: Animal
++  animal: Animal
+ 
+   """An edge for our `Gerbil`. May be used by Relay 1."""
+   gerbilEdge(

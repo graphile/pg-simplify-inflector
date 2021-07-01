@@ -20,6 +20,16 @@ function fixChangePlural(fn) {
     return `${prefix}${fn.call(this, word)}${suffix}`;
   };
 }
+function isPrimaryKey(detailedKeys, table) {
+  if (!table.primaryKeyConstraint) {
+    return false;
+  }
+  const { keyAttributes } = table.primaryKeyConstraint;
+  return (
+    detailedKeys.length === keyAttributes.length &&
+    detailedKeys.every((key, i) => key === keyAttributes[i])
+  );
+}
 function PgSimplifyInflectorPlugin(
   builder,
   {
@@ -195,7 +205,7 @@ function PgSimplifyInflectorPlugin(
           ? proc.tags.fieldName + ListSuffix(proc)
           : this.camelCase(pseudoColumnName + listSuffix(proc));
       },
-      singleRelationByKeys(detailedKeys, table, _foreignTable, constraint) {
+      singleRelationByKeys(detailedKeys, table, foreignTable, constraint) {
         if (constraint.tags.fieldName) {
           return constraint.tags.fieldName;
         }
@@ -203,13 +213,13 @@ function PgSimplifyInflectorPlugin(
         if (baseName) {
           return this.camelCase(baseName);
         }
-        if (this.baseNameMatches(baseName, table.name)) {
+        if (isPrimaryKey(detailedKeys, foreignTable)) {
           return this.camelCase(`${this._singularizedTableName(table)}`);
         }
         return oldInflection.singleRelationByKeys(
           detailedKeys,
           table,
-          _foreignTable,
+          foreignTable,
           constraint
         );
       },
@@ -226,13 +236,18 @@ function PgSimplifyInflectorPlugin(
           return constraint.tags.foreignFieldName;
         }
         const baseName = this.getBaseNameFromKeys(detailedKeys);
-        const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
-        if (oppositeBaseName) {
-          return this.camelCase(
-            `${oppositeBaseName}-${this._singularizedTableName(table)}`
-          );
+        if (baseName) {
+          const oppositeBaseName = this.getOppositeBaseName(baseName);
+          if (oppositeBaseName) {
+            return this.camelCase(
+              `${oppositeBaseName}-${this._singularizedTableName(table)}`
+            );
+          }
+          if (this.baseNameMatches(baseName, foreignTable.name)) {
+            return this.camelCase(`${this._singularizedTableName(table)}`);
+          }
         }
-        if (this.baseNameMatches(baseName, foreignTable.name)) {
+        if (isPrimaryKey(detailedKeys, table)) {
           return this.camelCase(`${this._singularizedTableName(table)}`);
         }
         return oldInflection.singleRelationByKeysBackwards(
@@ -244,18 +259,20 @@ function PgSimplifyInflectorPlugin(
       },
       _manyRelationByKeysBase(detailedKeys, table, _foreignTable, _constraint) {
         const baseName = this.getBaseNameFromKeys(detailedKeys);
-        const oppositeBaseName = baseName && this.getOppositeBaseName(baseName);
-        if (oppositeBaseName) {
-          return this.camelCase(
-            `${oppositeBaseName}-${this.distinctPluralize(
-              this._singularizedTableName(table)
-            )}`
-          );
-        }
-        if (this.baseNameMatches(baseName, _foreignTable.name)) {
-          return this.camelCase(
-            `${this.distinctPluralize(this._singularizedTableName(table))}`
-          );
+        if (baseName) {
+          const oppositeBaseName = this.getOppositeBaseName(baseName);
+          if (oppositeBaseName) {
+            return this.camelCase(
+              `${oppositeBaseName}-${this.distinctPluralize(
+                this._singularizedTableName(table)
+              )}`
+            );
+          }
+          if (this.baseNameMatches(baseName, _foreignTable.name)) {
+            return this.camelCase(
+              `${this.distinctPluralize(this._singularizedTableName(table))}`
+            );
+          }
         }
         return null;
       },
@@ -277,6 +294,13 @@ function PgSimplifyInflectorPlugin(
         );
         if (base) {
           return base + ConnectionSuffix(constraint);
+        }
+        if (isPrimaryKey(detailedKeys, table)) {
+          return (
+            this.camelCase(
+              `${this.distinctPluralize(this._singularizedTableName(table))}`
+            ) + ConnectionSuffix(constraint)
+          );
         }
         return (
           oldInflection.manyRelationByKeys(
@@ -302,6 +326,13 @@ function PgSimplifyInflectorPlugin(
         );
         if (base) {
           return base + ListSuffix(constraint);
+        }
+        if (isPrimaryKey(detailedKeys, table)) {
+          return (
+            this.camelCase(
+              `${this.distinctPluralize(this._singularizedTableName(table))}`
+            ) + ListSuffix(constraint)
+          );
         }
         return (
           oldInflection.manyRelationByKeys(
