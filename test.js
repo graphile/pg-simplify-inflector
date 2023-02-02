@@ -12,15 +12,6 @@ const ROOT_CONNECTION_STRING = "postgres";
 const DATABASE_NAME = "pg_simplify_inflectors";
 const ROOT = `${__dirname}/tests`;
 
-const BASE_SETTINGS = {
-  extends: [
-    postgraphilePresetAmber,
-    makeV4Preset({
-      simpleCollections: "both",
-    }),
-  ],
-};
-
 const withPool = async (connectionString, cb) => {
   const pool = new pg.Pool({
     connectionString,
@@ -60,7 +51,7 @@ async function withCleanDb(cb) {
 async function getSettings(dir) {
   try {
     const json = await fsp.readFile(`${ROOT}/${dir}/settings.json`, "utf8");
-    return { schema: JSON.parse(json) };
+    return JSON.parse(json);
   } catch {
     return {};
   }
@@ -70,8 +61,11 @@ async function getSchema(client, withSimplify, settings) {
   const pgSources = makePgSources(DATABASE_NAME, "app_public");
   const result = await makeSchema({
     extends: [
-      BASE_SETTINGS,
-      settings,
+      postgraphilePresetAmber,
+      makeV4Preset({
+        simpleCollections: "both",
+        ...settings,
+      }),
       ...(withSimplify ? [PgSimplifyInflectionPreset] : []),
     ],
     pgSources,
