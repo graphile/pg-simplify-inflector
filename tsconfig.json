@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es2021",
     "module": "commonjs",
-    "lib": ["es2018"],
+    "lib": ["es2021"],
     "declaration": false,
     "sourceMap": false,
     "strict": true,
     "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   }
 }
