@@ -233,12 +233,7 @@ const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
         }
         const detailedKeys = (relation.localColumns as string[]).map(
           (columnName) => ({
-            codec: source.codec.columns[columnName].codec as PgTypeCodec<
-              any,
-              any,
-              any,
-              any
-            >,
+            codec: source.codec,
             columnName,
           })
         );
@@ -276,8 +271,7 @@ const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
         }
         const detailedKeys = (relation.remoteColumns as string[]).map(
           (columnName) => ({
-            codec: relation.source.codec.columns[columnName]
-              .codec as PgTypeCodec<any, any, any, any>,
+            codec: relation.source.codec,
             columnName,
           })
         );
@@ -316,8 +310,7 @@ const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
         >;
         const detailedKeys = (relation.remoteColumns as string[]).map(
           (columnName) => ({
-            codec: relation.source.codec.columns[columnName]
-              .codec as PgTypeCodec<any, any, any, any>,
+            codec: relation.source.codec,
             columnName,
           })
         );
