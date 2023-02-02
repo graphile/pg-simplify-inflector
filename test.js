@@ -67,7 +67,7 @@ async function getSettings(dir) {
 }
 
 async function getSchema(client, withSimplify, settings) {
-  return await makeSchema({
+  const result = await makeSchema({
     extends: [
       BASE_SETTINGS,
       settings,
@@ -75,6 +75,7 @@ async function getSchema(client, withSimplify, settings) {
     ],
     pgSources: makePgSources(DATABASE_NAME, "app_public"),
   });
+  return result.schema;
 }
 
 async function runTests(pool, dir) {
