@@ -4,7 +4,7 @@ const fsp = require("fs").promises;
 const child_process = require("child_process");
 const SimplifyPlugin = require("./index.js");
 const { createPostGraphileSchema } = require("postgraphile");
-const { printSchema } = require("graphql");
+const { printSchema, lexicographicSortSchema } = require("graphql");
 
 const ROOT_CONNECTION_STRING = "postgres";
 const DATABASE_NAME = "pg_simplify_inflectors";
@@ -86,8 +86,11 @@ async function runTests(pool, dir) {
     const beforePath = `${ROOT}/${dir}/schema.unsimplified.graphql`;
     const afterPath = `${ROOT}/${dir}/schema.simplified.graphql`;
     const diffPath = `${ROOT}/${dir}/schema.graphql.diff`;
-    await fsp.writeFile(beforePath, printSchema(before));
-    await fsp.writeFile(afterPath, printSchema(after));
+    await fsp.writeFile(
+      beforePath,
+      printSchema(lexicographicSortSchema(before))
+    );
+    await fsp.writeFile(afterPath, printSchema(lexicographicSortSchema(after)));
 
     const diff = await new Promise((resolve, reject) => {
       const child = child_process.spawn(
