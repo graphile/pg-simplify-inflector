@@ -1,118 +1,88 @@
-import type { Inflection, Options, SchemaBuilder } from "graphile-build";
-import type {
-  PgClass,
-  PgConstraint,
-  PgEntity,
-  PgProc,
-  PgAttribute,
-} from "graphile-build-pg";
+import type {} from "graphile-config";
+import type {} from "graphile-build";
+import type {} from "postgraphile";
+import { PgSourceRelation, PgSourceUnique, PgTypeCodec } from "@dataplan/pg";
+import { arraysMatch } from "grafast";
 
-function fixCapitalisedPlural(fn: (this: Inflection, str: string) => string) {
-  return function (this: Inflection, str: string) {
-    const original = fn.call(this, str);
-    return original.replace(/[0-9]S(?=[A-Z]|$)/g, (match) =>
-      match.toLowerCase()
-    );
-  };
-}
-
-function fixChangePlural(fn: (this: Inflection, str: string) => string) {
-  return function (this: Inflection, str: string) {
-    const matches = str.match(/([A-Z]|_[a-z0-9])[a-z0-9]*_*$/);
-    const index = matches ? matches.index! + matches[1].length - 1 : 0;
-    const suffixMatches = str.match(/_*$/);
-    const suffixIndex = suffixMatches!.index!;
-    const prefix = str.substr(0, index);
-    const word = str.substr(index, suffixIndex - index);
-    const suffix = str.substr(suffixIndex);
-    return `${prefix}${fn.call(this, word)}${suffix}`;
-  };
-}
-
-function isPrimaryKey(detailedKeys: PgAttribute[], table: PgClass): boolean {
-  if (!table.primaryKeyConstraint) {
-    return false;
+declare global {
+  namespace GraphileBuild {
+    interface Inflection {
+      distinctPluralize(this: GraphileBuild.Inflection, str: string): string;
+      // TODO: methods that return non-string should be prefixed with `_` to
+      // indicate they should only be used from other inflectors
+      getBaseName(
+        this: GraphileBuild.Inflection,
+        columnName: string
+      ): string | null;
+      baseNameMatches(
+        this: GraphileBuild.Inflection,
+        baseName: string,
+        otherName: string
+      ): boolean;
+      /* This is a good method to override. */
+      getOppositeBaseName(
+        this: GraphileBuild.Inflection,
+        baseName: string
+      ): string | null;
+      getBaseNameFromKeys(
+        this: GraphileBuild.Inflection,
+        detailedKeys: Array<Parameters<Inflection["_columnName"]>[0]>
+      ): string | null;
+    }
+    interface SchemaOptions {
+      pgSimpleCollections?: boolean;
+      pgOmitListSuffix?: boolean;
+      pgSimplifyPatch?: boolean;
+      pgSimplifyAllRows?: boolean;
+      pgShortPk?: boolean;
+      pgSimplifyMultikeyRelations?: boolean;
+    }
   }
-  const { keyAttributes } = table.primaryKeyConstraint;
-  return (
-    detailedKeys.length === keyAttributes.length &&
-    detailedKeys.every((key, i) => key === keyAttributes[i])
-  );
 }
 
-function PgSimplifyInflectorPlugin(
-  builder: SchemaBuilder,
-  {
+function fixCapitalisedPlural(
+  this: GraphileBuild.Inflection,
+  previous: ((str: string) => string) | undefined,
+  _preset: GraphileConfig.ResolvedPreset,
+  str: string
+) {
+  const original = previous!.call(this, str);
+  return original.replace(/[0-9]S(?=[A-Z]|$)/g, (match) => match.toLowerCase());
+}
+
+function fixChangePlural(
+  this: GraphileBuild.Inflection,
+  previous: ((str: string) => string) | undefined,
+  _options: GraphileConfig.ResolvedPreset,
+  str: string
+): string {
+  const matches = str.match(/([A-Z]|_[a-z0-9])[a-z0-9]*_*$/);
+  const index = matches ? matches.index! + matches[1].length - 1 : 0;
+  const suffixMatches = str.match(/_*$/);
+  const suffixIndex = suffixMatches!.index!;
+  const prefix = str.substring(0, index);
+  const word = str.substring(index, suffixIndex);
+  const suffix = str.substring(suffixIndex);
+  return `${prefix}${previous!.call(this, word)}${suffix}`;
+}
+
+/*
+{
     pgSimpleCollections,
     pgOmitListSuffix,
     pgSimplifyPatch = true,
     pgSimplifyAllRows = true,
     pgShortPk = true,
     pgSimplifyMultikeyRelations = true,
-    nodeIdFieldName = "nodeId",
-  }: Options
-) {
-  const hasConnections = pgSimpleCollections !== "only";
-  const hasSimpleCollections =
-    pgSimpleCollections === "only" || pgSimpleCollections === "both";
+  } = build.options
+*/
+const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
+  name: "PgSimplifyInflectionPlugin",
+  version: "0.0.0",
 
-  if (
-    hasSimpleCollections &&
-    !hasConnections &&
-    pgOmitListSuffix !== true &&
-    pgOmitListSuffix !== false
-  ) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      "You can simplify the inflector further by adding `{graphileBuildOptions: {pgOmitListSuffix: true}}` to the options passed to PostGraphile, however be aware that doing so will mean that later enabling relay connections will be a breaking change. To dismiss this message, set `pgOmitListSuffix` to false instead."
-    );
-  }
-
-  function omitListSuffix(entity: PgEntity) {
-    const tag = entity.tags.listSuffix;
-    if (tag == null) return !!pgOmitListSuffix;
-    if (tag !== "include" && tag !== "omit")
-      throw new Error(
-        `Unrecognized @listSuffix value "${tag}" on ${entity.kind} "${entity.name}". If @listSuffix is set, it must be "omit" or "include".`
-      );
-    return tag === "omit";
-  }
-
-  function connectionSuffix(entity: PgEntity) {
-    return omitListSuffix(entity) ? "-connection" : "";
-  }
-
-  function ConnectionSuffix(entity: PgEntity) {
-    return omitListSuffix(entity) ? "Connection" : "";
-  }
-
-  function listSuffix(entity: PgEntity) {
-    return omitListSuffix(entity) ? "" : "-list";
-  }
-
-  function ListSuffix(entity: PgEntity) {
-    return omitListSuffix(entity) ? "" : "List";
-  }
-
-  builder.hook("inflection", (oldInflection) => {
-    return {
-      ...oldInflection,
-
-      /*
-       * This solves the issue with `blah-table1s` becoming `blahTable1S`
-       * (i.e. the capital S at the end) or `table1-connection becoming `Table1SConnection`
-       */
-      camelCase: fixCapitalisedPlural(oldInflection.camelCase),
-      upperCamelCase: fixCapitalisedPlural(oldInflection.upperCamelCase),
-
-      /*
-       * Pluralize/singularize only supports single words, so only run
-       * on the final segment of a name.
-       */
-      pluralize: fixChangePlural(oldInflection.pluralize),
-      singularize: fixChangePlural(oldInflection.singularize),
-
-      distinctPluralize(str: string) {
+  inflection: {
+    add: {
+      distinctPluralize(_preset, str) {
         const singular = this.singularize(str);
         const plural = this.pluralize(singular);
         if (singular !== plural) {
@@ -133,14 +103,7 @@ function PgSimplifyInflectorPlugin(
         }
       },
 
-      // Fix a naming bug
-      deletedNodeId(table: PgClass) {
-        return this.camelCase(
-          `deleted-${this.singularize(table.name)}-${nodeIdFieldName}`
-        );
-      },
-
-      getBaseName(columnName: string) {
+      getBaseName(_preset, columnName) {
         const matches = columnName.match(
           /^(.+?)(_row_id|_id|_uuid|_fk|_pk|RowId|Id|Uuid|UUID|Fk|Pk)$/
         );
@@ -150,13 +113,13 @@ function PgSimplifyInflectorPlugin(
         return null;
       },
 
-      baseNameMatches(baseName: string, otherName: string) {
+      baseNameMatches(_preset, baseName, otherName) {
         const singularizedName = this.singularize(otherName);
         return baseName === singularizedName;
       },
 
       /* This is a good method to override. */
-      getOppositeBaseName(baseName: string) {
+      getOppositeBaseName(_preset, baseName) {
         return (
           (
             {
@@ -178,13 +141,13 @@ function PgSimplifyInflectorPlugin(
         );
       },
 
-      getBaseNameFromKeys(detailedKeys: string[]) {
+      getBaseNameFromKeys(preset, detailedKeys) {
         if (detailedKeys.length === 1) {
           const key = detailedKeys[0];
           const columnName = this._columnName(key);
           return this.getBaseName(columnName);
         }
-        if (pgSimplifyMultikeyRelations) {
+        if (preset.schema?.pgSimplifyMultikeyRelations) {
           const columnNames = detailedKeys.map((key) => this._columnName(key));
           const baseNames = columnNames.map((columnName) =>
             this.getBaseName(columnName)
@@ -196,381 +159,350 @@ function PgSimplifyInflectorPlugin(
         }
         return null;
       },
+    },
+    replace: {
+      /*
+       * This solves the issue with `blah-table1s` becoming `blahTable1S`
+       * (i.e. the capital S at the end) or `table1-connection becoming `Table1SConnection`
+       */
+      camelCase: fixCapitalisedPlural,
+      upperCamelCase: fixCapitalisedPlural,
 
-      ...(pgSimplifyPatch
-        ? {
-            patchField() {
-              return "patch";
-            },
-          }
-        : null),
+      /*
+       * Pluralize/singularize only supports single words, so only run
+       * on the final segment of a name.
+       */
+      pluralize: fixChangePlural,
+      singularize: fixChangePlural,
 
-      ...(pgSimplifyAllRows
-        ? {
-            allRows(table: PgClass) {
-              return this.camelCase(
-                this.distinctPluralize(this._singularizedTableName(table)) +
-                  connectionSuffix(table)
-              );
-            },
-            allRowsSimple(table: PgClass) {
-              return this.camelCase(
-                this.distinctPluralize(this._singularizedTableName(table)) +
-                  listSuffix(table)
-              );
-            },
-          }
-        : null),
-
-      computedColumn(pseudoColumnName: string, proc: PgProc, _table: PgClass) {
-        return proc.tags.fieldName
-          ? proc.tags.fieldName +
-              (proc.returnsSet ? ConnectionSuffix(proc) : "")
-          : this.camelCase(
-              pseudoColumnName + (proc.returnsSet ? connectionSuffix(proc) : "")
-            );
+      // Fix a naming bug
+      deletedNodeId(_prev, preset, { source }) {
+        return this.camelCase(
+          `deleted-${this.singularize(
+            this.tableType(source.codec)
+          )}-${this.nodeIdFieldName()}`
+        );
       },
 
-      computedColumnList(
-        pseudoColumnName: string,
-        proc: PgProc,
-        _table: PgClass
-      ) {
-        return proc.tags.fieldName
-          ? proc.tags.fieldName + ListSuffix(proc)
-          : this.camelCase(pseudoColumnName + listSuffix(proc));
+      patchField(previous, options, fieldName) {
+        return options.schema?.pgSimplifyPatch
+          ? "patch"
+          : previous!.call(this, fieldName);
       },
 
-      singleRelationByKeys(
-        detailedKeys: PgAttribute[],
-        table: PgClass,
-        foreignTable: PgClass,
-        constraint: PgConstraint
-      ) {
-        if (constraint.tags.fieldName) {
-          return constraint.tags.fieldName;
+      connectionField(_prev, options, baseName) {
+        return options.schema?.pgOmitListSuffix
+          ? baseName + "Connection"
+          : baseName;
+      },
+      listField(_prev, options, baseName) {
+        return options.schema?.pgOmitListSuffix ? baseName : baseName + "List";
+      },
+
+      allRowsConnection(previous, options, source) {
+        if (options.schema?.pgSimplifyAllRows) {
+          return this.connectionField(
+            this.camelCase(
+              `${this.distinctPluralize(this._singularizedSourceName(source))}`
+            )
+          );
+        } else {
+          return previous!.call(this, source);
         }
+      },
+      allRowsList(previous, options, source) {
+        if (options.schema?.pgSimplifyAllRows) {
+          return this.listField(
+            this.camelCase(
+              this.distinctPluralize(this._singularizedSourceName(source))
+            )
+          );
+        } else {
+          return previous!.call(this, source);
+        }
+      },
+
+      singleRelation(previous, _options, details) {
+        const { source, relationName } = details;
+        const relation = source.getRelation(relationName) as PgSourceRelation<
+          any,
+          any
+        >;
+        if (typeof relation.extensions?.tags?.fieldName === "string") {
+          return relation.extensions.tags.fieldName;
+        }
+        const detailedKeys = (relation.localColumns as string[]).map(
+          (columnName) => ({
+            codec: source.codec.columns[columnName].codec as PgTypeCodec<
+              any,
+              any,
+              any,
+              any
+            >,
+            columnName,
+          })
+        );
         const baseName = this.getBaseNameFromKeys(detailedKeys);
         if (baseName) {
           return this.camelCase(baseName);
         }
-        if (isPrimaryKey(detailedKeys, foreignTable)) {
-          return this.camelCase(`${this._singularizedTableName(table)}`);
-        }
-        return oldInflection.singleRelationByKeys(
-          detailedKeys,
-          table,
-          foreignTable,
-          constraint
+        const foreignPk = (relation.source.uniques as PgSourceUnique[]).find(
+          (u) => u.isPrimary
         );
+        if (
+          foreignPk &&
+          arraysMatch(foreignPk.columns, relation.remoteColumns)
+        ) {
+          return this.camelCase(
+            `${this._singularizedCodecName(relation.source.codec)}`
+          );
+        }
+        return previous!.call(this, details);
       },
 
-      singleRelationByKeysBackwards(
-        detailedKeys: PgAttribute[],
-        table: PgClass,
-        foreignTable: PgClass,
-        constraint: PgConstraint
-      ) {
-        if (constraint.tags.foreignSingleFieldName) {
-          return constraint.tags.foreignSingleFieldName;
+      singleRelationBackwards(previous, _options, details) {
+        const { source, relationName } = details;
+        const relation = source.getRelation(relationName) as PgSourceRelation<
+          any,
+          any
+        >;
+        if (
+          typeof relation.extensions?.tags?.foreignSingleFieldName === "string"
+        ) {
+          return relation.extensions.tags.foreignSingleFieldName;
         }
-        if (constraint.tags.foreignFieldName) {
-          return constraint.tags.foreignFieldName;
+        if (typeof relation.extensions?.tags?.foreignFieldName === "string") {
+          return relation.extensions.tags.foreignFieldName;
         }
+        const detailedKeys = (relation.remoteColumns as string[]).map(
+          (columnName) => ({
+            codec: relation.source.codec.columns[columnName]
+              .codec as PgTypeCodec<any, any, any, any>,
+            columnName,
+          })
+        );
         const baseName = this.getBaseNameFromKeys(detailedKeys);
         if (baseName) {
           const oppositeBaseName = this.getOppositeBaseName(baseName);
           if (oppositeBaseName) {
             return this.camelCase(
-              `${oppositeBaseName}-${this._singularizedTableName(table)}`
+              `${oppositeBaseName}-${this._singularizedCodecName(
+                relation.source.codec
+              )}`
             );
           }
-          if (this.baseNameMatches(baseName, foreignTable.name)) {
-            return this.camelCase(`${this._singularizedTableName(table)}`);
+          if (this.baseNameMatches(baseName, source.name)) {
+            return this.camelCase(
+              `${this._singularizedCodecName(relation.source.codec)}`
+            );
           }
         }
-        if (isPrimaryKey(detailedKeys, table)) {
-          return this.camelCase(`${this._singularizedTableName(table)}`);
-        }
-        return oldInflection.singleRelationByKeysBackwards(
-          detailedKeys,
-          table,
-          foreignTable,
-          constraint
+        const pk = (source.uniques as PgSourceUnique[]).find(
+          (u) => u.isPrimary
         );
+        if (pk && arraysMatch(pk.columns, relation.localColumns)) {
+          return this.camelCase(
+            `${this._singularizedCodecName(relation.source.codec)}`
+          );
+        }
+        return previous!.call(this, details);
       },
 
-      _manyRelationByKeysBase(
-        detailedKeys: PgAttribute[],
-        table: PgClass,
-        _foreignTable: PgClass,
-        _constraint: PgConstraint
-      ) {
+      _manyRelation(previous, _options, details) {
+        const { source, relationName } = details;
+        const relation = source.getRelation(relationName) as PgSourceRelation<
+          any,
+          any
+        >;
+        const detailedKeys = (relation.remoteColumns as string[]).map(
+          (columnName) => ({
+            codec: relation.source.codec.columns[columnName]
+              .codec as PgTypeCodec<any, any, any, any>,
+            columnName,
+          })
+        );
         const baseName = this.getBaseNameFromKeys(detailedKeys);
         if (baseName) {
           const oppositeBaseName = this.getOppositeBaseName(baseName);
           if (oppositeBaseName) {
             return this.camelCase(
               `${oppositeBaseName}-${this.distinctPluralize(
-                this._singularizedTableName(table)
+                this._singularizedCodecName(relation.source.codec)
               )}`
             );
           }
-          if (this.baseNameMatches(baseName, _foreignTable.name)) {
+          if (this.baseNameMatches(baseName, source.name)) {
             return this.camelCase(
-              `${this.distinctPluralize(this._singularizedTableName(table))}`
+              `${this.distinctPluralize(
+                this._singularizedCodecName(relation.source.codec)
+              )}`
             );
           }
         }
-        return null;
-      },
-
-      manyRelationByKeys(
-        detailedKeys: PgAttribute[],
-        table: PgClass,
-        foreignTable: PgClass,
-        constraint: PgConstraint
-      ) {
-        if (constraint.tags.foreignFieldName) {
-          if (constraint.tags.foreignSimpleFieldName) {
-            return constraint.tags.foreignFieldName;
-          } else {
-            return (
-              constraint.tags.foreignFieldName + ConnectionSuffix(constraint)
-            );
-          }
-        }
-        const base = this._manyRelationByKeysBase(
-          detailedKeys,
-          table,
-          foreignTable,
-          constraint
+        const pk = (source.uniques as PgSourceUnique[]).find(
+          (u) => u.isPrimary
         );
-        if (base) {
-          return base + ConnectionSuffix(constraint);
-        }
-        if (isPrimaryKey(detailedKeys, table)) {
-          return (
-            this.camelCase(
-              `${this.distinctPluralize(this._singularizedTableName(table))}`
-            ) + ConnectionSuffix(constraint)
+        if (pk && arraysMatch(pk.columns, relation.localColumns)) {
+          return this.camelCase(
+            `${this.distinctPluralize(
+              this._singularizedCodecName(relation.source.codec)
+            )}`
           );
         }
-        return (
-          oldInflection.manyRelationByKeys(
-            detailedKeys,
-            table,
-            foreignTable,
-            constraint
-          ) + ConnectionSuffix(constraint)
-        );
+        return previous!.call(this, details);
       },
 
-      manyRelationByKeysSimple(
-        detailedKeys: PgAttribute[],
-        table: PgClass,
-        foreignTable: PgClass,
-        constraint: PgConstraint
-      ) {
-        if (constraint.tags.foreignSimpleFieldName) {
-          return constraint.tags.foreignSimpleFieldName;
+      nodeById(previous, options, typeName) {
+        if (options.schema?.pgShortPk) {
+          return this.camelCase(`${typeName}-by-${this.nodeIdFieldName()}`);
+        } else {
+          return previous!.call(this, typeName);
         }
-        if (constraint.tags.foreignFieldName) {
-          return constraint.tags.foreignFieldName + ListSuffix(constraint);
+      },
+      rowByUnique(previous, options, details) {
+        const { unique, source } = details;
+        if (typeof unique.extensions?.tags?.fieldName === "string") {
+          return unique.extensions?.tags?.fieldName;
         }
-        const base = this._manyRelationByKeysBase(
-          detailedKeys,
-          table,
-          foreignTable,
-          constraint
-        );
-        if (base) {
-          return base + ListSuffix(constraint);
+        if (options.schema?.pgShortPk && unique.isPrimary) {
+          // Primary key, shorten!
+          return this.camelCase(this._singularizedCodecName(source.codec));
+        } else {
+          return previous!.call(this, details);
         }
-        if (isPrimaryKey(detailedKeys, table)) {
-          return (
-            this.camelCase(
-              `${this.distinctPluralize(this._singularizedTableName(table))}`
-            ) + ListSuffix(constraint)
+      },
+
+      updateByKeysField(previous, options, details) {
+        const { source, unique } = details;
+        if (typeof unique.extensions?.tags.updateFieldName === "string") {
+          return unique.extensions.tags.updateFieldName;
+        }
+        if (options.schema?.pgShortPk && unique.isPrimary) {
+          return this.camelCase(
+            `update-${this._singularizedCodecName(source.codec)}`
+          );
+        } else {
+          return previous!.call(this, details);
+        }
+      },
+      deleteByKeysField(previous, options, details) {
+        const { source, unique } = details;
+        if (typeof unique.extensions?.tags.deleteFieldName === "string") {
+          return unique.extensions.tags.deleteFieldName;
+        }
+        if (options.schema?.pgShortPk && unique.isPrimary) {
+          // Primary key, shorten!
+          return this.camelCase(
+            `delete-${this._singularizedCodecName(source.codec)}`
+          );
+        } else {
+          return previous!.call(this, details);
+        }
+      },
+      updateByKeysInputType(previous, options, details) {
+        const { source, unique } = details;
+        if (unique.extensions?.tags.updateFieldName) {
+          return this.upperCamelCase(
+            `${unique.extensions.tags.updateFieldName}-input`
           );
         }
-        return (
-          oldInflection.manyRelationByKeys(
-            detailedKeys,
-            table,
-            foreignTable,
-            constraint
-          ) + ListSuffix(constraint)
-        );
+        if (options.schema?.pgShortPk && unique.isPrimary) {
+          // Primary key, shorten!
+          return this.upperCamelCase(
+            `update-${this._singularizedCodecName(source.codec)}-input`
+          );
+        } else {
+          return previous!.call(this, details);
+        }
       },
-
-      functionQueryName(proc: PgProc) {
-        return this.camelCase(
-          this._functionName(proc) +
-            (proc.returnsSet ? connectionSuffix(proc) : "")
-        );
+      deleteByKeysInputType(previous, options, details) {
+        const { source, unique } = details;
+        if (unique.extensions?.tags.deleteFieldName) {
+          return this.upperCamelCase(
+            `${unique.extensions.tags.deleteFieldName}-input`
+          );
+        }
+        if (options.schema?.pgShortPk && unique.isPrimary) {
+          // Primary key, shorten!
+          return this.upperCamelCase(
+            `delete-${this._singularizedCodecName(source.codec)}-input`
+          );
+        } else {
+          return previous!.call(this, details);
+        }
       },
-      functionQueryNameList(proc: PgProc) {
-        return this.camelCase(this._functionName(proc) + listSuffix(proc));
+      updateNodeField(previous, options, details) {
+        if (options.schema?.pgShortPk) {
+          return this.camelCase(
+            `update-${this._singularizedCodecName(
+              details.source.codec
+            )}-by-${this.nodeIdFieldName()}`
+          );
+        } else {
+          return previous!.call(this, details);
+        }
       },
+      deleteNodeField(previous, options, details) {
+        if (options.schema?.pgShortPk) {
+          return this.camelCase(
+            `delete-${this._singularizedCodecName(
+              details.source.codec
+            )}-by-${this.nodeIdFieldName()}`
+          );
+        } else {
+          return previous!.call(this, details);
+        }
+      },
+      updateNodeInputType(previous, options, details) {
+        if (options.schema?.pgShortPk) {
+          return this.upperCamelCase(
+            `update-${this._singularizedCodecName(
+              details.source.codec
+            )}-by-${this.nodeIdFieldName()}-input`
+          );
+        } else {
+          return previous!.call(this, details);
+        }
+      },
+      deleteNodeInputType(previous, options, details) {
+        if (options.schema?.pgShortPk) {
+          return this.upperCamelCase(
+            `delete-${this._singularizedCodecName(
+              details.source.codec
+            )}-by-${this.nodeIdFieldName()}-input`
+          );
+        } else {
+          return previous!.call(this, details);
+        }
+      },
+    },
+  },
+};
 
-      ...(pgShortPk
-        ? {
-            tableNode(table: PgClass) {
-              return this.camelCase(
-                `${this._singularizedTableName(table)}-by-${nodeIdFieldName}`
-              );
-            },
-            rowByUniqueKeys(
-              detailedKeys: string[],
-              table: PgClass,
-              constraint: PgConstraint
-            ) {
-              if (constraint.tags.fieldName) {
-                return constraint.tags.fieldName;
-              }
-              if (constraint.type === "p") {
-                // Primary key, shorten!
-                return this.camelCase(this._singularizedTableName(table));
-              } else {
-                return this.camelCase(
-                  `${this._singularizedTableName(table)}-by-${detailedKeys
-                    .map((key) => this.column(key))
-                    .join("-and-")}`
-                );
-              }
-            },
-
-            updateByKeys(
-              detailedKeys: string[],
-              table: PgClass,
-              constraint: PgConstraint
-            ) {
-              if (constraint.tags.updateFieldName) {
-                return constraint.tags.updateFieldName;
-              }
-              if (constraint.type === "p") {
-                return this.camelCase(
-                  `update-${this._singularizedTableName(table)}`
-                );
-              } else {
-                return this.camelCase(
-                  `update-${this._singularizedTableName(
-                    table
-                  )}-by-${detailedKeys
-                    .map((key) => this.column(key))
-                    .join("-and-")}`
-                );
-              }
-            },
-            deleteByKeys(
-              detailedKeys: string[],
-              table: PgClass,
-              constraint: PgConstraint
-            ) {
-              if (constraint.tags.deleteFieldName) {
-                return constraint.tags.deleteFieldName;
-              }
-              if (constraint.type === "p") {
-                // Primary key, shorten!
-                return this.camelCase(
-                  `delete-${this._singularizedTableName(table)}`
-                );
-              } else {
-                return this.camelCase(
-                  `delete-${this._singularizedTableName(
-                    table
-                  )}-by-${detailedKeys
-                    .map((key) => this.column(key))
-                    .join("-and-")}`
-                );
-              }
-            },
-            updateByKeysInputType(
-              detailedKeys: PgAttribute[],
-              table: PgClass,
-              constraint: PgConstraint
-            ) {
-              if (constraint.tags.updateFieldName) {
-                return this.upperCamelCase(
-                  `${constraint.tags.updateFieldName}-input`
-                );
-              }
-              if (constraint.type === "p") {
-                // Primary key, shorten!
-                return this.upperCamelCase(
-                  `update-${this._singularizedTableName(table)}-input`
-                );
-              } else {
-                return this.upperCamelCase(
-                  `update-${this._singularizedTableName(
-                    table
-                  )}-by-${detailedKeys
-                    .map((key) => this.column(key))
-                    .join("-and-")}-input`
-                );
-              }
-            },
-            deleteByKeysInputType(
-              detailedKeys: PgAttribute[],
-              table: PgClass,
-              constraint: PgConstraint
-            ) {
-              if (constraint.tags.deleteFieldName) {
-                return this.upperCamelCase(
-                  `${constraint.tags.deleteFieldName}-input`
-                );
-              }
-              if (constraint.type === "p") {
-                // Primary key, shorten!
-                return this.upperCamelCase(
-                  `delete-${this._singularizedTableName(table)}-input`
-                );
-              } else {
-                return this.upperCamelCase(
-                  `delete-${this._singularizedTableName(
-                    table
-                  )}-by-${detailedKeys
-                    .map((key) => this.column(key))
-                    .join("-and-")}-input`
-                );
-              }
-            },
-            updateNode(table: PgClass) {
-              return this.camelCase(
-                `update-${this._singularizedTableName(
-                  table
-                )}-by-${nodeIdFieldName}`
-              );
-            },
-            deleteNode(table: PgClass) {
-              return this.camelCase(
-                `delete-${this._singularizedTableName(
-                  table
-                )}-by-${nodeIdFieldName}`
-              );
-            },
-            updateNodeInputType(table: PgClass) {
-              return this.upperCamelCase(
-                `update-${this._singularizedTableName(
-                  table
-                )}-by-${nodeIdFieldName}-input`
-              );
-            },
-            deleteNodeInputType(table: PgClass) {
-              return this.upperCamelCase(
-                `delete-${this._singularizedTableName(
-                  table
-                )}-by-${nodeIdFieldName}-input`
-              );
-            },
-          }
-        : null),
-    };
-  });
+// TODO
+/*
+function omitListSuffix(
+  preset: GraphileConfig.ResolvedPreset,
+  source: PgSource<any, any, any, any>
+): boolean {
+  const tag = source.extensions?.tags?.listSuffix;
+  if (tag == null) return !!preset.schema?.pgOmitListSuffix;
+  if (tag !== "include" && tag !== "omit")
+    throw new Error(
+      `Unrecognized @listSuffix value "${tag}" on source "${source.name}". If @listSuffix is set, it must be "omit" or "include".`
+    );
+  return tag === "omit";
 }
+*/
 
-module.exports = PgSimplifyInflectorPlugin;
-// Hacks for TypeScript/Babel import
-module.exports.default = PgSimplifyInflectorPlugin;
-Object.defineProperty(module.exports, "__esModule", { value: true });
+export const PgSimplifyInflectionPreset: GraphileConfig.Preset = {
+  plugins: [PgSimplifyInflectionPlugin],
+  schema: {
+    pgSimplifyPatch: true,
+    pgSimplifyAllRows: true,
+    pgShortPk: true,
+    pgSimplifyMultikeyRelations: true,
+  },
+};
+
+export { PgSimplifyInflectionPlugin };
