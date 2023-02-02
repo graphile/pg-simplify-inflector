@@ -1,124 +1,39 @@
 --- unsimplified
 +++ simplified
-@@ -18,7 +18,7 @@
-   ): Node
- 
-   """Reads and enables pagination through a set of `Beverage`."""
--  allBeverages(
-+  beverages(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -47,7 +47,7 @@
-   ): BeveragesConnection
- 
-   """Reads a set of `Beverage`."""
--  allBeveragesList(
-+  beveragesList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -64,7 +64,7 @@
-   ): [Beverage!]
- 
-   """Reads and enables pagination through a set of `Company`."""
--  allCompanies(
-+  companies(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -93,7 +93,7 @@
-   ): CompaniesConnection
- 
-   """Reads a set of `Company`."""
--  allCompaniesList(
-+  companiesList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -110,7 +110,7 @@
-   ): [Company!]
- 
-   """Reads and enables pagination through a set of `Mascot`."""
--  allMascots(
-+  mascots(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -139,7 +139,7 @@
-   ): MascotsConnection
- 
-   """Reads a set of `Mascot`."""
--  allMascotsList(
-+  mascotsList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -154,25 +154,25 @@
-     """
-     condition: MascotCondition
-   ): [Mascot!]
--  beverageById(id: Int!): Beverage
--  companyById(id: Int!): Company
--  mascotById(id: Int!): Mascot
-+  beverage(id: Int!): Beverage
-+  company(id: Int!): Company
-+  mascot(id: Int!): Mascot
-   mascotByCompanyId(companyId: Int!): Mascot
- 
-   """Reads a single `Beverage` using its globally unique `ID`."""
--  beverage(
-+  beverageByNodeId(
-     """The globally unique `ID` to be used in selecting a single `Beverage`."""
-     nodeId: ID!
-   ): Beverage
- 
-   """Reads a single `Company` using its globally unique `ID`."""
--  company(
-+  companyByNodeId(
-     """The globally unique `ID` to be used in selecting a single `Company`."""
-     nodeId: ID!
-   ): Company
- 
-   """Reads a single `Mascot` using its globally unique `ID`."""
--  mascot(
-+  mascotByNodeId(
-     """The globally unique `ID` to be used in selecting a single `Mascot`."""
-     nodeId: ID!
-   ): Mascot
-@@ -214,10 +214,10 @@
-   name: String!
- 
+@@ -1,10 +1,10 @@
+ type Beverage implements Node {
    """Reads a single `Company` that is related to this `Beverage`."""
 -  companyByCompanyId: Company
 +  company: Company
++  companyId: Int!
  
    """Reads a single `Company` that is related to this `Beverage`."""
 -  companyByDistributorId: Company
+-  companyId: Int!
 +  distributor: Company
- }
+   distributorId: Int
+   id: Int!
+   name: String!
+@@ -131,7 +131,7 @@
  
  type Company implements Node {
-@@ -229,7 +229,7 @@
-   name: String!
- 
    """Reads and enables pagination through a set of `Beverage`."""
 -  beveragesByCompanyId(
 +  beverages(
-     """Only read the first `n` values of the set."""
-     first: Int
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
  
-@@ -258,7 +258,7 @@
+@@ -160,7 +160,7 @@
    ): BeveragesConnection!
  
    """Reads and enables pagination through a set of `Beverage`."""
 -  beveragesByCompanyIdList(
 +  beveragesList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -321,10 +321,10 @@
-   ): [Beverage!]!
+     """
+     A condition to be used in determining which values should be returned by the collection.
+     """
+@@ -224,10 +224,10 @@
+   id: Int!
  
    """Reads a single `Mascot` that is related to this `Company`."""
 -  mascotByCompanyId: Mascot
@@ -127,157 +42,20 @@
    """Reads and enables pagination through a set of `Mascot`."""
 -  mascotsByCompanyId(
 +  mascots(
-     """Only read the first `n` values of the set."""
-     first: Int
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
  
-@@ -350,7 +350,7 @@
-     A condition to be used in determining which values should be returned by the collection.
-     """
-     condition: MascotCondition
+@@ -253,7 +253,7 @@
+ 
+     """The method to use when ordering `Mascot`."""
+     orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
 -  ): MascotsConnection! @deprecated(reason: "Please use mascotByCompanyId instead")
 +  ): MascotsConnection! @deprecated(reason: "Please use mascot instead")
- }
- 
- """A location in a connection that can be used for resuming pagination."""
-@@ -399,7 +399,7 @@
    name: String!
  
-   """Reads a single `Company` that is related to this `Mascot`."""
--  companyByCompanyId: Company
-+  company: Company
- }
- 
- """A connection to a list of `Mascot` values."""
-@@ -556,51 +556,51 @@
-   ): CreateMascotPayload
- 
-   """Updates a single `Beverage` using its globally unique id and a patch."""
--  updateBeverage(
-+  updateBeverageByNodeId(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: UpdateBeverageInput!
-+    input: UpdateBeverageByNodeIdInput!
-   ): UpdateBeveragePayload
- 
-   """Updates a single `Beverage` using a unique key and a patch."""
--  updateBeverageById(
-+  updateBeverage(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: UpdateBeverageByIdInput!
-+    input: UpdateBeverageInput!
-   ): UpdateBeveragePayload
- 
-   """Updates a single `Company` using its globally unique id and a patch."""
--  updateCompany(
-+  updateCompanyByNodeId(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: UpdateCompanyInput!
-+    input: UpdateCompanyByNodeIdInput!
-   ): UpdateCompanyPayload
- 
-   """Updates a single `Company` using a unique key and a patch."""
--  updateCompanyById(
-+  updateCompany(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: UpdateCompanyByIdInput!
-+    input: UpdateCompanyInput!
-   ): UpdateCompanyPayload
- 
-   """Updates a single `Mascot` using its globally unique id and a patch."""
--  updateMascot(
-+  updateMascotByNodeId(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: UpdateMascotInput!
-+    input: UpdateMascotByNodeIdInput!
-   ): UpdateMascotPayload
- 
-   """Updates a single `Mascot` using a unique key and a patch."""
--  updateMascotById(
-+  updateMascot(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: UpdateMascotByIdInput!
-+    input: UpdateMascotInput!
-   ): UpdateMascotPayload
- 
-   """Updates a single `Mascot` using a unique key and a patch."""
-@@ -612,51 +612,51 @@
-   ): UpdateMascotPayload
- 
-   """Deletes a single `Beverage` using its globally unique id."""
--  deleteBeverage(
-+  deleteBeverageByNodeId(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: DeleteBeverageInput!
-+    input: DeleteBeverageByNodeIdInput!
-   ): DeleteBeveragePayload
- 
-   """Deletes a single `Beverage` using a unique key."""
--  deleteBeverageById(
-+  deleteBeverage(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: DeleteBeverageByIdInput!
-+    input: DeleteBeverageInput!
-   ): DeleteBeveragePayload
- 
-   """Deletes a single `Company` using its globally unique id."""
--  deleteCompany(
-+  deleteCompanyByNodeId(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: DeleteCompanyInput!
-+    input: DeleteCompanyByNodeIdInput!
-   ): DeleteCompanyPayload
- 
-   """Deletes a single `Company` using a unique key."""
--  deleteCompanyById(
-+  deleteCompany(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: DeleteCompanyByIdInput!
-+    input: DeleteCompanyInput!
-   ): DeleteCompanyPayload
- 
-   """Deletes a single `Mascot` using its globally unique id."""
--  deleteMascot(
-+  deleteMascotByNodeId(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: DeleteMascotInput!
-+    input: DeleteMascotByNodeIdInput!
-   ): DeleteMascotPayload
- 
-   """Deletes a single `Mascot` using a unique key."""
--  deleteMascotById(
-+  deleteMascot(
-     """
-     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-     """
--    input: DeleteMascotByIdInput!
-+    input: DeleteMascotInput!
-   ): DeleteMascotPayload
- 
-   """Deletes a single `Mascot` using a unique key."""
-@@ -685,10 +685,10 @@
-   query: Query
+   """
+@@ -317,10 +317,10 @@
+   clientMutationId: String
  
    """Reads a single `Company` that is related to this `Beverage`."""
 -  companyByCompanyId: Company
@@ -286,281 +64,571 @@
    """Reads a single `Company` that is related to this `Beverage`."""
 -  companyByDistributorId: Company
 +  distributor: Company
- 
-   """An edge for our `Beverage`. May be used by Relay 1."""
-   beverageEdge(
-@@ -775,7 +775,7 @@
-   query: Query
- 
-   """Reads a single `Company` that is related to this `Mascot`."""
--  companyByCompanyId: Company
-+  company: Company
- 
-   """An edge for our `Mascot`. May be used by Relay 1."""
-   mascotEdge(
-@@ -820,10 +820,10 @@
-   query: Query
- 
-   """Reads a single `Company` that is related to this `Beverage`."""
--  companyByCompanyId: Company
-+  company: Company
- 
-   """Reads a single `Company` that is related to this `Beverage`."""
--  companyByDistributorId: Company
-+  distributor: Company
- 
-   """An edge for our `Beverage`. May be used by Relay 1."""
-   beverageEdge(
-@@ -832,8 +832,8 @@
-   ): BeveragesEdge
- }
- 
--"""All input for the `updateBeverage` mutation."""
--input UpdateBeverageInput {
-+"""All input for the `updateBeverageByNodeId` mutation."""
-+input UpdateBeverageByNodeIdInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-@@ -848,7 +848,7 @@
-   """
-   An object where the defined keys will be set on the `Beverage` being updated.
-   """
--  beveragePatch: BeveragePatch!
-+  patch: BeveragePatch!
- }
- 
- """
-@@ -861,8 +861,8 @@
-   name: String
- }
- 
--"""All input for the `updateBeverageById` mutation."""
--input UpdateBeverageByIdInput {
-+"""All input for the `updateBeverage` mutation."""
-+input UpdateBeverageInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-@@ -872,7 +872,7 @@
-   """
-   An object where the defined keys will be set on the `Beverage` being updated.
-   """
--  beveragePatch: BeveragePatch!
-+  patch: BeveragePatch!
-   id: Int!
- }
- 
-@@ -899,8 +899,8 @@
-   ): CompaniesEdge
- }
- 
--"""All input for the `updateCompany` mutation."""
--input UpdateCompanyInput {
-+"""All input for the `updateCompanyByNodeId` mutation."""
-+input UpdateCompanyByNodeIdInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-@@ -915,7 +915,7 @@
-   """
-   An object where the defined keys will be set on the `Company` being updated.
-   """
--  companyPatch: CompanyPatch!
-+  patch: CompanyPatch!
- }
- 
- """
-@@ -926,8 +926,8 @@
-   name: String
- }
- 
--"""All input for the `updateCompanyById` mutation."""
--input UpdateCompanyByIdInput {
-+"""All input for the `updateCompany` mutation."""
-+input UpdateCompanyInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-@@ -937,7 +937,7 @@
-   """
-   An object where the defined keys will be set on the `Company` being updated.
-   """
--  companyPatch: CompanyPatch!
-+  patch: CompanyPatch!
-   id: Int!
- }
- 
-@@ -958,7 +958,7 @@
-   query: Query
- 
-   """Reads a single `Company` that is related to this `Mascot`."""
--  companyByCompanyId: Company
-+  company: Company
- 
-   """An edge for our `Mascot`. May be used by Relay 1."""
-   mascotEdge(
-@@ -967,8 +967,8 @@
-   ): MascotsEdge
- }
- 
--"""All input for the `updateMascot` mutation."""
--input UpdateMascotInput {
-+"""All input for the `updateMascotByNodeId` mutation."""
-+input UpdateMascotByNodeIdInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-@@ -983,7 +983,7 @@
-   """
-   An object where the defined keys will be set on the `Mascot` being updated.
-   """
--  mascotPatch: MascotPatch!
-+  patch: MascotPatch!
- }
- 
- """
-@@ -995,8 +995,8 @@
-   name: String
- }
- 
--"""All input for the `updateMascotById` mutation."""
--input UpdateMascotByIdInput {
-+"""All input for the `updateMascot` mutation."""
-+input UpdateMascotInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
-   payload verbatim. May be used to track mutations by the client.
-@@ -1006,7 +1006,7 @@
-   """
-   An object where the defined keys will be set on the `Mascot` being updated.
-   """
--  mascotPatch: MascotPatch!
-+  patch: MascotPatch!
-   id: Int!
- }
- 
-@@ -1021,7 +1021,7 @@
-   """
-   An object where the defined keys will be set on the `Mascot` being updated.
-   """
--  mascotPatch: MascotPatch!
-+  patch: MascotPatch!
-   companyId: Int!
- }
- 
-@@ -1035,7 +1035,7 @@
- 
-   """The `Beverage` that was deleted by this mutation."""
-   beverage: Beverage
--  deletedBeverageId: ID
-+  deletedBeverageNodeId: ID
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -1043,10 +1043,10 @@
-   query: Query
+@@ -384,7 +384,7 @@
+   clientMutationId: String
  
-   """Reads a single `Company` that is related to this `Beverage`."""
+   """Reads a single `Company` that is related to this `Mascot`."""
 -  companyByCompanyId: Company
 +  company: Company
  
-   """Reads a single `Company` that is related to this `Beverage`."""
--  companyByDistributorId: Company
-+  distributor: Company
+   """The `Mascot` that was created by this mutation."""
+   mascot: Mascot
+@@ -404,14 +404,18 @@
+ """A location in a connection that can be used for resuming pagination."""
+ scalar Cursor
  
-   """An edge for our `Beverage`. May be used by Relay 1."""
-   beverageEdge(
-@@ -1055,8 +1055,8 @@
-   ): BeveragesEdge
- }
- 
--"""All input for the `deleteBeverage` mutation."""
--input DeleteBeverageInput {
+-"""All input for the `deleteBeverageById` mutation."""
+-input DeleteBeverageByIdInput {
 +"""All input for the `deleteBeverageByNodeId` mutation."""
 +input DeleteBeverageByNodeIdInput {
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1069,8 +1069,8 @@
-   nodeId: ID!
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Beverage` to be deleted.
++  """
++  nodeId: ID!
  }
  
--"""All input for the `deleteBeverageById` mutation."""
--input DeleteBeverageByIdInput {
-+"""All input for the `deleteBeverage` mutation."""
-+input DeleteBeverageInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
+ """All input for the `deleteBeverage` mutation."""
+@@ -421,11 +425,7 @@
    payload verbatim. May be used to track mutations by the client.
-@@ -1089,7 +1089,7 @@
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Beverage` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
  
-   """The `Company` that was deleted by this mutation."""
-   company: Company
--  deletedCompanyId: ID
-+  deletedCompanyNodeId: ID
+ """The output of our delete `Beverage` mutation."""
+@@ -446,11 +446,11 @@
+   clientMutationId: String
+ 
+   """Reads a single `Company` that is related to this `Beverage`."""
+-  companyByCompanyId: Company
++  company: Company
++  deletedBeverageNodeId: ID
+ 
+   """Reads a single `Company` that is related to this `Beverage`."""
+-  companyByDistributorId: Company
+-  deletedBeverageId: ID
++  distributor: Company
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -1103,8 +1103,8 @@
-   ): CompaniesEdge
+@@ -458,14 +458,18 @@
+   query: Query
  }
  
--"""All input for the `deleteCompany` mutation."""
--input DeleteCompanyInput {
+-"""All input for the `deleteCompanyById` mutation."""
+-input DeleteCompanyByIdInput {
 +"""All input for the `deleteCompanyByNodeId` mutation."""
 +input DeleteCompanyByNodeIdInput {
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1117,8 +1117,8 @@
-   nodeId: ID!
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Company` to be deleted.
++  """
++  nodeId: ID!
  }
  
--"""All input for the `deleteCompanyById` mutation."""
--input DeleteCompanyByIdInput {
-+"""All input for the `deleteCompany` mutation."""
-+input DeleteCompanyInput {
-   """
-   An arbitrary string value with no semantic meaning. Will be included in the
+ """All input for the `deleteCompany` mutation."""
+@@ -475,11 +479,7 @@
    payload verbatim. May be used to track mutations by the client.
-@@ -1137,7 +1137,7 @@
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Company` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
  
-   """The `Mascot` that was deleted by this mutation."""
-   mascot: Mascot
--  deletedMascotId: ID
-+  deletedMascotNodeId: ID
+ """The output of our delete `Company` mutation."""
+@@ -498,7 +498,7 @@
+     """The method to use when ordering `Company`."""
+     orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
+   ): CompaniesEdge
+-  deletedCompanyId: ID
++  deletedCompanyNodeId: ID
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -1145,7 +1145,7 @@
-   query: Query
- 
-   """Reads a single `Company` that is related to this `Mascot`."""
--  companyByCompanyId: Company
-+  company: Company
- 
-   """An edge for our `Mascot`. May be used by Relay 1."""
-   mascotEdge(
-@@ -1154,8 +1154,8 @@
-   ): MascotsEdge
+@@ -516,14 +516,18 @@
+   companyId: Int!
  }
  
--"""All input for the `deleteMascot` mutation."""
--input DeleteMascotInput {
+-"""All input for the `deleteMascotById` mutation."""
+-input DeleteMascotByIdInput {
 +"""All input for the `deleteMascotByNodeId` mutation."""
 +input DeleteMascotByNodeIdInput {
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1168,8 +1168,8 @@
-   nodeId: ID!
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Mascot` to be deleted.
++  """
++  nodeId: ID!
  }
  
--"""All input for the `deleteMascotById` mutation."""
--input DeleteMascotByIdInput {
-+"""All input for the `deleteMascot` mutation."""
-+input DeleteMascotInput {
+ """All input for the `deleteMascot` mutation."""
+@@ -533,11 +537,7 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-
+-  """
+-  The globally unique `ID` which will identify a single `Mascot` to be deleted.
+-  """
+-  nodeId: ID!
++  id: Int!
+ }
+ 
+ """The output of our delete `Mascot` mutation."""
+@@ -549,8 +549,8 @@
+   clientMutationId: String
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
+-  deletedMascotId: ID
++  company: Company
++  deletedMascotNodeId: ID
+ 
+   """The `Mascot` that was deleted by this mutation."""
+   mascot: Mascot
+@@ -569,7 +569,7 @@
+ 
+ type Mascot implements Node {
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+   companyId: Int!
+   id: Int!
+   name: String!
+@@ -677,7 +677,7 @@
+     input: CreateMascotInput!
+   ): CreateMascotPayload
+ 
+-  """Deletes a single `Beverage` using its globally unique id."""
++  """Deletes a single `Beverage` using a unique key."""
+   deleteBeverage(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+@@ -685,15 +685,15 @@
+     input: DeleteBeverageInput!
+   ): DeleteBeveragePayload
+ 
+-  """Deletes a single `Beverage` using a unique key."""
+-  deleteBeverageById(
++  """Deletes a single `Beverage` using its globally unique id."""
++  deleteBeverageByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteBeverageByIdInput!
++    input: DeleteBeverageByNodeIdInput!
+   ): DeleteBeveragePayload
+ 
+-  """Deletes a single `Company` using its globally unique id."""
++  """Deletes a single `Company` using a unique key."""
+   deleteCompany(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+@@ -701,15 +701,15 @@
+     input: DeleteCompanyInput!
+   ): DeleteCompanyPayload
+ 
+-  """Deletes a single `Company` using a unique key."""
+-  deleteCompanyById(
++  """Deletes a single `Company` using its globally unique id."""
++  deleteCompanyByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteCompanyByIdInput!
++    input: DeleteCompanyByNodeIdInput!
+   ): DeleteCompanyPayload
+ 
+-  """Deletes a single `Mascot` using its globally unique id."""
++  """Deletes a single `Mascot` using a unique key."""
+   deleteMascot(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+@@ -725,15 +725,15 @@
+     input: DeleteMascotByCompanyIdInput!
+   ): DeleteMascotPayload
+ 
+-  """Deletes a single `Mascot` using a unique key."""
+-  deleteMascotById(
++  """Deletes a single `Mascot` using its globally unique id."""
++  deleteMascotByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: DeleteMascotByIdInput!
++    input: DeleteMascotByNodeIdInput!
+   ): DeleteMascotPayload
+ 
+-  """Updates a single `Beverage` using its globally unique id and a patch."""
++  """Updates a single `Beverage` using a unique key and a patch."""
+   updateBeverage(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+@@ -741,15 +741,15 @@
+     input: UpdateBeverageInput!
+   ): UpdateBeveragePayload
+ 
+-  """Updates a single `Beverage` using a unique key and a patch."""
+-  updateBeverageById(
++  """Updates a single `Beverage` using its globally unique id and a patch."""
++  updateBeverageByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateBeverageByIdInput!
++    input: UpdateBeverageByNodeIdInput!
+   ): UpdateBeveragePayload
+ 
+-  """Updates a single `Company` using its globally unique id and a patch."""
++  """Updates a single `Company` using a unique key and a patch."""
+   updateCompany(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+@@ -757,15 +757,15 @@
+     input: UpdateCompanyInput!
+   ): UpdateCompanyPayload
+ 
+-  """Updates a single `Company` using a unique key and a patch."""
+-  updateCompanyById(
++  """Updates a single `Company` using its globally unique id and a patch."""
++  updateCompanyByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateCompanyByIdInput!
++    input: UpdateCompanyByNodeIdInput!
+   ): UpdateCompanyPayload
+ 
+-  """Updates a single `Mascot` using its globally unique id and a patch."""
++  """Updates a single `Mascot` using a unique key and a patch."""
+   updateMascot(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+@@ -781,12 +781,12 @@
+     input: UpdateMascotByCompanyIdInput!
+   ): UpdateMascotPayload
+ 
+-  """Updates a single `Mascot` using a unique key and a patch."""
+-  updateMascotById(
++  """Updates a single `Mascot` using its globally unique id and a patch."""
++  updateMascotByNodeId(
+     """
+     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+     """
+-    input: UpdateMascotByIdInput!
++    input: UpdateMascotByNodeIdInput!
+   ): UpdateMascotPayload
+ }
+ 
+@@ -815,8 +815,16 @@
+ 
+ """The root query type which gives access points into the data universe."""
+ type Query implements Node {
++  beverage(id: Int!): Beverage
++
++  """Reads a single `Beverage` using its globally unique `ID`."""
++  beverageByNodeId(
++    """The globally unique `ID` to be used in selecting a single `Beverage`."""
++    nodeId: ID!
++  ): Beverage
++
+   """Reads and enables pagination through a set of `Beverage`."""
+-  allBeverages(
++  beverages(
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
+ 
+@@ -845,7 +853,7 @@
+   ): BeveragesConnection
+ 
+   """Reads a set of `Beverage`."""
+-  allBeveragesList(
++  beveragesList(
+     """
+     A condition to be used in determining which values should be returned by the collection.
+     """
+@@ -862,7 +870,7 @@
+   ): [Beverage!]
+ 
+   """Reads and enables pagination through a set of `Company`."""
+-  allCompanies(
++  companies(
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
+ 
+@@ -891,7 +899,7 @@
+   ): CompaniesConnection
+ 
+   """Reads a set of `Company`."""
+-  allCompaniesList(
++  companiesList(
+     """
+     A condition to be used in determining which values should be returned by the collection.
+     """
+@@ -906,9 +914,24 @@
+     """The method to use when ordering `Company`."""
+     orderBy: [CompaniesOrderBy!]
+   ): [Company!]
++  company(id: Int!): Company
++
++  """Reads a single `Company` using its globally unique `ID`."""
++  companyByNodeId(
++    """The globally unique `ID` to be used in selecting a single `Company`."""
++    nodeId: ID!
++  ): Company
++  mascot(id: Int!): Mascot
++  mascotByCompanyId(companyId: Int!): Mascot
++
++  """Reads a single `Mascot` using its globally unique `ID`."""
++  mascotByNodeId(
++    """The globally unique `ID` to be used in selecting a single `Mascot`."""
++    nodeId: ID!
++  ): Mascot
+ 
+   """Reads and enables pagination through a set of `Mascot`."""
+-  allMascots(
++  mascots(
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
+ 
+@@ -937,7 +960,7 @@
+   ): MascotsConnection
+ 
+   """Reads a set of `Mascot`."""
+-  allMascotsList(
++  mascotsList(
+     """
+     A condition to be used in determining which values should be returned by the collection.
+     """
+@@ -953,28 +976,6 @@
+     orderBy: [MascotsOrderBy!]
+   ): [Mascot!]
+ 
+-  """Reads a single `Beverage` using its globally unique `ID`."""
+-  beverage(
+-    """The globally unique `ID` to be used in selecting a single `Beverage`."""
+-    nodeId: ID!
+-  ): Beverage
+-  beverageById(id: Int!): Beverage
+-
+-  """Reads a single `Company` using its globally unique `ID`."""
+-  company(
+-    """The globally unique `ID` to be used in selecting a single `Company`."""
+-    nodeId: ID!
+-  ): Company
+-  companyById(id: Int!): Company
+-
+-  """Reads a single `Mascot` using its globally unique `ID`."""
+-  mascot(
+-    """The globally unique `ID` to be used in selecting a single `Mascot`."""
+-    nodeId: ID!
+-  ): Mascot
+-  mascotByCompanyId(companyId: Int!): Mascot
+-  mascotById(id: Int!): Mascot
+-
+   """Fetches an object given its globally unique `ID`."""
+   node(
+     """The globally unique `ID`."""
+@@ -993,38 +994,38 @@
+   query: Query!
+ }
+ 
+-"""All input for the `updateBeverageById` mutation."""
+-input UpdateBeverageByIdInput {
+-  """
+-  An object where the defined keys will be set on the `Beverage` being updated.
+-  """
+-  beveragePatch: BeveragePatch!
+-
++"""All input for the `updateBeverageByNodeId` mutation."""
++input UpdateBeverageByNodeIdInput {
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
+-}
+ 
+-"""All input for the `updateBeverage` mutation."""
+-input UpdateBeverageInput {
++  """
++  The globally unique `ID` which will identify a single `Beverage` to be updated.
++  """
++  nodeId: ID!
++
+   """
+   An object where the defined keys will be set on the `Beverage` being updated.
+   """
+-  beveragePatch: BeveragePatch!
++  patch: BeveragePatch!
++}
+ 
++"""All input for the `updateBeverage` mutation."""
++input UpdateBeverageInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
++  id: Int!
+ 
+   """
+-  The globally unique `ID` which will identify a single `Beverage` to be updated.
++  An object where the defined keys will be set on the `Beverage` being updated.
+   """
+-  nodeId: ID!
++  patch: BeveragePatch!
+ }
+ 
+ """The output of our update `Beverage` mutation."""
+@@ -1045,10 +1046,10 @@
+   clientMutationId: String
+ 
+   """Reads a single `Company` that is related to this `Beverage`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """Reads a single `Company` that is related to this `Beverage`."""
+-  companyByDistributorId: Company
++  distributor: Company
+ 
+   """
+   Our root query field type. Allows us to run any query from our mutation payload.
+@@ -1056,8 +1057,8 @@
+   query: Query
+ }
+ 
+-"""All input for the `updateCompanyById` mutation."""
+-input UpdateCompanyByIdInput {
++"""All input for the `updateCompanyByNodeId` mutation."""
++input UpdateCompanyByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+@@ -1065,10 +1066,14 @@
+   clientMutationId: String
+ 
+   """
++  The globally unique `ID` which will identify a single `Company` to be updated.
++  """
++  nodeId: ID!
++
++  """
+   An object where the defined keys will be set on the `Company` being updated.
+   """
+-  companyPatch: CompanyPatch!
+-  id: Int!
++  patch: CompanyPatch!
+ }
+ 
+ """All input for the `updateCompany` mutation."""
+@@ -1078,16 +1083,12 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
++  id: Int!
+ 
+   """
+   An object where the defined keys will be set on the `Company` being updated.
+   """
+-  companyPatch: CompanyPatch!
+-
+-  """
+-  The globally unique `ID` which will identify a single `Company` to be updated.
+-  """
+-  nodeId: ID!
++  patch: CompanyPatch!
+ }
+ 
+ """The output of our update `Company` mutation."""
+@@ -1125,22 +1126,26 @@
+   """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
++  patch: MascotPatch!
+ }
+ 
+-"""All input for the `updateMascotById` mutation."""
+-input UpdateMascotByIdInput {
++"""All input for the `updateMascotByNodeId` mutation."""
++input UpdateMascotByNodeIdInput {
+   """
+   An arbitrary string value with no semantic meaning. Will be included in the
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
+-  id: Int!
++
++  """
++  The globally unique `ID` which will identify a single `Mascot` to be updated.
++  """
++  nodeId: ID!
+ 
+   """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
++  patch: MascotPatch!
+ }
+ 
+ """All input for the `updateMascot` mutation."""
+@@ -1150,16 +1155,12 @@
+   payload verbatim. May be used to track mutations by the client.
+   """
+   clientMutationId: String
++  id: Int!
+ 
+   """
+   An object where the defined keys will be set on the `Mascot` being updated.
+   """
+-  mascotPatch: MascotPatch!
+-
+-  """
+-  The globally unique `ID` which will identify a single `Mascot` to be updated.
+-  """
+-  nodeId: ID!
++  patch: MascotPatch!
+ }
+ 
+ """The output of our update `Mascot` mutation."""
+@@ -1171,7 +1172,7 @@
+   clientMutationId: String
+ 
+   """Reads a single `Company` that is related to this `Mascot`."""
+-  companyByCompanyId: Company
++  company: Company
+ 
+   """The `Mascot` that was updated by this mutation."""
+   mascot: Mascot

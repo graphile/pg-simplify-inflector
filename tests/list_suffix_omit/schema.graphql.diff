@@ -1,79 +1,184 @@
 --- unsimplified
 +++ simplified
-@@ -18,7 +18,7 @@
-   ): Node
+@@ -1,10 +1,10 @@
+ type Beverage implements Node {
+   """Reads a single `Company` that is related to this `Beverage`."""
+-  companyByCompanyId: Company
++  company: Company
++  companyId: Int!
  
+   """Reads a single `Company` that is related to this `Beverage`."""
+-  companyByDistributorId: Company
+-  companyId: Int!
++  distributor: Company
+   distributorId: Int
+   id: Int!
+   name: String!
+@@ -113,7 +113,24 @@
+ 
+ type Company implements Node {
+   """Reads and enables pagination through a set of `Beverage`."""
+-  beveragesByCompanyId(
++  beverages(
++    """
++    A condition to be used in determining which values should be returned by the collection.
++    """
++    condition: BeverageCondition
++
++    """Only read the first `n` values of the set."""
++    first: Int
++
++    """Skip the first `n` values."""
++    offset: Int
++
++    """The method to use when ordering `Beverage`."""
++    orderBy: [BeveragesOrderBy!]
++  ): [Beverage!]!
++
++  """Reads and enables pagination through a set of `Beverage`."""
++  beveragesConnection(
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
+ 
+@@ -142,23 +159,6 @@
+   ): BeveragesConnection!
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+-  beveragesByCompanyIdList(
+-    """
+-    A condition to be used in determining which values should be returned by the collection.
+-    """
+-    condition: BeverageCondition
+-
+-    """Only read the first `n` values of the set."""
+-    first: Int
+-
+-    """Skip the first `n` values."""
+-    offset: Int
+-
+-    """The method to use when ordering `Beverage`."""
+-    orderBy: [BeveragesOrderBy!]
+-  ): [Beverage!]!
+-
+-  """Reads and enables pagination through a set of `Beverage`."""
+   computedListInclude(
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
+@@ -190,6 +190,15 @@
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+   computedListOmit(
++    """Only read the first `n` values of the set."""
++    first: Int
++
++    """Skip the first `n` values."""
++    offset: Int
++  ): [Beverage]
++
++  """Reads and enables pagination through a set of `Beverage`."""
++  computedListOmitConnection(
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
+ 
+@@ -210,15 +219,6 @@
+   ): BeveragesConnection!
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+-  computedListOmitList(
+-    """Only read the first `n` values of the set."""
+-    first: Int
+-
+-    """Skip the first `n` values."""
+-    offset: Int
+-  ): [Beverage]
+-
+-  """Reads and enables pagination through a set of `Beverage`."""
+   distributedBeverages(
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
+@@ -311,8 +311,16 @@
+ 
+ """The root query type which gives access points into the data universe."""
+ type Query implements Node {
++  beverage(id: Int!): Beverage
++
++  """Reads a single `Beverage` using its globally unique `ID`."""
++  beverageByNodeId(
++    """The globally unique `ID` to be used in selecting a single `Beverage`."""
++    nodeId: ID!
++  ): Beverage
++
    """Reads and enables pagination through a set of `Beverage`."""
 -  allBeverages(
 +  beverages(
-     """Only read the first `n` values of the set."""
-     first: Int
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
  
-@@ -47,7 +47,7 @@
+@@ -341,7 +349,7 @@
    ): BeveragesConnection
  
    """Reads a set of `Beverage`."""
 -  allBeveragesList(
 +  beveragesList(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -64,7 +64,7 @@
+     """
+     A condition to be used in determining which values should be returned by the collection.
+     """
+@@ -357,8 +365,25 @@
+     orderBy: [BeveragesOrderBy!]
    ): [Beverage!]
  
++  """Reads a set of `Company`."""
++  companies(
++    """
++    A condition to be used in determining which values should be returned by the collection.
++    """
++    condition: CompanyCondition
++
++    """Only read the first `n` values of the set."""
++    first: Int
++
++    """Skip the first `n` values."""
++    offset: Int
++
++    """The method to use when ordering `Company`."""
++    orderBy: [CompaniesOrderBy!]
++  ): [Company!]
++
    """Reads and enables pagination through a set of `Company`."""
 -  allCompanies(
 +  companiesConnection(
-     """Only read the first `n` values of the set."""
-     first: Int
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
  
-@@ -93,7 +93,7 @@
+@@ -385,37 +410,13 @@
+     """The method to use when ordering `Company`."""
+     orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
    ): CompaniesConnection
- 
-   """Reads a set of `Company`."""
+-
+-  """Reads a set of `Company`."""
 -  allCompaniesList(
-+  companies(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -108,8 +108,8 @@
-     """
-     condition: CompanyCondition
-   ): [Company!]
--  beverageById(id: Int!): Beverage
--  companyById(id: Int!): Company
-+  beverage(id: Int!): Beverage
-+  company(id: Int!): Company
- 
-   """Reads and enables pagination through a set of `Beverage`."""
-   listInclude(
-@@ -142,7 +142,7 @@
-   ): [Beverage]
- 
-   """Reads and enables pagination through a set of `Beverage`."""
--  listOmit(
-+  listOmitConnection(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -163,7 +163,7 @@
-   ): BeveragesConnection
- 
-   """Reads and enables pagination through a set of `Beverage`."""
--  listOmitList(
-+  listOmit(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -172,13 +172,13 @@
-   ): [Beverage]
- 
-   """Reads a single `Beverage` using its globally unique `ID`."""
+-    """
+-    A condition to be used in determining which values should be returned by the collection.
+-    """
+-    condition: CompanyCondition
+-
+-    """Only read the first `n` values of the set."""
+-    first: Int
+-
+-    """Skip the first `n` values."""
+-    offset: Int
+-
+-    """The method to use when ordering `Company`."""
+-    orderBy: [CompaniesOrderBy!]
+-  ): [Company!]
+-
+-  """Reads a single `Beverage` using its globally unique `ID`."""
 -  beverage(
-+  beverageByNodeId(
-     """The globally unique `ID` to be used in selecting a single `Beverage`."""
-     nodeId: ID!
-   ): Beverage
+-    """The globally unique `ID` to be used in selecting a single `Beverage`."""
+-    nodeId: ID!
+-  ): Beverage
+-  beverageById(id: Int!): Beverage
++  company(id: Int!): Company
  
    """Reads a single `Company` using its globally unique `ID`."""
 -  company(
@@ -81,52 +186,39 @@
      """The globally unique `ID` to be used in selecting a single `Company`."""
      nodeId: ID!
    ): Company
-@@ -220,10 +220,10 @@
-   name: String!
- 
-   """Reads a single `Company` that is related to this `Beverage`."""
--  companyByCompanyId: Company
-+  company: Company
- 
-   """Reads a single `Company` that is related to this `Beverage`."""
--  companyByDistributorId: Company
-+  distributor: Company
- }
- 
- type Company implements Node {
-@@ -235,7 +235,7 @@
-   name: String!
+-  companyById(id: Int!): Company
  
    """Reads and enables pagination through a set of `Beverage`."""
--  beveragesByCompanyId(
-+  beveragesConnection(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -264,7 +264,7 @@
-   ): BeveragesConnection!
+   listInclude(
+@@ -449,6 +450,15 @@
  
    """Reads and enables pagination through a set of `Beverage`."""
--  beveragesByCompanyIdList(
-+  beverages(
-     """Only read the first `n` values of the set."""
-     first: Int
+   listOmit(
++    """Only read the first `n` values of the set."""
++    first: Int
++
++    """Skip the first `n` values."""
++    offset: Int
++  ): [Beverage]
++
++  """Reads and enables pagination through a set of `Beverage`."""
++  listOmitConnection(
+     """Read all values in the set after (below) this cursor."""
+     after: Cursor
  
-@@ -357,7 +357,7 @@
-   ): [Beverage]
+@@ -468,15 +478,6 @@
+     offset: Int
+   ): BeveragesConnection
  
-   """Reads and enables pagination through a set of `Beverage`."""
--  computedListOmit(
-+  computedListOmitConnection(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
-@@ -378,7 +378,7 @@
-   ): BeveragesConnection!
- 
-   """Reads and enables pagination through a set of `Beverage`."""
--  computedListOmitList(
-+  computedListOmit(
-     """Only read the first `n` values of the set."""
-     first: Int
- 
+-  """Reads and enables pagination through a set of `Beverage`."""
+-  listOmitList(
+-    """Only read the first `n` values of the set."""
+-    first: Int
+-
+-    """Skip the first `n` values."""
+-    offset: Int
+-  ): [Beverage]
+-
+   """Fetches an object given its globally unique `ID`."""
+   node(
+     """The globally unique `ID`."""
