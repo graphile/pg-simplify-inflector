@@ -2,8 +2,10 @@
 const pg = require("pg");
 const fsp = require("fs").promises;
 const child_process = require("child_process");
-const SimplifyPlugin = require("./index.js");
-const { createPostGraphileSchema } = require("postgraphile");
+const { PgSimplifyInflectionPreset } = require("./index.js");
+const { makeSchema, makePgSources } = require("postgraphile");
+const { postgraphilePresetAmber } = require("postgraphile/presets/amber");
+const { makeV4Preset } = require("postgraphile/presets/v4");
 const { printSchema, lexicographicSortSchema } = require("graphql");
 
 const ROOT_CONNECTION_STRING = "postgres";
@@ -11,7 +13,12 @@ const DATABASE_NAME = "pg_simplify_inflectors";
 const ROOT = `${__dirname}/tests`;
 
 const BASE_SETTINGS = {
-  simpleCollections: "both",
+  extends: [
+    postgraphilePresetAmber,
+    makeV4Preset({
+      simpleCollections: "both",
+    }),
+  ],
 };
 
 const withPool = async (connectionString, cb) => {
@@ -53,17 +60,20 @@ async function withCleanDb(cb) {
 async function getSettings(dir) {
   try {
     const json = await fsp.readFile(`${ROOT}/${dir}/settings.json`, "utf8");
-    return JSON.parse(json);
+    return { schema: JSON.parse(json) };
   } catch {
     return {};
   }
 }
 
 async function getSchema(client, withSimplify, settings) {
-  return await createPostGraphileSchema(DATABASE_NAME, "app_public", {
-    ...BASE_SETTINGS,
-    ...settings,
-    appendPlugins: withSimplify ? [SimplifyPlugin] : [],
+  return await makeSchema({
+    extends: [
+      BASE_SETTINGS,
+      settings,
+      ...(withSimplify ? [PgSimplifyInflectionPreset] : []),
+    ],
+    pgSources: makePgSources(DATABASE_NAME, "app_public"),
   });
 }
 
