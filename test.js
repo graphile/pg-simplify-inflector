@@ -67,14 +67,18 @@ async function getSettings(dir) {
 }
 
 async function getSchema(client, withSimplify, settings) {
+  const pgSources = makePgSources(DATABASE_NAME, "app_public");
   const result = await makeSchema({
     extends: [
       BASE_SETTINGS,
       settings,
       ...(withSimplify ? [PgSimplifyInflectionPreset] : []),
     ],
-    pgSources: makePgSources(DATABASE_NAME, "app_public"),
+    pgSources,
   });
+  // TODO: solve this better!
+  // Hack to release the pool
+  pgSources[0].adaptorSettings.pool.end();
   return result.schema;
 }
 
