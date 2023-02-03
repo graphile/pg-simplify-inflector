@@ -324,7 +324,7 @@ const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
               )}`
             );
           }
-          if (this.baseNameMatches(baseName, relation.source.name)) {
+          if (this.baseNameMatches(baseName, source.name)) {
             return this.camelCase(
               `${this.distinctPluralize(
                 this._singularizedCodecName(relation.source.codec)
