@@ -38,7 +38,7 @@ type BeveragesConnection {
   """
   A list of edges which contains the `Beverage` and cursor to aid in pagination.
   """
-  edges: [BeveragesEdge!]!
+  edges: [BeveragesEdge]!
 
   """A list of `Beverage` objects."""
   nodes: [Beverage]!
@@ -79,7 +79,7 @@ type CompaniesConnection {
   """
   A list of edges which contains the `Company` and cursor to aid in pagination.
   """
-  edges: [CompaniesEdge!]!
+  edges: [CompaniesEdge]!
 
   """A list of `Company` objects."""
   nodes: [Company]!
@@ -178,8 +178,6 @@ type Company implements Node {
     """
     offset: Int
   ): BeveragesConnection!
-
-  """Reads and enables pagination through a set of `Beverage`."""
   computedListIncludeList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -187,8 +185,6 @@ type Company implements Node {
     """Skip the first `n` values."""
     offset: Int
   ): [Beverage]
-
-  """Reads and enables pagination through a set of `Beverage`."""
   computedListOmit(
     """Only read the first `n` values of the set."""
     first: Int
@@ -311,6 +307,7 @@ type PageInfo {
 
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
+  """Get a single `Beverage`."""
   beverage(id: Int!): Beverage
 
   """Reads a single `Beverage` using its globally unique `ID`."""
@@ -410,6 +407,8 @@ type Query implements Node {
     """The method to use when ordering `Company`."""
     orderBy: [CompaniesOrderBy!]
   ): [Company!]
+
+  """Get a single `Company`."""
   company(id: Int!): Company
 
   """Reads a single `Company` using its globally unique `ID`."""
@@ -438,8 +437,6 @@ type Query implements Node {
     """
     offset: Int
   ): BeveragesConnection
-
-  """Reads and enables pagination through a set of `Beverage`."""
   listIncludeList(
     """Only read the first `n` values of the set."""
     first: Int
@@ -447,8 +444,6 @@ type Query implements Node {
     """Skip the first `n` values."""
     offset: Int
   ): [Beverage]
-
-  """Reads and enables pagination through a set of `Beverage`."""
   listOmit(
     """Only read the first `n` values of the set."""
     first: Int

@@ -27,7 +27,7 @@ type CreateGoalContributorPayload {
   """An edge for our `GoalContributor`. May be used by Relay 1."""
   goalContributorEdge(
     """The method to use when ordering `GoalContributor`."""
-    orderBy: [GoalContributorsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GoalContributorsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GoalContributorsEdge
 
   """
@@ -73,7 +73,7 @@ type CreateGoalPayload {
   """An edge for our `Goal`. May be used by Relay 1."""
   goalEdge(
     """The method to use when ordering `Goal`."""
-    orderBy: [GoalsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GoalsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GoalsEdge
 
   """Reads a single `Organization` that is related to this `Goal`."""
@@ -114,7 +114,7 @@ type CreateOrganizationPayload {
   """An edge for our `Organization`. May be used by Relay 1."""
   organizationEdge(
     """The method to use when ordering `Organization`."""
-    orderBy: [OrganizationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [OrganizationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): OrganizationsEdge
 
   """
@@ -154,7 +154,7 @@ type CreateTeamPayload {
   """An edge for our `Team`. May be used by Relay 1."""
   teamEdge(
     """The method to use when ordering `Team`."""
-    orderBy: [TeamsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [TeamsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): TeamsEdge
 }
 
@@ -189,7 +189,7 @@ type CreateUserPayload {
   """An edge for our `User`. May be used by Relay 1."""
   userEdge(
     """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [UsersOrderBy!]! = [PRIMARY_KEY_ASC]
   ): UsersEdge
 }
 
@@ -252,7 +252,7 @@ type DeleteGoalContributorPayload {
   """An edge for our `GoalContributor`. May be used by Relay 1."""
   goalContributorEdge(
     """The method to use when ordering `GoalContributor`."""
-    orderBy: [GoalContributorsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GoalContributorsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GoalContributorsEdge
 
   """
@@ -301,7 +301,7 @@ type DeleteGoalPayload {
   """An edge for our `Goal`. May be used by Relay 1."""
   goalEdge(
     """The method to use when ordering `Goal`."""
-    orderBy: [GoalsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GoalsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GoalsEdge
 
   """Reads a single `Organization` that is related to this `Goal`."""
@@ -355,7 +355,7 @@ type DeleteOrganizationPayload {
   """An edge for our `Organization`. May be used by Relay 1."""
   organizationEdge(
     """The method to use when ordering `Organization`."""
-    orderBy: [OrganizationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [OrganizationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): OrganizationsEdge
 
   """
@@ -408,7 +408,7 @@ type DeleteTeamPayload {
   """An edge for our `Team`. May be used by Relay 1."""
   teamEdge(
     """The method to use when ordering `Team`."""
-    orderBy: [TeamsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [TeamsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): TeamsEdge
 }
 
@@ -456,7 +456,7 @@ type DeleteUserPayload {
   """An edge for our `User`. May be used by Relay 1."""
   userEdge(
     """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [UsersOrderBy!]! = [PRIMARY_KEY_ASC]
   ): UsersEdge
 }
 
@@ -620,7 +620,7 @@ type GoalContributorsConnection {
   """
   A list of edges which contains the `GoalContributor` and cursor to aid in pagination.
   """
-  edges: [GoalContributorsEdge!]!
+  edges: [GoalContributorsEdge]!
 
   """A list of `GoalContributor` objects."""
   nodes: [GoalContributor]!
@@ -683,7 +683,7 @@ type GoalsConnection {
   """
   A list of edges which contains the `Goal` and cursor to aid in pagination.
   """
-  edges: [GoalsEdge!]!
+  edges: [GoalsEdge]!
 
   """A list of `Goal` objects."""
   nodes: [Goal]!
@@ -1068,7 +1068,7 @@ type OrganizationsConnection {
   """
   A list of edges which contains the `Organization` and cursor to aid in pagination.
   """
-  edges: [OrganizationsEdge!]!
+  edges: [OrganizationsEdge]!
 
   """A list of `Organization` objects."""
   nodes: [Organization]!
@@ -1352,6 +1352,8 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Goal`."""
     nodeId: ID!
   ): Goal
+
+  """Get a single `Goal`."""
   goalByOrganizationIdAndTeamIdAndGoalUuid(goalUuid: UUID!, organizationId: Int!, teamId: Int!): Goal
 
   """Reads a single `GoalContributor` using its globally unique `ID`."""
@@ -1361,6 +1363,8 @@ type Query implements Node {
     """
     nodeId: ID!
   ): GoalContributor
+
+  """Get a single `GoalContributor`."""
   goalContributorById(id: Int!): GoalContributor
 
   """Fetches an object given its globally unique `ID`."""
@@ -1381,6 +1385,8 @@ type Query implements Node {
     """
     nodeId: ID!
   ): Organization
+
+  """Get a single `Organization`."""
   organizationById(id: Int!): Organization
 
   """
@@ -1394,6 +1400,8 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Team`."""
     nodeId: ID!
   ): Team
+
+  """Get a single `Team`."""
   teamById(id: Int!): Team
 
   """Reads a single `User` using its globally unique `ID`."""
@@ -1401,6 +1409,8 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `User`."""
     nodeId: ID!
   ): User
+
+  """Get a single `User`."""
   userById(id: Int!): User
 }
 
@@ -1533,7 +1543,7 @@ type TeamsConnection {
   """
   A list of edges which contains the `Team` and cursor to aid in pagination.
   """
-  edges: [TeamsEdge!]!
+  edges: [TeamsEdge]!
 
   """A list of `Team` objects."""
   nodes: [Team]!
@@ -1640,7 +1650,7 @@ type UpdateGoalContributorPayload {
   """An edge for our `GoalContributor`. May be used by Relay 1."""
   goalContributorEdge(
     """The method to use when ordering `GoalContributor`."""
-    orderBy: [GoalContributorsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GoalContributorsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GoalContributorsEdge
 
   """
@@ -1693,7 +1703,7 @@ type UpdateGoalPayload {
   """An edge for our `Goal`. May be used by Relay 1."""
   goalEdge(
     """The method to use when ordering `Goal`."""
-    orderBy: [GoalsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GoalsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GoalsEdge
 
   """Reads a single `Organization` that is related to this `Goal`."""
@@ -1756,7 +1766,7 @@ type UpdateOrganizationPayload {
   """An edge for our `Organization`. May be used by Relay 1."""
   organizationEdge(
     """The method to use when ordering `Organization`."""
-    orderBy: [OrganizationsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [OrganizationsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): OrganizationsEdge
 
   """
@@ -1818,7 +1828,7 @@ type UpdateTeamPayload {
   """An edge for our `Team`. May be used by Relay 1."""
   teamEdge(
     """The method to use when ordering `Team`."""
-    orderBy: [TeamsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [TeamsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): TeamsEdge
 }
 
@@ -1875,7 +1885,7 @@ type UpdateUserPayload {
   """An edge for our `User`. May be used by Relay 1."""
   userEdge(
     """The method to use when ordering `User`."""
-    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [UsersOrderBy!]! = [PRIMARY_KEY_ASC]
   ): UsersEdge
 }
 
@@ -1962,7 +1972,7 @@ type UsersConnection {
   """
   A list of edges which contains the `User` and cursor to aid in pagination.
   """
-  edges: [UsersEdge!]!
+  edges: [UsersEdge]!
 
   """A list of `User` objects."""
   nodes: [User]!

@@ -614,10 +614,11 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -1117,8 +1115,25 @@
+@@ -1117,8 +1115,28 @@
  
  """The root query type which gives access points into the data universe."""
  type Query implements Node {
++  """Get a single `Goal`."""
 +  goal(goalUuid: UUID!, organizationId: Int!, teamId: Int!): Goal
 +
 +  """Reads a single `Goal` using its globally unique `ID`."""
@@ -625,6 +626,8 @@
 +    """The globally unique `ID` to be used in selecting a single `Goal`."""
 +    nodeId: ID!
 +  ): Goal
++
++  """Get a single `GoalContributor`."""
 +  goalContributor(id: Int!): GoalContributor
 +
 +  """Reads a single `GoalContributor` using its globally unique `ID`."""
@@ -641,7 +644,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -1147,7 +1162,7 @@
+@@ -1147,7 +1165,7 @@
    ): GoalContributorsConnection
  
    """Reads a set of `GoalContributor`."""
@@ -650,7 +653,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -1164,7 +1179,7 @@
+@@ -1164,7 +1182,7 @@
    ): [GoalContributor!]
  
    """Reads and enables pagination through a set of `Goal`."""
@@ -659,7 +662,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -1193,7 +1208,7 @@
+@@ -1193,7 +1211,7 @@
    ): GoalsConnection
  
    """Reads a set of `Goal`."""
@@ -668,7 +671,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -1209,8 +1224,28 @@
+@@ -1209,8 +1227,30 @@
      orderBy: [GoalsOrderBy!]
    ): [Goal!]
  
@@ -682,6 +685,8 @@
 +  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
 +  """
 +  nodeId: ID!
++
++  """Get a single `Organization`."""
 +  organization(id: Int!): Organization
 +
 +  """Reads a single `Organization` using its globally unique `ID`."""
@@ -698,7 +703,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -1239,7 +1274,7 @@
+@@ -1239,7 +1279,7 @@
    ): OrganizationsConnection
  
    """Reads a set of `Organization`."""
@@ -707,7 +712,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -1255,8 +1290,21 @@
+@@ -1255,8 +1295,23 @@
      orderBy: [OrganizationsOrderBy!]
    ): [Organization!]
  
@@ -716,6 +721,8 @@
 +  which can only query top level fields if they are in a particular form.
 +  """
 +  query: Query!
++
++  """Get a single `Team`."""
 +  team(id: Int!): Team
 +
 +  """Reads a single `Team` using its globally unique `ID`."""
@@ -730,7 +737,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -1285,7 +1333,7 @@
+@@ -1285,7 +1340,7 @@
    ): TeamsConnection
  
    """Reads a set of `Team`."""
@@ -739,10 +746,11 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -1300,9 +1348,16 @@
-     """The method to use when ordering `Team`."""
+@@ -1301,8 +1356,17 @@
      orderBy: [TeamsOrderBy!]
    ): [Team!]
+ 
++  """Get a single `User`."""
 +  user(id: Int!): User
 +
 +  """Reads a single `User` using its globally unique `ID`."""
@@ -750,14 +758,14 @@
 +    """The globally unique `ID` to be used in selecting a single `User`."""
 +    nodeId: ID!
 +  ): User
- 
++
    """Reads and enables pagination through a set of `User`."""
 -  allUsers(
 +  users(
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -1331,7 +1386,7 @@
+@@ -1331,7 +1395,7 @@
    ): UsersConnection
  
    """Reads a set of `User`."""
@@ -766,7 +774,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -1346,67 +1401,11 @@
+@@ -1346,77 +1410,11 @@
      """The method to use when ordering `User`."""
      orderBy: [UsersOrderBy!]
    ): [User!]
@@ -776,6 +784,8 @@
 -    """The globally unique `ID` to be used in selecting a single `Goal`."""
 -    nodeId: ID!
 -  ): Goal
+-
+-  """Get a single `Goal`."""
 -  goalByOrganizationIdAndTeamIdAndGoalUuid(goalUuid: UUID!, organizationId: Int!, teamId: Int!): Goal
 -
 -  """Reads a single `GoalContributor` using its globally unique `ID`."""
@@ -785,6 +795,8 @@
 -    """
 -    nodeId: ID!
 -  ): GoalContributor
+-
+-  """Get a single `GoalContributor`."""
 -  goalContributorById(id: Int!): GoalContributor
 -
 -  """Fetches an object given its globally unique `ID`."""
@@ -805,6 +817,8 @@
 -    """
 -    nodeId: ID!
 -  ): Organization
+-
+-  """Get a single `Organization`."""
 -  organizationById(id: Int!): Organization
 -
 -  """
@@ -818,6 +832,8 @@
 -    """The globally unique `ID` to be used in selecting a single `Team`."""
 -    nodeId: ID!
 -  ): Team
+-
+-  """Get a single `Team`."""
 -  teamById(id: Int!): Team
 -
 -  """Reads a single `User` using its globally unique `ID`."""
@@ -825,6 +841,8 @@
 -    """The globally unique `ID` to be used in selecting a single `User`."""
 -    nodeId: ID!
 -  ): User
+-
+-  """Get a single `User`."""
 -  userById(id: Int!): User
  }
  
@@ -835,7 +853,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -1435,7 +1434,7 @@
+@@ -1445,7 +1443,7 @@
    ): GoalContributorsConnection!
  
    """Reads and enables pagination through a set of `GoalContributor`."""
@@ -844,7 +862,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -1452,7 +1451,7 @@
+@@ -1462,7 +1460,7 @@
    ): [GoalContributor!]!
  
    """Reads and enables pagination through a set of `Goal`."""
@@ -853,7 +871,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -1481,7 +1480,7 @@
+@@ -1491,7 +1489,7 @@
    ): GoalsConnection!
  
    """Reads and enables pagination through a set of `Goal`."""
@@ -862,7 +880,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -1570,10 +1569,8 @@
+@@ -1580,10 +1578,8 @@
  """
  scalar UUID
  
@@ -875,7 +893,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1581,16 +1578,18 @@
+@@ -1591,16 +1587,18 @@
    clientMutationId: String
  
    """
@@ -900,7 +918,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1598,10 +1597,14 @@
+@@ -1608,10 +1606,14 @@
    clientMutationId: String
  
    """
@@ -917,7 +935,7 @@
  }
  
  """All input for the `updateGoalContributor` mutation."""
-@@ -1611,16 +1614,12 @@
+@@ -1621,16 +1623,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -936,7 +954,7 @@
  }
  
  """The output of our update `GoalContributor` mutation."""
-@@ -1631,8 +1630,8 @@
+@@ -1641,8 +1639,8 @@
    """
    clientMutationId: String
  
@@ -947,7 +965,7 @@
  
    """The `GoalContributor` that was updated by this mutation."""
    goalContributor: GoalContributor
-@@ -1646,7 +1645,10 @@
+@@ -1656,7 +1654,10 @@
    """
    Reads a single `Organization` that is related to this `GoalContributor`.
    """
@@ -959,7 +977,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -1654,10 +1656,7 @@
+@@ -1664,10 +1665,7 @@
    query: Query
  
    """Reads a single `Team` that is related to this `GoalContributor`."""
@@ -971,7 +989,7 @@
  }
  
  """All input for the `updateGoal` mutation."""
-@@ -1667,16 +1666,14 @@
+@@ -1677,16 +1675,14 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -992,7 +1010,7 @@
  }
  
  """The output of our update `Goal` mutation."""
-@@ -1697,7 +1694,7 @@
+@@ -1707,7 +1703,7 @@
    ): GoalsEdge
  
    """Reads a single `Organization` that is related to this `Goal`."""
@@ -1001,7 +1019,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -1705,22 +1702,26 @@
+@@ -1715,22 +1711,26 @@
    query: Query
  
    """Reads a single `Team` that is related to this `Goal`."""
@@ -1033,7 +1051,7 @@
  }
  
  """All input for the `updateOrganization` mutation."""
-@@ -1730,16 +1731,12 @@
+@@ -1740,16 +1740,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -1052,7 +1070,7 @@
  }
  
  """The output of our update `Organization` mutation."""
-@@ -1765,19 +1762,23 @@
+@@ -1775,19 +1771,23 @@
    query: Query
  }
  
@@ -1080,7 +1098,7 @@
  }
  
  """All input for the `updateTeam` mutation."""
-@@ -1787,16 +1788,12 @@
+@@ -1797,16 +1797,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -1099,7 +1117,7 @@
  }
  
  """The output of our update `Team` mutation."""
-@@ -1822,19 +1819,23 @@
+@@ -1832,19 +1828,23 @@
    ): TeamsEdge
  }
  
@@ -1127,7 +1145,7 @@
  }
  
  """All input for the `updateUser` mutation."""
-@@ -1844,16 +1845,12 @@
+@@ -1854,16 +1854,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String

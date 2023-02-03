@@ -124,7 +124,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -357,8 +365,25 @@
+@@ -353,8 +362,25 @@
      orderBy: [BeveragesOrderBy!]
    ): [Beverage!]
  
@@ -151,11 +151,10 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -385,37 +410,13 @@
-     """The method to use when ordering `Company`."""
+@@ -382,41 +408,15 @@
      orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
    ): CompaniesConnection
--
+ 
 -  """Reads a set of `Company`."""
 -  allCompaniesList(
 -    """
@@ -178,7 +177,10 @@
 -    """The globally unique `ID` to be used in selecting a single `Beverage`."""
 -    nodeId: ID!
 -  ): Beverage
+-
+-  """Get a single `Beverage`."""
 -  beverageById(id: Int!): Beverage
++  """Get a single `Company`."""
 +  company(id: Int!): Company
  
    """Reads a single `Company` using its globally unique `ID`."""
@@ -187,31 +189,35 @@
      """The globally unique `ID` to be used in selecting a single `Company`."""
      nodeId: ID!
    ): Company
--  companyById(id: Int!): Company
  
+-  """Get a single `Company`."""
+-  companyById(id: Int!): Company
+-
    """Reads and enables pagination through a set of `Beverage`."""
    listInclude(
-@@ -449,6 +450,15 @@
- 
-   """Reads and enables pagination through a set of `Beverage`."""
-   listOmit(
+     """Read all values in the set after (below) this cursor."""
+@@ -444,9 +444,16 @@
+     """Skip the first `n` values."""
+     offset: Int
+   ): [Beverage]
++  listOmit(
 +    """Only read the first `n` values of the set."""
 +    first: Int
 +
 +    """Skip the first `n` values."""
 +    offset: Int
 +  ): [Beverage]
-+
-+  """Reads and enables pagination through a set of `Beverage`."""
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+-  listOmit(
 +  listOmitConnection(
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -468,15 +478,6 @@
+@@ -465,13 +472,6 @@
+     """
      offset: Int
    ): BeveragesConnection
- 
--  """Reads and enables pagination through a set of `Beverage`."""
 -  listOmitList(
 -    """Only read the first `n` values of the set."""
 -    first: Int
@@ -219,7 +225,6 @@
 -    """Skip the first `n` values."""
 -    offset: Int
 -  ): [Beverage]
--
+ 
    """Fetches an object given its globally unique `ID`."""
    node(
-     """The globally unique `ID`."""
