@@ -40,7 +40,7 @@ type AnimalsConnection {
   """
   A list of edges which contains the `Animal` and cursor to aid in pagination.
   """
-  edges: [AnimalsEdge!]!
+  edges: [AnimalsEdge]!
 
   """A list of `Animal` objects."""
   nodes: [Animal]!
@@ -104,7 +104,7 @@ type CatsConnection {
   """
   A list of edges which contains the `Cat` and cursor to aid in pagination.
   """
-  edges: [CatsEdge!]!
+  edges: [CatsEdge]!
 
   """A list of `Cat` objects."""
   nodes: [Cat]!
@@ -522,7 +522,7 @@ type DogsConnection {
   """
   A list of edges which contains the `Dog` and cursor to aid in pagination.
   """
-  edges: [DogsEdge!]!
+  edges: [DogsEdge]!
 
   """A list of `Dog` objects."""
   nodes: [Dog]!
@@ -588,7 +588,7 @@ type GerbilsConnection {
   """
   A list of edges which contains the `Gerbil` and cursor to aid in pagination.
   """
-  edges: [GerbilsEdge!]!
+  edges: [GerbilsEdge]!
 
   """A list of `Gerbil` objects."""
   nodes: [Gerbil]!
