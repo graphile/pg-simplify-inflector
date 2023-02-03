@@ -1,18 +1,18 @@
 # @graphile-contrib/pg-simplify-inflector
 
-This plugin simplifies field names in the PostGraphile schema; e.g. `allUsers`
+This preset simplifies field names in the PostGraphile schema; e.g. `allUsers`
 becomes simply `users`, `User.postsByAuthorId` becomes simply `User.posts`, and
 `Post.userByAuthorId` becomes simply `Post.author`.
 
-**Adding this plugin to your schema is almost certainly a breaking change, so do
+**Adding this preset to your schema is almost certainly a breaking change, so do
 it before you ship anything!** This is the primary reason this isn't enabled by
 default in PostGraphile.
 
-_This plugin is recommended for all PostGraphile users._
+_This preset is recommended for all PostGraphile users._
 
 ## Customising
 
-This plugin is implemented as a single JS file that does not need to be compiled
+This preset is implemented as a single JS file that does not need to be compiled
 at all - you can simply copy it into your project and customise it as you see
 fit.
 
@@ -60,29 +60,32 @@ comment on constraint "beverages_distributor_id_fkey" on "beverages" is
   E'@foreignFieldName distributedBeverages';
 ```
 
-or with a custom inflector:
+or with a custom inflector plugin:
 
 ```js
-module.exports = makeAddInflectorsPlugin(
-  {
-    getOppositeBaseName(baseName) {
-      return (
-        {
-          // These are the default opposites
-          parent: "child",
-          child: "parent",
-          author: "authored",
-          editor: "edited",
-          reviewer: "reviewed",
+const plugin = {
+  name: "MyCustomInflectionPlugin",
+  version: "0.0.0",
+  inflection: {
+    replace: {
+      getOppositeBaseName(previous, options, baseName) {
+        return (
+          {
+            // These are the default opposites
+            parent: "child",
+            child: "parent",
+            author: "authored",
+            editor: "edited",
+            reviewer: "reviewed",
 
-          // 👇 Add/customise this line:
-          distributor: "distributed",
-        }[baseName] || null
-      );
+            // 👇 Add/customise this line:
+            distributor: "distributed",
+          }[baseName] || previous.call(this, baseName)
+        );
+      },
     },
   },
-  true
-);
+};
 ```
 
 ## Installation:
@@ -99,49 +102,41 @@ npm install --save @graphile-contrib/pg-simplify-inflector
 
 ## Usage:
 
-CLI:
+Add the preset to your Graphile Config file, under presets:
 
-```bash
-postgraphile --append-plugins @graphile-contrib/pg-simplify-inflector
-```
+```ts
+import { PgSimplifyInflectionPreset } from "@graphile-contrib/pg-simplify-inflector";
 
-Library:
+export default {
+  extends: [
+    // ... (PostGraphileAmber, etc)
+    PgSimplifyInflectionPreset,
+  ],
 
-```js
-const PgSimplifyInflectorPlugin = require("@graphile-contrib/pg-simplify-inflector");
-
-// ...
-
-app.use(
-  postgraphile(process.env.AUTH_DATABASE_URL, "app_public", {
-    appendPlugins: [PgSimplifyInflectorPlugin],
-
-    // Optional customisation
-    graphileBuildOptions: {
-      /*
-       * Uncomment if you want simple collections to lose the 'List' suffix
-       * (and connections to gain a 'Connection' suffix).
-       */
-      //pgOmitListSuffix: true,
-      /*
-       * Uncomment if you want 'userPatch' instead of 'patch' in update
-       * mutations.
-       */
-      //pgSimplifyPatch: false,
-      /*
-       * Uncomment if you want 'allUsers' instead of 'users' at root level.
-       */
-      //pgSimplifyAllRows: false,
-      /*
-       * Uncomment if you want primary key queries and mutations to have
-       * `ById` (or similar) suffix; and the `nodeId` queries/mutations
-       * to lose their `ByNodeId` suffix.
-       */
-      // pgShortPk: true,
-    },
-    // ... other settings ...
-  })
-);
+  schema: {
+    // ...
+    /*
+     * Uncomment if you want simple collections to lose the 'List' suffix
+     * (and connections to gain a 'Connection' suffix).
+     */
+    //pgOmitListSuffix: true,
+    /*
+     * Uncomment if you want 'userPatch' instead of 'patch' in update
+     * mutations.
+     */
+    //pgSimplifyPatch: false,
+    /*
+     * Uncomment if you want 'allUsers' instead of 'users' at root level.
+     */
+    //pgSimplifyAllRows: false,
+    /*
+     * Uncomment if you want primary key queries and mutations to have
+     * `ById` (or similar) suffix; and the `nodeId` queries/mutations
+     * to lose their `ByNodeId` suffix.
+     */
+    // pgShortPk: true,
+  },
+};
 ```
 
 ## Naming your foreign key fields
