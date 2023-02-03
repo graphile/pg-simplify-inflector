@@ -16,16 +16,25 @@ function fixChangePlural(previous, _options, str) {
     const suffix = str.substring(suffixIndex);
     return `${prefix}${previous.call(this, word)}${suffix}`;
 }
-/*
-{
-    pgSimpleCollections,
-    pgOmitListSuffix,
-    pgSimplifyPatch = true,
-    pgSimplifyAllRows = true,
-    pgShortPk = true,
-    pgSimplifyMultikeyRelations = true,
-  } = build.options
-*/
+// Users can add 'listSuffix === "omit"`/`"include"` smart tags, this handles
+// that.
+let globalPgOmitListSuffix = null;
+function overrideListSuffix(listSuffix, cb) {
+    if (listSuffix == null) {
+        return cb();
+    }
+    if (listSuffix !== "include" && listSuffix !== "omit") {
+        throw new Error(`Unrecognized @listSuffix value "${listSuffix}". If @listSuffix is set, it must be "omit" or "include".`);
+    }
+    const oldOverridePgOmitListSuffix = globalPgOmitListSuffix;
+    try {
+        globalPgOmitListSuffix = listSuffix === "omit";
+        return cb();
+    }
+    finally {
+        globalPgOmitListSuffix = oldOverridePgOmitListSuffix;
+    }
+}
 const PgSimplifyInflectionPlugin = {
     name: "PgSimplifyInflectionPlugin",
     version: "0.0.0",
@@ -120,12 +129,14 @@ const PgSimplifyInflectionPlugin = {
                     : previous.call(this, fieldName);
             },
             connectionField(_prev, options, baseName) {
-                return options.schema?.pgOmitListSuffix
+                return globalPgOmitListSuffix ?? options.schema?.pgOmitListSuffix
                     ? baseName + "Connection"
                     : baseName;
             },
             listField(_prev, options, baseName) {
-                return options.schema?.pgOmitListSuffix ? baseName : baseName + "List";
+                return globalPgOmitListSuffix ?? options.schema?.pgOmitListSuffix
+                    ? baseName
+                    : baseName + "List";
             },
             allRowsConnection(previous, options, source) {
                 if (options.schema?.pgSimplifyAllRows) {
@@ -215,6 +226,36 @@ const PgSimplifyInflectionPlugin = {
                     return this.camelCase(`${this.distinctPluralize(this._singularizedCodecName(relation.source.codec))}`);
                 }
                 return previous.call(this, details);
+            },
+            manyRelationConnection(previous, _options, details) {
+                const { source, relationName } = details;
+                const relation = source.getRelation(relationName);
+                const listSuffix = relation.extensions?.tags?.listSuffix ??
+                    source.extensions?.tags?.listSuffix;
+                return overrideListSuffix(listSuffix, () => previous.call(this, details));
+            },
+            manyRelationList(previous, _options, details) {
+                const { source, relationName } = details;
+                const relation = source.getRelation(relationName);
+                const listSuffix = relation.extensions?.tags?.listSuffix ??
+                    source.extensions?.tags?.listSuffix;
+                return overrideListSuffix(listSuffix, () => previous.call(this, details));
+            },
+            customQueryConnectionField(previous, _options, details) {
+                const listSuffix = details.source.extensions?.tags?.listSuffix;
+                return overrideListSuffix(listSuffix, () => previous.call(this, details));
+            },
+            customQueryListField(previous, _options, details) {
+                const listSuffix = details.source.extensions?.tags?.listSuffix;
+                return overrideListSuffix(listSuffix, () => previous.call(this, details));
+            },
+            computedColumnConnectionField(previous, _options, details) {
+                const listSuffix = details.source.extensions?.tags?.listSuffix;
+                return overrideListSuffix(listSuffix, () => previous.call(this, details));
+            },
+            computedColumnListField(previous, _options, details) {
+                const listSuffix = details.source.extensions?.tags?.listSuffix;
+                return overrideListSuffix(listSuffix, () => previous.call(this, details));
             },
             nodeById(previous, options, typeName) {
                 if (options.schema?.pgShortPk) {
@@ -324,21 +365,6 @@ const PgSimplifyInflectionPlugin = {
     },
 };
 exports.PgSimplifyInflectionPlugin = PgSimplifyInflectionPlugin;
-// TODO
-/*
-function omitListSuffix(
-  preset: GraphileConfig.ResolvedPreset,
-  source: PgSource<any, any, any, any>
-): boolean {
-  const tag = source.extensions?.tags?.listSuffix;
-  if (tag == null) return !!preset.schema?.pgOmitListSuffix;
-  if (tag !== "include" && tag !== "omit")
-    throw new Error(
-      `Unrecognized @listSuffix value "${tag}" on source "${source.name}". If @listSuffix is set, it must be "omit" or "include".`
-    );
-  return tag === "omit";
-}
-*/
 exports.PgSimplifyInflectionPreset = {
     plugins: [PgSimplifyInflectionPlugin],
     schema: {
