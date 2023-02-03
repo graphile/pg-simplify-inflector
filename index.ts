@@ -368,7 +368,7 @@ const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
         const relation = source.getRelation(relationName);
         const listSuffix =
           relation.extensions?.tags?.listSuffix ??
-          source.extensions?.tags?.listSuffix;
+          relation.source.extensions?.tags?.listSuffix;
         return overrideListSuffix(listSuffix, () =>
           previous!.call(this, details)
         );
@@ -379,7 +379,7 @@ const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
         const relation = source.getRelation(relationName);
         const listSuffix =
           relation.extensions?.tags?.listSuffix ??
-          source.extensions?.tags?.listSuffix;
+          relation.source.extensions?.tags?.listSuffix;
         return overrideListSuffix(listSuffix, () =>
           previous!.call(this, details)
         );

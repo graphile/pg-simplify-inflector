@@ -231,14 +231,14 @@ const PgSimplifyInflectionPlugin = {
                 const { source, relationName } = details;
                 const relation = source.getRelation(relationName);
                 const listSuffix = relation.extensions?.tags?.listSuffix ??
-                    source.extensions?.tags?.listSuffix;
+                    relation.source.extensions?.tags?.listSuffix;
                 return overrideListSuffix(listSuffix, () => previous.call(this, details));
             },
             manyRelationList(previous, _options, details) {
                 const { source, relationName } = details;
                 const relation = source.getRelation(relationName);
                 const listSuffix = relation.extensions?.tags?.listSuffix ??
-                    source.extensions?.tags?.listSuffix;
+                    relation.source.extensions?.tags?.listSuffix;
                 return overrideListSuffix(listSuffix, () => previous.call(this, details));
             },
             customQueryConnectionField(previous, _options, details) {
