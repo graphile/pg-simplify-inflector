@@ -209,16 +209,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -391,7 +391,7 @@
-     """The method to use when ordering `Fish`."""
-     orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -393,7 +393,7 @@
    ): FishConnection!
+ 
+   """Reads and enables pagination through a set of `Fish`."""
 -  fishByPondIdList(
 +  fishesList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -477,8 +477,17 @@
+@@ -479,8 +479,17 @@
  
  """The root query type which gives access points into the data universe."""
  type Query implements Node {
@@ -237,7 +237,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -505,7 +514,7 @@
+@@ -507,7 +516,7 @@
      """The method to use when ordering `Fish`."""
      orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
    ): FishConnection
@@ -246,7 +246,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -521,8 +530,28 @@
+@@ -523,8 +532,28 @@
      orderBy: [FishOrderBy!]
    ): [Fish!]
  
@@ -276,7 +276,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -549,7 +578,7 @@
+@@ -551,7 +580,7 @@
      """The method to use when ordering `Pond`."""
      orderBy: [PondsOrderBy!] = [PRIMARY_KEY_ASC]
    ): PondsConnection
@@ -285,7 +285,7 @@
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -565,35 +594,6 @@
+@@ -567,35 +596,6 @@
      orderBy: [PondsOrderBy!]
    ): [Pond!]
  
@@ -321,7 +321,7 @@
    """
    Exposes the root query type nested one level down. This is helpful for Relay 1
    which can only query top level fields if they are in a particular form.
-@@ -601,8 +601,8 @@
+@@ -603,8 +603,8 @@
    query: Query!
  }
  
@@ -332,7 +332,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -610,10 +610,14 @@
+@@ -612,10 +612,14 @@
    clientMutationId: String
  
    """
@@ -349,7 +349,7 @@
  }
  
  """All input for the `updateFish` mutation."""
-@@ -623,16 +627,12 @@
+@@ -625,16 +629,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -368,7 +368,7 @@
  }
  
  """The output of our update `Fish` mutation."""
-@@ -653,7 +653,7 @@
+@@ -655,7 +655,7 @@
    ): FishEdge
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -377,7 +377,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -661,19 +661,23 @@
+@@ -663,19 +663,23 @@
    query: Query
  }
  
@@ -405,7 +405,7 @@
  }
  
  """All input for the `updatePond` mutation."""
-@@ -683,16 +687,12 @@
+@@ -685,16 +689,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String

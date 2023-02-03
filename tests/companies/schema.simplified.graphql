@@ -158,6 +158,8 @@ type Company implements Node {
     """The method to use when ordering `Beverage`."""
     orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesConnection!
+
+  """Reads and enables pagination through a set of `Beverage`."""
   beveragesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -202,6 +204,8 @@ type Company implements Node {
     """The method to use when ordering `Beverage`."""
     orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesConnection!
+
+  """Reads and enables pagination through a set of `Beverage`."""
   distributedBeveragesList(
     """
     A condition to be used in determining which values should be returned by the collection.

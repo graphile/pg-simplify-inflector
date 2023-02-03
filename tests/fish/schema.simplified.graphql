@@ -391,6 +391,8 @@ type Pond implements Node {
     """The method to use when ordering `Fish`."""
     orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
   ): FishConnection!
+
+  """Reads and enables pagination through a set of `Fish`."""
   fishesList(
     """
     A condition to be used in determining which values should be returned by the collection.

@@ -64,26 +64,28 @@
    computedListInclude(
      """Read all values in the set after (below) this cursor."""
      after: Cursor
-@@ -190,6 +190,15 @@
- 
-   """Reads and enables pagination through a set of `Beverage`."""
-   computedListOmit(
+@@ -185,9 +185,16 @@
+     """Skip the first `n` values."""
+     offset: Int
+   ): [Beverage]
++  computedListOmit(
 +    """Only read the first `n` values of the set."""
 +    first: Int
 +
 +    """Skip the first `n` values."""
 +    offset: Int
 +  ): [Beverage]
-+
-+  """Reads and enables pagination through a set of `Beverage`."""
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
+-  computedListOmit(
 +  computedListOmitConnection(
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -210,15 +219,6 @@
+@@ -206,16 +213,9 @@
+     """
+     offset: Int
    ): BeveragesConnection!
- 
-   """Reads and enables pagination through a set of `Beverage`."""
 -  computedListOmitList(
 -    """Only read the first `n` values of the set."""
 -    first: Int

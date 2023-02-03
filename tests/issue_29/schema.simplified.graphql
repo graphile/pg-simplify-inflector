@@ -448,6 +448,8 @@ type Something implements Node {
     """The method to use when ordering `SomethingDatum`."""
     orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingDataConnection!
+
+  """Reads and enables pagination through a set of `SomethingDatum`."""
   somethingDataBySomeIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
