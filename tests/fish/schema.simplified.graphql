@@ -206,7 +206,7 @@ type FishConnection {
   """
   A list of edges which contains the `Fish` and cursor to aid in pagination.
   """
-  edges: [FishEdge!]!
+  edges: [FishEdge]!
 
   """A list of `Fish` objects."""
   nodes: [Fish]!
@@ -443,7 +443,7 @@ type PondsConnection {
   """
   A list of edges which contains the `Pond` and cursor to aid in pagination.
   """
-  edges: [PondsEdge!]!
+  edges: [PondsEdge]!
 
   """A list of `Pond` objects."""
   nodes: [Pond]!

@@ -32,7 +32,7 @@ type CreateSomethingDatumPayload {
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
     """The method to use when ordering `SomethingDatum`."""
-    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [SomethingDataOrderBy!]! = [PRIMARY_KEY_ASC]
   ): SomethingDataEdge
 }
 
@@ -67,7 +67,7 @@ type CreateSomethingPayload {
   """An edge for our `Something`. May be used by Relay 1."""
   somethingEdge(
     """The method to use when ordering `Something`."""
-    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [SomethingsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): SomethingsEdge
 }
 
@@ -131,7 +131,7 @@ type DeleteSomethingDatumPayload {
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
     """The method to use when ordering `SomethingDatum`."""
-    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [SomethingDataOrderBy!]! = [PRIMARY_KEY_ASC]
   ): SomethingDataEdge
 }
 
@@ -169,7 +169,7 @@ type DeleteSomethingPayload {
   """An edge for our `Something`. May be used by Relay 1."""
   somethingEdge(
     """The method to use when ordering `Something`."""
-    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [SomethingsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): SomethingsEdge
 }
 
@@ -313,8 +313,6 @@ type Query implements Node {
     """The method to use when ordering `SomethingDatum`."""
     orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingDataConnection
-
-  """Reads a set of `SomethingDatum`."""
   allSomethingDataList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -359,8 +357,6 @@ type Query implements Node {
     """The method to use when ordering `Something`."""
     orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingsConnection
-
-  """Reads a set of `Something`."""
   allSomethingsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -399,6 +395,8 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Something`."""
     nodeId: ID!
   ): Something
+
+  """Get a single `Something`."""
   somethingBySomeId(someId: Int!): Something
 
   """Reads a single `SomethingDatum` using its globally unique `ID`."""
@@ -408,6 +406,8 @@ type Query implements Node {
     """
     nodeId: ID!
   ): SomethingDatum
+
+  """Get a single `SomethingDatum`."""
   somethingDatumBySomethingDataId(somethingDataId: Int!): SomethingDatum
 }
 
@@ -448,8 +448,6 @@ type Something implements Node {
     """The method to use when ordering `SomethingDatum`."""
     orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingDataConnection!
-
-  """Reads and enables pagination through a set of `SomethingDatum`."""
   somethingDataBySomeIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -484,7 +482,7 @@ type SomethingDataConnection {
   """
   A list of edges which contains the `SomethingDatum` and cursor to aid in pagination.
   """
-  edges: [SomethingDataEdge!]!
+  edges: [SomethingDataEdge]!
 
   """A list of `SomethingDatum` objects."""
   nodes: [SomethingDatum]!
@@ -582,7 +580,7 @@ type SomethingsConnection {
   """
   A list of edges which contains the `Something` and cursor to aid in pagination.
   """
-  edges: [SomethingsEdge!]!
+  edges: [SomethingsEdge]!
 
   """A list of `Something` objects."""
   nodes: [Something]!
@@ -685,7 +683,7 @@ type UpdateSomethingDatumPayload {
   """An edge for our `SomethingDatum`. May be used by Relay 1."""
   somethingDatumEdge(
     """The method to use when ordering `SomethingDatum`."""
-    orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [SomethingDataOrderBy!]! = [PRIMARY_KEY_ASC]
   ): SomethingDataEdge
 }
 
@@ -727,6 +725,6 @@ type UpdateSomethingPayload {
   """An edge for our `Something`. May be used by Relay 1."""
   somethingEdge(
     """The method to use when ordering `Something`."""
-    orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [SomethingsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): SomethingsEdge
 }

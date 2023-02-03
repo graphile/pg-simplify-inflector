@@ -56,7 +56,7 @@ type BeveragesConnection {
   """
   A list of edges which contains the `Beverage` and cursor to aid in pagination.
   """
-  edges: [BeveragesEdge!]!
+  edges: [BeveragesEdge]!
 
   """A list of `Beverage` objects."""
   nodes: [Beverage]!
@@ -97,7 +97,7 @@ type CompaniesConnection {
   """
   A list of edges which contains the `Company` and cursor to aid in pagination.
   """
-  edges: [CompaniesEdge!]!
+  edges: [CompaniesEdge]!
 
   """A list of `Company` objects."""
   nodes: [Company]!
@@ -582,7 +582,7 @@ type MascotsConnection {
   """
   A list of edges which contains the `Mascot` and cursor to aid in pagination.
   """
-  edges: [MascotsEdge!]!
+  edges: [MascotsEdge]!
 
   """A list of `Mascot` objects."""
   nodes: [Mascot]!

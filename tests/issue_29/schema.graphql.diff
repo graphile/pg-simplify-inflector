@@ -303,11 +303,13 @@
 -    """
 -    nodeId: ID!
 -  ): SomethingDatum
+-
+-  """Get a single `SomethingDatum`."""
 -  somethingDatumBySomethingDataId(somethingDataId: Int!): SomethingDatum
  }
  
  type Something implements Node {
-@@ -525,10 +525,10 @@
+@@ -523,10 +523,10 @@
    A globally unique identifier. Can be used in various places throughout the system to identify this single value.
    """
    nodeId: ID!
@@ -320,7 +322,7 @@
    somethingDataId: Int!
  }
  
-@@ -614,34 +614,42 @@
+@@ -612,34 +612,42 @@
    SOME_ID_DESC
  }
  
@@ -371,7 +373,7 @@
  }
  
  """All input for the `updateSomethingDatum` mutation."""
-@@ -653,14 +661,10 @@
+@@ -651,14 +659,10 @@
    clientMutationId: String
  
    """
@@ -388,7 +390,7 @@
  }
  
  """The output of our update `SomethingDatum` mutation."""
-@@ -677,7 +681,7 @@
+@@ -675,7 +679,7 @@
    query: Query
  
    """Reads a single `Something` that is related to this `SomethingDatum`."""
@@ -397,7 +399,7 @@
  
    """The `SomethingDatum` that was updated by this mutation."""
    somethingDatum: SomethingDatum
-@@ -698,14 +702,10 @@
+@@ -696,14 +700,10 @@
    clientMutationId: String
  
    """
