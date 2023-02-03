@@ -139,20 +139,26 @@ const PgSimplifyInflectionPlugin = {
                     : baseName + "List";
             },
             allRowsConnection(previous, options, source) {
-                if (options.schema?.pgSimplifyAllRows) {
-                    return this.connectionField(this.camelCase(`${this.distinctPluralize(this._singularizedSourceName(source))}`));
-                }
-                else {
-                    return previous.call(this, source);
-                }
+                const listSuffix = source.extensions?.tags?.listSuffix;
+                return overrideListSuffix(listSuffix, () => {
+                    if (options.schema?.pgSimplifyAllRows) {
+                        return this.connectionField(this.camelCase(`${this.distinctPluralize(this._singularizedSourceName(source))}`));
+                    }
+                    else {
+                        return previous.call(this, source);
+                    }
+                });
             },
             allRowsList(previous, options, source) {
-                if (options.schema?.pgSimplifyAllRows) {
-                    return this.listField(this.camelCase(this.distinctPluralize(this._singularizedSourceName(source))));
-                }
-                else {
-                    return previous.call(this, source);
-                }
+                const listSuffix = source.extensions?.tags?.listSuffix;
+                return overrideListSuffix(listSuffix, () => {
+                    if (options.schema?.pgSimplifyAllRows) {
+                        return this.listField(this.camelCase(this.distinctPluralize(this._singularizedSourceName(source))));
+                    }
+                    else {
+                        return previous.call(this, source);
+                    }
+                });
             },
             singleRelation(previous, _options, details) {
                 const { source, relationName } = details;
