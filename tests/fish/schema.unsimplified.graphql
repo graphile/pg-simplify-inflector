@@ -24,7 +24,7 @@ type CreateFishPayload {
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
     """The method to use when ordering `Fish`."""
-    orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [FishOrderBy!]! = [PRIMARY_KEY_ASC]
   ): FishEdge
 
   """Reads a single `Pond` that is related to this `Fish`."""
@@ -62,7 +62,7 @@ type CreatePondPayload {
   """An edge for our `Pond`. May be used by Relay 1."""
   pondEdge(
     """The method to use when ordering `Pond`."""
-    orderBy: [PondsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [PondsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PondsEdge
 
   """
@@ -113,7 +113,7 @@ type DeleteFishPayload {
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
     """The method to use when ordering `Fish`."""
-    orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [FishOrderBy!]! = [PRIMARY_KEY_ASC]
   ): FishEdge
 
   """Reads a single `Pond` that is related to this `Fish`."""
@@ -164,7 +164,7 @@ type DeletePondPayload {
   """An edge for our `Pond`. May be used by Relay 1."""
   pondEdge(
     """The method to use when ordering `Pond`."""
-    orderBy: [PondsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [PondsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PondsEdge
 
   """
@@ -391,8 +391,6 @@ type Pond implements Node {
     """The method to use when ordering `Fish`."""
     orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
   ): FishConnection!
-
-  """Reads and enables pagination through a set of `Fish`."""
   fishByPondIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -507,8 +505,6 @@ type Query implements Node {
     """The method to use when ordering `Fish`."""
     orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
   ): FishConnection
-
-  """Reads a set of `Fish`."""
   allFishList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -553,8 +549,6 @@ type Query implements Node {
     """The method to use when ordering `Pond`."""
     orderBy: [PondsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PondsConnection
-
-  """Reads a set of `Pond`."""
   allPondsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -576,6 +570,8 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Fish`."""
     nodeId: ID!
   ): Fish
+
+  """Get a single `Fish`."""
   fishById(id: Int!): Fish
 
   """Fetches an object given its globally unique `ID`."""
@@ -594,6 +590,8 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Pond`."""
     nodeId: ID!
   ): Pond
+
+  """Get a single `Pond`."""
   pondById(id: Int!): Pond
 
   """
@@ -651,7 +649,7 @@ type UpdateFishPayload {
   """An edge for our `Fish`. May be used by Relay 1."""
   fishEdge(
     """The method to use when ordering `Fish`."""
-    orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [FishOrderBy!]! = [PRIMARY_KEY_ASC]
   ): FishEdge
 
   """Reads a single `Pond` that is related to this `Fish`."""
@@ -711,7 +709,7 @@ type UpdatePondPayload {
   """An edge for our `Pond`. May be used by Relay 1."""
   pondEdge(
     """The method to use when ordering `Pond`."""
-    orderBy: [PondsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [PondsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): PondsEdge
 
   """

@@ -23,38 +23,25 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -160,7 +160,7 @@
+@@ -158,7 +158,7 @@
+     """The method to use when ordering `Beverage`."""
+     orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
    ): BeveragesConnection!
- 
-   """Reads and enables pagination through a set of `Beverage`."""
 -  beveragesByCompanyIdList(
 +  beveragesList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -224,10 +224,10 @@
+@@ -220,7 +220,7 @@
    id: Int!
  
    """Reads a single `Mascot` that is related to this `Company`."""
 -  mascotByCompanyId: Mascot
 +  mascot: Mascot
- 
-   """Reads and enables pagination through a set of `Mascot`."""
--  mascotsByCompanyId(
-+  mascots(
-     """Read all values in the set after (below) this cursor."""
-     after: Cursor
- 
-@@ -253,7 +253,7 @@
- 
-     """The method to use when ordering `Mascot`."""
-     orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
--  ): MascotsConnection! @deprecated(reason: "Please use mascotByCompanyId instead")
-+  ): MascotsConnection! @deprecated(reason: "Please use mascot instead")
    name: String!
  
    """
-@@ -317,10 +317,10 @@
+@@ -284,10 +284,10 @@
    clientMutationId: String
  
    """Reads a single `Company` that is related to this `Beverage`."""
@@ -67,7 +54,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -384,7 +384,7 @@
+@@ -351,7 +351,7 @@
    clientMutationId: String
  
    """Reads a single `Company` that is related to this `Mascot`."""
@@ -76,7 +63,7 @@
  
    """The `Mascot` that was created by this mutation."""
    mascot: Mascot
-@@ -404,14 +404,18 @@
+@@ -371,14 +371,18 @@
  """A location in a connection that can be used for resuming pagination."""
  scalar Cursor
  
@@ -98,7 +85,7 @@
  }
  
  """All input for the `deleteBeverage` mutation."""
-@@ -421,11 +425,7 @@
+@@ -388,11 +392,7 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -111,7 +98,7 @@
  }
  
  """The output of our delete `Beverage` mutation."""
-@@ -446,11 +446,11 @@
+@@ -413,11 +413,11 @@
    clientMutationId: String
  
    """Reads a single `Company` that is related to this `Beverage`."""
@@ -126,7 +113,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -458,14 +458,18 @@
+@@ -425,14 +425,18 @@
    query: Query
  }
  
@@ -148,7 +135,7 @@
  }
  
  """All input for the `deleteCompany` mutation."""
-@@ -475,11 +479,7 @@
+@@ -442,11 +446,7 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -161,16 +148,16 @@
  }
  
  """The output of our delete `Company` mutation."""
-@@ -498,7 +498,7 @@
+@@ -465,7 +465,7 @@
      """The method to use when ordering `Company`."""
-     orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
+     orderBy: [CompaniesOrderBy!]! = [PRIMARY_KEY_ASC]
    ): CompaniesEdge
 -  deletedCompanyId: ID
 +  deletedCompanyNodeId: ID
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -516,14 +516,18 @@
+@@ -483,14 +483,18 @@
    companyId: Int!
  }
  
@@ -192,7 +179,7 @@
  }
  
  """All input for the `deleteMascot` mutation."""
-@@ -533,11 +537,7 @@
+@@ -500,11 +504,7 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -205,7 +192,7 @@
  }
  
  """The output of our delete `Mascot` mutation."""
-@@ -549,8 +549,8 @@
+@@ -516,8 +516,8 @@
    clientMutationId: String
  
    """Reads a single `Company` that is related to this `Mascot`."""
@@ -216,7 +203,7 @@
  
    """The `Mascot` that was deleted by this mutation."""
    mascot: Mascot
-@@ -569,7 +569,7 @@
+@@ -536,7 +536,7 @@
  
  type Mascot implements Node {
    """Reads a single `Company` that is related to this `Mascot`."""
@@ -225,7 +212,7 @@
    companyId: Int!
    id: Int!
    name: String!
-@@ -677,7 +677,7 @@
+@@ -644,7 +644,7 @@
      input: CreateMascotInput!
    ): CreateMascotPayload
  
@@ -234,7 +221,7 @@
    deleteBeverage(
      """
      The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-@@ -685,15 +685,15 @@
+@@ -652,15 +652,15 @@
      input: DeleteBeverageInput!
    ): DeleteBeveragePayload
  
@@ -254,7 +241,7 @@
    deleteCompany(
      """
      The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-@@ -701,15 +701,15 @@
+@@ -668,15 +668,15 @@
      input: DeleteCompanyInput!
    ): DeleteCompanyPayload
  
@@ -274,7 +261,7 @@
    deleteMascot(
      """
      The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-@@ -725,15 +725,15 @@
+@@ -692,15 +692,15 @@
      input: DeleteMascotByCompanyIdInput!
    ): DeleteMascotPayload
  
@@ -294,7 +281,7 @@
    updateBeverage(
      """
      The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-@@ -741,15 +741,15 @@
+@@ -708,15 +708,15 @@
      input: UpdateBeverageInput!
    ): UpdateBeveragePayload
  
@@ -314,7 +301,7 @@
    updateCompany(
      """
      The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-@@ -757,15 +757,15 @@
+@@ -724,15 +724,15 @@
      input: UpdateCompanyInput!
    ): UpdateCompanyPayload
  
@@ -334,7 +321,7 @@
    updateMascot(
      """
      The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-@@ -781,12 +781,12 @@
+@@ -748,12 +748,12 @@
      input: UpdateMascotByCompanyIdInput!
    ): UpdateMascotPayload
  
@@ -350,10 +337,11 @@
    ): UpdateMascotPayload
  }
  
-@@ -815,8 +815,16 @@
+@@ -782,8 +782,17 @@
  
  """The root query type which gives access points into the data universe."""
  type Query implements Node {
++  """Get a single `Beverage`."""
 +  beverage(id: Int!): Beverage
 +
 +  """Reads a single `Beverage` using its globally unique `ID`."""
@@ -368,16 +356,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -845,7 +853,7 @@
+@@ -810,7 +819,7 @@
+     """The method to use when ordering `Beverage`."""
+     orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
    ): BeveragesConnection
- 
-   """Reads a set of `Beverage`."""
 -  allBeveragesList(
 +  beveragesList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -862,7 +870,7 @@
+@@ -827,7 +836,7 @@
    ): [Beverage!]
  
    """Reads and enables pagination through a set of `Company`."""
@@ -386,19 +374,20 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -891,7 +899,7 @@
+@@ -854,7 +863,7 @@
+     """The method to use when ordering `Company`."""
+     orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
    ): CompaniesConnection
- 
-   """Reads a set of `Company`."""
 -  allCompaniesList(
 +  companiesList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -906,9 +914,24 @@
-     """The method to use when ordering `Company`."""
+@@ -870,8 +879,29 @@
      orderBy: [CompaniesOrderBy!]
    ): [Company!]
+ 
++  """Get a single `Company`."""
 +  company(id: Int!): Company
 +
 +  """Reads a single `Company` using its globally unique `ID`."""
@@ -406,7 +395,11 @@
 +    """The globally unique `ID` to be used in selecting a single `Company`."""
 +    nodeId: ID!
 +  ): Company
++
++  """Get a single `Mascot`."""
 +  mascot(id: Int!): Mascot
++
++  """Get a single `Mascot`."""
 +  mascotByCompanyId(companyId: Int!): Mascot
 +
 +  """Reads a single `Mascot` using its globally unique `ID`."""
@@ -414,23 +407,23 @@
 +    """The globally unique `ID` to be used in selecting a single `Mascot`."""
 +    nodeId: ID!
 +  ): Mascot
- 
++
    """Reads and enables pagination through a set of `Mascot`."""
 -  allMascots(
 +  mascots(
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -937,7 +960,7 @@
+@@ -898,7 +928,7 @@
+     """The method to use when ordering `Mascot`."""
+     orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
    ): MascotsConnection
- 
-   """Reads a set of `Mascot`."""
 -  allMascotsList(
 +  mascotsList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -953,28 +976,6 @@
+@@ -914,36 +944,6 @@
      orderBy: [MascotsOrderBy!]
    ): [Mascot!]
  
@@ -439,6 +432,8 @@
 -    """The globally unique `ID` to be used in selecting a single `Beverage`."""
 -    nodeId: ID!
 -  ): Beverage
+-
+-  """Get a single `Beverage`."""
 -  beverageById(id: Int!): Beverage
 -
 -  """Reads a single `Company` using its globally unique `ID`."""
@@ -446,6 +441,8 @@
 -    """The globally unique `ID` to be used in selecting a single `Company`."""
 -    nodeId: ID!
 -  ): Company
+-
+-  """Get a single `Company`."""
 -  companyById(id: Int!): Company
 -
 -  """Reads a single `Mascot` using its globally unique `ID`."""
@@ -453,13 +450,17 @@
 -    """The globally unique `ID` to be used in selecting a single `Mascot`."""
 -    nodeId: ID!
 -  ): Mascot
+-
+-  """Get a single `Mascot`."""
 -  mascotByCompanyId(companyId: Int!): Mascot
+-
+-  """Get a single `Mascot`."""
 -  mascotById(id: Int!): Mascot
 -
    """Fetches an object given its globally unique `ID`."""
    node(
      """The globally unique `ID`."""
-@@ -993,38 +994,38 @@
+@@ -962,38 +962,38 @@
    query: Query!
  }
  
@@ -512,7 +513,7 @@
  }
  
  """The output of our update `Beverage` mutation."""
-@@ -1045,10 +1046,10 @@
+@@ -1014,10 +1014,10 @@
    clientMutationId: String
  
    """Reads a single `Company` that is related to this `Beverage`."""
@@ -525,7 +526,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -1056,8 +1057,8 @@
+@@ -1025,8 +1025,8 @@
    query: Query
  }
  
@@ -536,7 +537,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1065,10 +1066,14 @@
+@@ -1034,10 +1034,14 @@
    clientMutationId: String
  
    """
@@ -553,7 +554,7 @@
  }
  
  """All input for the `updateCompany` mutation."""
-@@ -1078,16 +1083,12 @@
+@@ -1047,16 +1051,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -572,7 +573,7 @@
  }
  
  """The output of our update `Company` mutation."""
-@@ -1125,22 +1126,26 @@
+@@ -1094,22 +1094,26 @@
    """
    An object where the defined keys will be set on the `Mascot` being updated.
    """
@@ -604,7 +605,7 @@
  }
  
  """All input for the `updateMascot` mutation."""
-@@ -1150,16 +1155,12 @@
+@@ -1119,16 +1123,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -623,7 +624,7 @@
  }
  
  """The output of our update `Mascot` mutation."""
-@@ -1171,7 +1172,7 @@
+@@ -1140,7 +1140,7 @@
    clientMutationId: String
  
    """Reads a single `Company` that is related to this `Mascot`."""

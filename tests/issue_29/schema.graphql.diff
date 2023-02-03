@@ -190,7 +190,7 @@
    ): UpdateSomethingDatumPayload
  }
  
-@@ -285,8 +285,32 @@
+@@ -285,8 +285,34 @@
  
  """The root query type which gives access points into the data universe."""
  type Query implements Node {
@@ -210,6 +210,8 @@
 +  which can only query top level fields if they are in a particular form.
 +  """
 +  query: Query!
++
++  """Get a single `Something`."""
 +  something(someId: Int!): Something
 +
 +  """Reads a single `Something` using its globally unique `ID`."""
@@ -224,19 +226,20 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -315,7 +339,7 @@
+@@ -313,7 +339,7 @@
+     """The method to use when ordering `SomethingDatum`."""
+     orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
    ): SomethingDataConnection
- 
-   """Reads a set of `SomethingDatum`."""
 -  allSomethingDataList(
 +  somethingDataList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -330,9 +354,18 @@
-     """The method to use when ordering `SomethingDatum`."""
+@@ -329,8 +355,19 @@
      orderBy: [SomethingDataOrderBy!]
    ): [SomethingDatum!]
+ 
++  """Get a single `SomethingDatum`."""
 +  somethingDatum(somethingDataId: Int!): SomethingDatum
 +
 +  """Reads a single `SomethingDatum` using its globally unique `ID`."""
@@ -246,23 +249,23 @@
 +    """
 +    nodeId: ID!
 +  ): SomethingDatum
- 
++
    """Reads and enables pagination through a set of `Something`."""
 -  allSomethings(
 +  somethings(
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -361,7 +394,7 @@
+@@ -357,7 +394,7 @@
+     """The method to use when ordering `Something`."""
+     orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
    ): SomethingsConnection
- 
-   """Reads a set of `Something`."""
 -  allSomethingsList(
 +  somethingsList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -376,39 +409,6 @@
+@@ -372,43 +409,6 @@
      """The method to use when ordering `Something`."""
      orderBy: [SomethingsOrderBy!]
    ): [Something!]
@@ -289,6 +292,8 @@
 -    """The globally unique `ID` to be used in selecting a single `Something`."""
 -    nodeId: ID!
 -  ): Something
+-
+-  """Get a single `Something`."""
 -  somethingBySomeId(someId: Int!): Something
 -
 -  """Reads a single `SomethingDatum` using its globally unique `ID`."""

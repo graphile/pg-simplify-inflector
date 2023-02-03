@@ -158,8 +158,6 @@ type Company implements Node {
     """The method to use when ordering `Beverage`."""
     orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesConnection!
-
-  """Reads and enables pagination through a set of `Beverage`."""
   beveragesByCompanyIdList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -204,8 +202,6 @@ type Company implements Node {
     """The method to use when ordering `Beverage`."""
     orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesConnection!
-
-  """Reads and enables pagination through a set of `Beverage`."""
   distributedBeveragesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -225,35 +221,6 @@ type Company implements Node {
 
   """Reads a single `Mascot` that is related to this `Company`."""
   mascotByCompanyId: Mascot
-
-  """Reads and enables pagination through a set of `Mascot`."""
-  mascotsByCompanyId(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: MascotCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Mascot`."""
-    orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): MascotsConnection! @deprecated(reason: "Please use mascotByCompanyId instead")
   name: String!
 
   """
@@ -307,7 +274,7 @@ type CreateBeveragePayload {
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
     """The method to use when ordering `Beverage`."""
-    orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [BeveragesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): BeveragesEdge
 
   """
@@ -354,7 +321,7 @@ type CreateCompanyPayload {
   """An edge for our `Company`. May be used by Relay 1."""
   companyEdge(
     """The method to use when ordering `Company`."""
-    orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CompaniesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CompaniesEdge
 
   """
@@ -392,7 +359,7 @@ type CreateMascotPayload {
   """An edge for our `Mascot`. May be used by Relay 1."""
   mascotEdge(
     """The method to use when ordering `Mascot`."""
-    orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [MascotsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): MascotsEdge
 
   """
@@ -436,7 +403,7 @@ type DeleteBeveragePayload {
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
     """The method to use when ordering `Beverage`."""
-    orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [BeveragesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): BeveragesEdge
 
   """
@@ -496,7 +463,7 @@ type DeleteCompanyPayload {
   """An edge for our `Company`. May be used by Relay 1."""
   companyEdge(
     """The method to use when ordering `Company`."""
-    orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CompaniesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CompaniesEdge
   deletedCompanyId: ID
 
@@ -558,7 +525,7 @@ type DeleteMascotPayload {
   """An edge for our `Mascot`. May be used by Relay 1."""
   mascotEdge(
     """The method to use when ordering `Mascot`."""
-    orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [MascotsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): MascotsEdge
 
   """
@@ -843,8 +810,6 @@ type Query implements Node {
     """The method to use when ordering `Beverage`."""
     orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesConnection
-
-  """Reads a set of `Beverage`."""
   allBeveragesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -889,8 +854,6 @@ type Query implements Node {
     """The method to use when ordering `Company`."""
     orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompaniesConnection
-
-  """Reads a set of `Company`."""
   allCompaniesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -935,8 +898,6 @@ type Query implements Node {
     """The method to use when ordering `Mascot`."""
     orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
   ): MascotsConnection
-
-  """Reads a set of `Mascot`."""
   allMascotsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -958,6 +919,8 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Beverage`."""
     nodeId: ID!
   ): Beverage
+
+  """Get a single `Beverage`."""
   beverageById(id: Int!): Beverage
 
   """Reads a single `Company` using its globally unique `ID`."""
@@ -965,6 +928,8 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Company`."""
     nodeId: ID!
   ): Company
+
+  """Get a single `Company`."""
   companyById(id: Int!): Company
 
   """Reads a single `Mascot` using its globally unique `ID`."""
@@ -972,7 +937,11 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Mascot`."""
     nodeId: ID!
   ): Mascot
+
+  """Get a single `Mascot`."""
   mascotByCompanyId(companyId: Int!): Mascot
+
+  """Get a single `Mascot`."""
   mascotById(id: Int!): Mascot
 
   """Fetches an object given its globally unique `ID`."""
@@ -1035,7 +1004,7 @@ type UpdateBeveragePayload {
   """An edge for our `Beverage`. May be used by Relay 1."""
   beverageEdge(
     """The method to use when ordering `Beverage`."""
-    orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [BeveragesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): BeveragesEdge
 
   """
@@ -1104,7 +1073,7 @@ type UpdateCompanyPayload {
   """An edge for our `Company`. May be used by Relay 1."""
   companyEdge(
     """The method to use when ordering `Company`."""
-    orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CompaniesOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CompaniesEdge
 
   """
@@ -1179,7 +1148,7 @@ type UpdateMascotPayload {
   """An edge for our `Mascot`. May be used by Relay 1."""
   mascotEdge(
     """The method to use when ordering `Mascot`."""
-    orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [MascotsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): MascotsEdge
 
   """

@@ -2,98 +2,11 @@ type Animal implements Node {
   """Reads a single `Cat` that is related to this `Animal`."""
   cat: Cat
 
-  """Reads and enables pagination through a set of `Cat`."""
-  cats(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: CatCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Cat`."""
-    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): CatsConnection! @deprecated(reason: "Please use cat instead")
-
   """Reads a single `Dog` that is related to this `Animal`."""
   dog: Dog
 
-  """Reads and enables pagination through a set of `Dog`."""
-  dogs(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: DogCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Dog`."""
-    orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): DogsConnection! @deprecated(reason: "Please use dog instead")
-
   """Reads a single `Gerbil` that is related to this `Animal`."""
   gerbil: Gerbil
-
-  """Reads and enables pagination through a set of `Gerbil`."""
-  gerbils(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GerbilCondition
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `Gerbil`."""
-    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): GerbilsConnection! @deprecated(reason: "Please use gerbil instead")
   id: Int!
 
   """
@@ -241,7 +154,7 @@ type CreateAnimalPayload {
   """An edge for our `Animal`. May be used by Relay 1."""
   animalEdge(
     """The method to use when ordering `Animal`."""
-    orderBy: [AnimalsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AnimalsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AnimalsEdge
 
   """
@@ -279,7 +192,7 @@ type CreateCatPayload {
   """An edge for our `Cat`. May be used by Relay 1."""
   catEdge(
     """The method to use when ordering `Cat`."""
-    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CatsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CatsEdge
 
   """
@@ -323,7 +236,7 @@ type CreateDogPayload {
   """An edge for our `Dog`. May be used by Relay 1."""
   dogEdge(
     """The method to use when ordering `Dog`."""
-    orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [DogsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): DogsEdge
 
   """
@@ -361,7 +274,7 @@ type CreateGerbilPayload {
   """An edge for our `Gerbil`. May be used by Relay 1."""
   gerbilEdge(
     """The method to use when ordering `Gerbil`."""
-    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GerbilsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GerbilsEdge
 
   """
@@ -405,7 +318,7 @@ type DeleteAnimalPayload {
   """An edge for our `Animal`. May be used by Relay 1."""
   animalEdge(
     """The method to use when ordering `Animal`."""
-    orderBy: [AnimalsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AnimalsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AnimalsEdge
 
   """
@@ -456,7 +369,7 @@ type DeleteCatPayload {
   """An edge for our `Cat`. May be used by Relay 1."""
   catEdge(
     """The method to use when ordering `Cat`."""
-    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CatsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CatsEdge
 
   """
@@ -514,7 +427,7 @@ type DeleteDogPayload {
   """An edge for our `Dog`. May be used by Relay 1."""
   dogEdge(
     """The method to use when ordering `Dog`."""
-    orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [DogsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): DogsEdge
 
   """
@@ -566,7 +479,7 @@ type DeleteGerbilPayload {
   """An edge for our `Gerbil`. May be used by Relay 1."""
   gerbilEdge(
     """The method to use when ordering `Gerbil`."""
-    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GerbilsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GerbilsEdge
 
   """
@@ -895,6 +808,7 @@ type PageInfo {
 
 """The root query type which gives access points into the data universe."""
 type Query implements Node {
+  """Get a single `Animal`."""
   animal(id: Int!): Animal
 
   """Reads a single `Animal` using its globally unique `ID`."""
@@ -931,8 +845,6 @@ type Query implements Node {
     """The method to use when ordering `Animal`."""
     orderBy: [AnimalsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnimalsConnection
-
-  """Reads a set of `Animal`."""
   animalsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -948,6 +860,8 @@ type Query implements Node {
     """The method to use when ordering `Animal`."""
     orderBy: [AnimalsOrderBy!]
   ): [Animal!]
+
+  """Get a single `Cat`."""
   cat(id: Int!): Cat
 
   """Reads a single `Cat` using its globally unique `ID`."""
@@ -984,8 +898,6 @@ type Query implements Node {
     """The method to use when ordering `Cat`."""
     orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CatsConnection
-
-  """Reads a set of `Cat`."""
   catsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -1001,6 +913,8 @@ type Query implements Node {
     """The method to use when ordering `Cat`."""
     orderBy: [CatsOrderBy!]
   ): [Cat!]
+
+  """Get a single `Dog`."""
   dog(id: Int!): Dog
 
   """Reads a single `Dog` using its globally unique `ID`."""
@@ -1037,8 +951,6 @@ type Query implements Node {
     """The method to use when ordering `Dog`."""
     orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
   ): DogsConnection
-
-  """Reads a set of `Dog`."""
   dogsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -1054,6 +966,8 @@ type Query implements Node {
     """The method to use when ordering `Dog`."""
     orderBy: [DogsOrderBy!]
   ): [Dog!]
+
+  """Get a single `Gerbil`."""
   gerbil(animalId: Int!): Gerbil
 
   """Reads a single `Gerbil` using its globally unique `ID`."""
@@ -1090,8 +1004,6 @@ type Query implements Node {
     """The method to use when ordering `Gerbil`."""
     orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GerbilsConnection
-
-  """Reads a set of `Gerbil`."""
   gerbilsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -1168,7 +1080,7 @@ type UpdateAnimalPayload {
   """An edge for our `Animal`. May be used by Relay 1."""
   animalEdge(
     """The method to use when ordering `Animal`."""
-    orderBy: [AnimalsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [AnimalsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): AnimalsEdge
 
   """
@@ -1228,7 +1140,7 @@ type UpdateCatPayload {
   """An edge for our `Cat`. May be used by Relay 1."""
   catEdge(
     """The method to use when ordering `Cat`."""
-    orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [CatsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): CatsEdge
 
   """
@@ -1294,7 +1206,7 @@ type UpdateDogPayload {
   """An edge for our `Dog`. May be used by Relay 1."""
   dogEdge(
     """The method to use when ordering `Dog`."""
-    orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [DogsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): DogsEdge
 
   """
@@ -1355,7 +1267,7 @@ type UpdateGerbilPayload {
   """An edge for our `Gerbil`. May be used by Relay 1."""
   gerbilEdge(
     """The method to use when ordering `Gerbil`."""
-    orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+    orderBy: [GerbilsOrderBy!]! = [PRIMARY_KEY_ASC]
   ): GerbilsEdge
 
   """
