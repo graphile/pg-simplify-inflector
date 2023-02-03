@@ -226,16 +226,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -313,7 +339,7 @@
-     """The method to use when ordering `SomethingDatum`."""
-     orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -315,7 +341,7 @@
    ): SomethingDataConnection
+ 
+   """Reads a set of `SomethingDatum`."""
 -  allSomethingDataList(
 +  somethingDataList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -329,8 +355,19 @@
+@@ -331,8 +357,19 @@
      orderBy: [SomethingDataOrderBy!]
    ): [SomethingDatum!]
  
@@ -256,16 +256,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -357,7 +394,7 @@
-     """The method to use when ordering `Something`."""
-     orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -361,7 +398,7 @@
    ): SomethingsConnection
+ 
+   """Reads a set of `Something`."""
 -  allSomethingsList(
 +  somethingsList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -372,43 +409,6 @@
+@@ -376,43 +413,6 @@
      """The method to use when ordering `Something`."""
      orderBy: [SomethingsOrderBy!]
    ): [Something!]
@@ -309,7 +309,7 @@
  }
  
  type Something implements Node {
-@@ -525,10 +525,10 @@
+@@ -529,10 +529,10 @@
    A globally unique identifier. Can be used in various places throughout the system to identify this single value.
    """
    nodeId: ID!
@@ -322,7 +322,7 @@
    somethingDataId: Int!
  }
  
-@@ -614,34 +614,42 @@
+@@ -618,34 +618,42 @@
    SOME_ID_DESC
  }
  
@@ -373,7 +373,7 @@
  }
  
  """All input for the `updateSomethingDatum` mutation."""
-@@ -653,14 +661,10 @@
+@@ -657,14 +665,10 @@
    clientMutationId: String
  
    """
@@ -390,7 +390,7 @@
  }
  
  """The output of our update `SomethingDatum` mutation."""
-@@ -677,7 +681,7 @@
+@@ -681,7 +685,7 @@
    query: Query
  
    """Reads a single `Something` that is related to this `SomethingDatum`."""
@@ -399,7 +399,7 @@
  
    """The `SomethingDatum` that was updated by this mutation."""
    somethingDatum: SomethingDatum
-@@ -698,14 +702,10 @@
+@@ -702,14 +706,10 @@
    clientMutationId: String
  
    """

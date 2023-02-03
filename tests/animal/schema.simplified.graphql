@@ -845,6 +845,8 @@ type Query implements Node {
     """The method to use when ordering `Animal`."""
     orderBy: [AnimalsOrderBy!] = [PRIMARY_KEY_ASC]
   ): AnimalsConnection
+
+  """Reads a set of `Animal`."""
   animalsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -898,6 +900,8 @@ type Query implements Node {
     """The method to use when ordering `Cat`."""
     orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CatsConnection
+
+  """Reads a set of `Cat`."""
   catsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -951,6 +955,8 @@ type Query implements Node {
     """The method to use when ordering `Dog`."""
     orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
   ): DogsConnection
+
+  """Reads a set of `Dog`."""
   dogsList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -1004,6 +1010,8 @@ type Query implements Node {
     """The method to use when ordering `Gerbil`."""
     orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
   ): GerbilsConnection
+
+  """Reads a set of `Gerbil`."""
   gerbilsList(
     """
     A condition to be used in determining which values should be returned by the collection.

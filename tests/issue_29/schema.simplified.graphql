@@ -339,6 +339,8 @@ type Query implements Node {
     """The method to use when ordering `SomethingDatum`."""
     orderBy: [SomethingDataOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingDataConnection
+
+  """Reads a set of `SomethingDatum`."""
   somethingDataList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -394,6 +396,8 @@ type Query implements Node {
     """The method to use when ordering `Something`."""
     orderBy: [SomethingsOrderBy!] = [PRIMARY_KEY_ASC]
   ): SomethingsConnection
+
+  """Reads a set of `Something`."""
   somethingsList(
     """
     A condition to be used in determining which values should be returned by the collection.

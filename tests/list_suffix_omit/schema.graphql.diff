@@ -82,7 +82,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -206,16 +213,9 @@
+@@ -206,13 +213,6 @@
      """
      offset: Int
    ): BeveragesConnection!
@@ -93,15 +93,14 @@
 -    """Skip the first `n` values."""
 -    offset: Int
 -  ): [Beverage]
--
--  """Reads and enables pagination through a set of `Beverage`."""
+ 
+   """Reads and enables pagination through a set of `Beverage`."""
    distributedBeverages(
-     """Read all values in the set after (below) this cursor."""
-     after: Cursor
-@@ -311,8 +311,16 @@
+@@ -307,8 +307,17 @@
  
  """The root query type which gives access points into the data universe."""
  type Query implements Node {
++  """Get a single `Beverage`."""
 +  beverage(id: Int!): Beverage
 +
 +  """Reads a single `Beverage` using its globally unique `ID`."""
@@ -116,7 +115,7 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -341,7 +349,7 @@
+@@ -337,7 +346,7 @@
    ): BeveragesConnection
  
    """Reads a set of `Beverage`."""

@@ -453,16 +453,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -836,7 +845,7 @@
-     """The method to use when ordering `Animal`."""
-     orderBy: [AnimalsOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -838,7 +847,7 @@
    ): AnimalsConnection
+ 
+   """Reads a set of `Animal`."""
 -  allAnimalsList(
 +  animalsList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -852,8 +861,17 @@
+@@ -854,8 +863,17 @@
      orderBy: [AnimalsOrderBy!]
    ): [Animal!]
  
@@ -481,16 +481,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -880,7 +898,7 @@
-     """The method to use when ordering `Cat`."""
-     orderBy: [CatsOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -884,7 +902,7 @@
    ): CatsConnection
+ 
+   """Reads a set of `Cat`."""
 -  allCatsList(
 +  catsList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -896,8 +914,17 @@
+@@ -900,8 +918,17 @@
      orderBy: [CatsOrderBy!]
    ): [Cat!]
  
@@ -509,16 +509,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -924,7 +951,7 @@
-     """The method to use when ordering `Dog`."""
-     orderBy: [DogsOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -930,7 +957,7 @@
    ): DogsConnection
+ 
+   """Reads a set of `Dog`."""
 -  allDogsList(
 +  dogsList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -940,8 +967,17 @@
+@@ -946,8 +973,17 @@
      orderBy: [DogsOrderBy!]
    ): [Dog!]
  
@@ -537,16 +537,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -968,7 +1004,7 @@
-     """The method to use when ordering `Gerbil`."""
-     orderBy: [GerbilsOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -976,7 +1012,7 @@
    ): GerbilsConnection
+ 
+   """Reads a set of `Gerbil`."""
 -  allGerbilsList(
 +  gerbilsList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -984,42 +1020,6 @@
+@@ -992,42 +1028,6 @@
      orderBy: [GerbilsOrderBy!]
    ): [Gerbil!]
  
@@ -589,7 +589,7 @@
    """Fetches an object given its globally unique `ID`."""
    node(
      """The globally unique `ID`."""
-@@ -1038,38 +1038,38 @@
+@@ -1046,38 +1046,38 @@
    query: Query!
  }
  
@@ -642,7 +642,7 @@
  }
  
  """The output of our update `Animal` mutation."""
-@@ -1095,44 +1095,44 @@
+@@ -1103,44 +1103,44 @@
    query: Query
  }
  
@@ -702,7 +702,7 @@
  
    """The `Cat` that was updated by this mutation."""
    cat: Cat
-@@ -1155,8 +1155,8 @@
+@@ -1163,8 +1163,8 @@
    query: Query
  }
  
@@ -713,7 +713,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1164,10 +1164,14 @@
+@@ -1172,10 +1172,14 @@
    clientMutationId: String
  
    """
@@ -730,7 +730,7 @@
  }
  
  """All input for the `updateDog` mutation."""
-@@ -1177,22 +1181,18 @@
+@@ -1185,22 +1189,18 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -756,7 +756,7 @@
  
    """
    The exact same `clientMutationId` that was provided in the mutation input,
-@@ -1215,10 +1215,8 @@
+@@ -1223,10 +1223,8 @@
    query: Query
  }
  
@@ -769,7 +769,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1226,13 +1224,20 @@
+@@ -1234,13 +1232,20 @@
    clientMutationId: String
  
    """
@@ -791,7 +791,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -1242,18 +1247,13 @@
+@@ -1250,18 +1255,13 @@
    """
    An object where the defined keys will be set on the `Gerbil` being updated.
    """

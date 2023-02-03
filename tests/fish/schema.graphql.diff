@@ -237,16 +237,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -507,7 +516,7 @@
-     """The method to use when ordering `Fish`."""
-     orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -509,7 +518,7 @@
    ): FishConnection
+ 
+   """Reads a set of `Fish`."""
 -  allFishList(
 +  fishesList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -523,8 +532,28 @@
+@@ -525,8 +534,28 @@
      orderBy: [FishOrderBy!]
    ): [Fish!]
  
@@ -276,16 +276,16 @@
      """Read all values in the set after (below) this cursor."""
      after: Cursor
  
-@@ -551,7 +580,7 @@
-     """The method to use when ordering `Pond`."""
-     orderBy: [PondsOrderBy!] = [PRIMARY_KEY_ASC]
+@@ -555,7 +584,7 @@
    ): PondsConnection
+ 
+   """Reads a set of `Pond`."""
 -  allPondsList(
 +  pondsList(
      """
      A condition to be used in determining which values should be returned by the collection.
      """
-@@ -567,35 +596,6 @@
+@@ -571,35 +600,6 @@
      orderBy: [PondsOrderBy!]
    ): [Pond!]
  
@@ -321,7 +321,7 @@
    """
    Exposes the root query type nested one level down. This is helpful for Relay 1
    which can only query top level fields if they are in a particular form.
-@@ -603,8 +603,8 @@
+@@ -607,8 +607,8 @@
    query: Query!
  }
  
@@ -332,7 +332,7 @@
    """
    An arbitrary string value with no semantic meaning. Will be included in the
    payload verbatim. May be used to track mutations by the client.
-@@ -612,10 +612,14 @@
+@@ -616,10 +616,14 @@
    clientMutationId: String
  
    """
@@ -349,7 +349,7 @@
  }
  
  """All input for the `updateFish` mutation."""
-@@ -625,16 +629,12 @@
+@@ -629,16 +633,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String
@@ -368,7 +368,7 @@
  }
  
  """The output of our update `Fish` mutation."""
-@@ -655,7 +655,7 @@
+@@ -659,7 +659,7 @@
    ): FishEdge
  
    """Reads a single `Pond` that is related to this `Fish`."""
@@ -377,7 +377,7 @@
  
    """
    Our root query field type. Allows us to run any query from our mutation payload.
-@@ -663,19 +663,23 @@
+@@ -667,19 +667,23 @@
    query: Query
  }
  
@@ -405,7 +405,7 @@
  }
  
  """All input for the `updatePond` mutation."""
-@@ -685,16 +689,12 @@
+@@ -689,16 +693,12 @@
    payload verbatim. May be used to track mutations by the client.
    """
    clientMutationId: String

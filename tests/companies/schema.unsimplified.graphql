@@ -814,6 +814,8 @@ type Query implements Node {
     """The method to use when ordering `Beverage`."""
     orderBy: [BeveragesOrderBy!] = [PRIMARY_KEY_ASC]
   ): BeveragesConnection
+
+  """Reads a set of `Beverage`."""
   allBeveragesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -858,6 +860,8 @@ type Query implements Node {
     """The method to use when ordering `Company`."""
     orderBy: [CompaniesOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompaniesConnection
+
+  """Reads a set of `Company`."""
   allCompaniesList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -902,6 +906,8 @@ type Query implements Node {
     """The method to use when ordering `Mascot`."""
     orderBy: [MascotsOrderBy!] = [PRIMARY_KEY_ASC]
   ): MascotsConnection
+
+  """Reads a set of `Mascot`."""
   allMascotsList(
     """
     A condition to be used in determining which values should be returned by the collection.

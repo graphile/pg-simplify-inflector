@@ -507,6 +507,8 @@ type Query implements Node {
     """The method to use when ordering `Fish`."""
     orderBy: [FishOrderBy!] = [PRIMARY_KEY_ASC]
   ): FishConnection
+
+  """Reads a set of `Fish`."""
   allFishList(
     """
     A condition to be used in determining which values should be returned by the collection.
@@ -551,6 +553,8 @@ type Query implements Node {
     """The method to use when ordering `Pond`."""
     orderBy: [PondsOrderBy!] = [PRIMARY_KEY_ASC]
   ): PondsConnection
+
+  """Reads a set of `Pond`."""
   allPondsList(
     """
     A condition to be used in determining which values should be returned by the collection.
