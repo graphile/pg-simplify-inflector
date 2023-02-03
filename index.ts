@@ -324,7 +324,7 @@ const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
               )}`
             );
           }
-          if (this.baseNameMatches(baseName, source.name)) {
+          if (this.baseNameMatches(baseName, relation.source.name)) {
             return this.camelCase(
               `${this.distinctPluralize(
                 this._singularizedCodecName(relation.source.codec)
@@ -332,10 +332,10 @@ const PgSimplifyInflectionPlugin: GraphileConfig.Plugin = {
             );
           }
         }
-        const pk = (source.uniques as PgSourceUnique[]).find(
+        const pk = (relation.source.uniques as PgSourceUnique[]).find(
           (u) => u.isPrimary
         );
-        if (pk && arraysMatch(pk.columns, relation.localColumns)) {
+        if (pk && arraysMatch(pk.columns, relation.remoteColumns)) {
           return this.camelCase(
             `${this.distinctPluralize(
               this._singularizedCodecName(relation.source.codec)

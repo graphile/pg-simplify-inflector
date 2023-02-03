@@ -206,12 +206,12 @@ const PgSimplifyInflectionPlugin = {
                     if (oppositeBaseName) {
                         return this.camelCase(`${oppositeBaseName}-${this.distinctPluralize(this._singularizedCodecName(relation.source.codec))}`);
                     }
-                    if (this.baseNameMatches(baseName, source.name)) {
+                    if (this.baseNameMatches(baseName, relation.source.name)) {
                         return this.camelCase(`${this.distinctPluralize(this._singularizedCodecName(relation.source.codec))}`);
                     }
                 }
-                const pk = source.uniques.find((u) => u.isPrimary);
-                if (pk && (0, grafast_1.arraysMatch)(pk.columns, relation.localColumns)) {
+                const pk = relation.source.uniques.find((u) => u.isPrimary);
+                if (pk && (0, grafast_1.arraysMatch)(pk.columns, relation.remoteColumns)) {
                     return this.camelCase(`${this.distinctPluralize(this._singularizedCodecName(relation.source.codec))}`);
                 }
                 return previous.call(this, details);
