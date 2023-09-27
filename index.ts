@@ -570,7 +570,7 @@ function PgSimplifyInflectorPlugin(
   });
 }
 
-module.exports = PgSimplifyInflectorPlugin;
 // Hacks for TypeScript/Babel import
-module.exports.default = PgSimplifyInflectorPlugin;
-Object.defineProperty(module.exports, "__esModule", { value: true });
+export = PgSimplifyInflectorPlugin;
+PgSimplifyInflectorPlugin.default = PgSimplifyInflectorPlugin;
+Object.defineProperty(PgSimplifyInflectorPlugin, "__esModule", { value: true });
