@@ -1,6 +1,6 @@
 # @graphile-contrib/pg-simplify-inflector
 
-(For Postgraphile v5, use [@graphile/simplify-inflection](https://www.npmjs.com/package/@graphile/simplify-inflection))
+(For PostGraphile v5, use [@graphile/simplify-inflection](https://www.npmjs.com/package/@graphile/simplify-inflection))
 
 This plugin simplifies field names in the PostGraphile schema; e.g. `allUsers`
 becomes simply `users`, `User.postsByAuthorId` becomes simply `User.posts`, and
